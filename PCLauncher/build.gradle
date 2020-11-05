@@ -1,0 +1,10 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project "es.ucm.vdm.pcengine"
+    implementation project "es.ucm.vdm.logic"
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
