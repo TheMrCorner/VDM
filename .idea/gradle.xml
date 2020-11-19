@@ -15,8 +15,8 @@
             <option value="$PROJECT_DIR$/Logic" />
             <option value="$PROJECT_DIR$/PCEngine" />
             <option value="$PROJECT_DIR$/PCLauncher" />
+            <option value="$PROJECT_DIR$/alauncher" />
             <option value="$PROJECT_DIR$/androidengine" />
-            <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,7 +1,7 @@
 include ':androidengine'
+include ':alauncher'
 include ':Logic'
 include ':PCEngine'
 include ':Engine'
 include ':PCLauncher'
-include ':app'
 rootProject.name = "Off The Line"
