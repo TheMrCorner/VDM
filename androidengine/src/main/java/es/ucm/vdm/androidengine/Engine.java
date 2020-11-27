@@ -4,6 +4,8 @@ import android.content.res.AssetManager;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.InputStream;
+
 import es.ucm.vdm.engine.Logic;
 import es.ucm.vdm.engine.Rect;
 
@@ -65,6 +67,11 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
     @Override
     public Input getInput() {
         return _ip;
+    }
+
+    @Override
+    public InputStream openInputStream(String filename) {
+        return null;
     }
 
     @Override

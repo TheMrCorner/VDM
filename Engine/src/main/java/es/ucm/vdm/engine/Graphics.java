@@ -56,17 +56,27 @@ public interface Graphics {
     void clear(int color);
 
     /**
+     * Sets a color to draw things in screen.
+     *
+     * @param color (int) Color to set for drawing
+     */
+    void setColor(int color);
+
+    /**
      * Draws a line between to points specified with some color provided.
      *
      * @param y1 (int) Y position of the beginning point
      * @param x1 (int) X position of the beginning point
      * @param y2 (int) Y position of the ending point
      * @param x2 (int) X position of the ending point
-     * @param color (int) Color to paint the line
      */
-    void drawLine(int y1, int x1, int y2, int x2, int color);
+    void drawLine(int x1, int y1, int x2, int y2);
 
-    // TODO: TTF y texto
+    void fillRect(int x1, int y1, int x2, int y2);
+
+    void drawText(String text, int x, int y);
+
+    Font newFont(String filename, int size, boolean isBold);
 
     //------------------------------------------------------------------------
 
@@ -99,23 +109,28 @@ public interface Graphics {
      */
     Rect scale(Rect src, Rect dim);
 
-    /**
-     * Reposition X coordinate to fit in canvas.
-     *
-     * @param x (int) Coordinate
-     * @return (int) New coordinate
-     */
-    int repositionX(int x);
+    void save();
+
+    void restore();
 
     /**
-     * Reposition Y coordinate to fit in canvas.
+     * Rotates an object using angles given.
      *
-     * @param y (int) Coordinate
-     * @return (int) New coordinate
+     * @param angle (float) Angle to rotate object
      */
-    int repositionY(int y);
+    void rotate(float angle);
 
-    // TODO: Quizá necesitamos hacer el reverso de los anteriores para el input.
+    /**
+     * Translates the origin coordinates to the specified position.
+     *
+     * @param x (int) X position to set as origin
+     * @param y (int) Y position to set as origin
+     */
+    void translate(int x, int y);
+
+
+    int reverseRepositionX(int x);
+    int reverseRepositionY(int y);
 
     //------------------------------------------------------------------------
 

@@ -70,7 +70,7 @@ public abstract class AbstractGraphics implements Graphics {
         // If the src width is higher than the reference width
         if(width > dim.getWidth()){
             // Set the new width but resized proportionally
-            width = repositionX(width);
+            width = (width * _can.getWidth()) / _refCan.getWidth();
             // Change height keeping proportions
             height = (width * src.getHeight()) / src.getWidth();
         } // if
@@ -78,7 +78,7 @@ public abstract class AbstractGraphics implements Graphics {
         // If the src height (or the changed height) is bigger than the reference one
         if(height > dim.getHeight()){
             // Set the new height but resized proportionally
-            height = repositionY(height);
+            height = (height * _can.getHeight()) / _refCan.getHeight();
             // Change width proportionally
             width = (height * src.getWidth()) / src.getHeight();
         } // if
@@ -110,26 +110,6 @@ public abstract class AbstractGraphics implements Graphics {
             return false;
         } // else
     } // isInCanvas
-
-    /**
-     * Receives a X coordinate in logic reference and converts it to physical reference.
-     *
-     * @param x X coordinate in logic reference.
-     * @return X coordinate in physical reference.
-     */
-    public int repositionX(int x) {
-        return (x * _can.getWidth()) / _refCan.getWidth();
-    } // repositionX
-
-    /**
-     * Receives a Y coordinate in logic reference and converts it to physical reference.
-     *
-     * @param y Y coordinate in logic reference.
-     * @return Y coordinate in physical reference.
-     */
-    public int repositionY(int y) {
-        return (y * _can.getHeight()) / _refCan.getHeight();
-    } // repositionY
 
     /**
      * Receives a X coordinate in screen axis system an converts it to logic canvas coordinates.

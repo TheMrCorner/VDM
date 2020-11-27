@@ -5,9 +5,12 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.io.InputStream;
 
 import es.ucm.vdm.engine.Logic;
+import es.ucm.vdm.engine.Rect;
 
+// TODO: Comentar un poco lo que hace la calse y demás.
 public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentListener {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -26,8 +29,9 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
     int _height;
     int _frames;
     long _info;
-    int FPS = 30;
+    int FPS = 60;
     double averageFPS;
+    boolean forward = true;
 
     // Testing
     int _currentColor = 0; //Background sprites iterator
@@ -35,6 +39,12 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
     int _planeColor[] = {0xff41a85f, 0xff00a885, 0xff3d8eb9, 0xff2969b0, 0xff553982, 0xff28324e, 0xfff37934,
             0xffd14b41, 0xff75706b};
 
+    /**
+     * Class constructor. Creates a new Engine instance and sets everything for game to run
+     * correctly. Sets all window values needed, creates the new window, creates a new graphics
+     * instance, initializes all data related to time controlling and calculations and sets
+     * itself as listener of window events.
+     */
     public Engine(){
         //Window generation
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -56,56 +66,102 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
         _frames = 0; // Number of frames passed
 
         _win.addComponentListener(this);
-    }
+    } // Engine
 
+    /**
+     * Resize canvas to fit the screen. Only called when the window is resized. (Fullscreen, or
+     * anything else.
+     */
+    public void resize(){
+        Rect temp;
+        Rect temp2;
+
+        // RESIZE
+        // Get window size (as a rectangle)
+        temp2 = new Rect(_win.getWidth(), 0, 0, _win.getHeight());
+
+        // Get Logic's canvas
+        temp = _logic.getCanvasSize();
+
+        // Resize the Logic's canvas with that reference
+        _g.setCanvasSize(temp, temp2);
+
+        _g.setCanvasPos(((_win.getWidth()/2) - (_g.getCanvas().getWidth() / 2)),
+                ((_win.getHeight()/2) - (_g.getCanvas().getHeight() / 2)));
+    } // resize
+
+    /**
+     * Returns access to the Graphics instance saved here for the Logic to paint it's updates.
+     *
+     * @return (Graphics) Graphics instance.
+     */
     @Override
     public Graphics getGraphics() {
-        return null;
-    }
+        return _g;
+    } // getGraphics
 
+    /**
+     * Returns access to the Input(Manager) for input management in Logic.
+     *
+     * @return (Input) Input instance.
+     */
     @Override
     public Input getInput() {
         return _ip;
-    }
+    } // getInput
 
     @Override
-    public void setLogic(Logic l) {
+    public InputStream openInputStream(String filename) {
+        // TODO: Implementar
 
-    }
+        return null;
+    } // openInputStream
+
+    /**
+     * Function to save an instance of the logic and call all it's functions (update, render, handle
+     * Input, etc.)
+     *
+     * @param l (Logic) Instance of Logic
+     */
+    @Override
+    public void setLogic(Logic l) {
+        _logic = l;
+    } // setLogic
 
     @Override
     public void HandleException(Exception e) {
-    }
+        // TODO: Implementar
+    } // HandleException
 
+    /**
+     * Function to get the width of the screen or the window.
+     *
+     * @return (int) Window/Screen width
+     */
     @Override
     public int getWidth() {
-        return 0;
-    }
+        return _width;
+    } // getWidth
 
+    /**
+     * Function to get the height of the screen or the window
+     *
+     * @return (int) Window/Screen height
+     */
     @Override
     public int getHeight() {
-        return 0;
-    }
+        return _height;
+    } // getHeight
 
+    /**
+     * Resize canvas to fit screen after window is resized.
+     *
+     * @param componentEvent (ComponentEvent) ComponentEvent
+     */
     @Override
     public void componentResized(ComponentEvent componentEvent) {
-
-    }
-
-    @Override
-    public void componentMoved(ComponentEvent componentEvent) {
-
-    }
-
-    @Override
-    public void componentShown(ComponentEvent componentEvent) {
-
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent componentEvent) {
-
-    }
+        resize();
+    } // componentResized
 
     /**
      * Render function.
@@ -123,14 +179,8 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
             do {
                 _win.setGraphics();
                 try { // Try to paint in the Graphics
-                    //_g.testCanvas(_win);
-                    //_g.drawLine(200, 200, 800, 1000, _planeColor[_currentColor]);
-                    _win.getJGraphics().setColor(new Color(_planeColor[_currentColor]));
-                    // TODO: Line stroke
-                    _win.getJGraphics().drawRect(200, 200, 400, 400);
-                    _win.getJGraphics().setColor(Color.BLACK);
-                    _win.getJGraphics().drawString("FPS: " + averageFPS, 10, 10);
-                    _currentColor++;
+                    _logic.render();
+
                     if(_currentColor == _planeColor.length){
                         _currentColor = 0;
                     }
@@ -144,6 +194,10 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
         } while(_win.getBufferStrategy().contentsLost());
     }
 
+    /**
+     * run function, called by the main thread for running the main loop of the game. Controls the
+     * frame rate and calls for update and render functions, checks if new Input happened.
+     */
     @Override
     public void run() {
         // FPS
@@ -179,7 +233,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
                 System.out.println("Info: " + fps + " fps");
                 _frames = 0;
                 _info = _currentTime;
-            }
+            } // if
             ++_frames; // Update frames
 
             // Clear and update graphics
@@ -190,9 +244,10 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
 
             try{
                 Thread.sleep(waitTime);
-            }catch(Exception e){
+            } // try
+            catch(Exception e){
                 HandleException(e);
-            }
+            } // catch
 
             totalTime += System.nanoTime() - startTime;
             fCount++;
@@ -200,7 +255,19 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
                 averageFPS = 1000.0 / ((totalTime / fCount) / 1000000);
                 fCount = 0;
                 totalTime = 0;
-            }
-        }
-    }
-}
+            } // if
+        } // while
+    } // run
+
+
+    //------------------Implementation Methods---------------------
+
+    @Override
+    public void componentMoved(ComponentEvent componentEvent) {}
+
+    @Override
+    public void componentShown(ComponentEvent componentEvent) {}
+
+    @Override
+    public void componentHidden(ComponentEvent componentEvent) {}
+} // Engine

@@ -115,5 +115,5 @@ public class Rect {
     public int width;
     public int height;
 
-}
+} // Rect
 

@@ -25,6 +25,7 @@ public class Window extends JFrame{
     public Window(int width, int height, String title, Engine en){
         super(title);
         _eng = en;
+
         init(width, height);
     } // Window
 
