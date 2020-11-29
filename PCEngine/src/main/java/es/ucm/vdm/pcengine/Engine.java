@@ -29,7 +29,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
     int _height;
     int _frames;
     long _info;
-    int FPS = 60;
+    int FPS;
     double averageFPS;
     boolean forward = true;
 
@@ -128,6 +128,16 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
         _logic = l;
     } // setLogic
 
+    /**
+     * Sets the max frame rate to keep all running at the same velocity
+     *
+     * @param fps (int) Max frame rate.
+     */
+    @Override
+    public void setFPS(int fps) {
+        FPS = fps;
+    } // setFPS
+
     @Override
     public void HandleException(Exception e) {
         // TODO: Implementar
@@ -180,11 +190,6 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
                 _win.setGraphics();
                 try { // Try to paint in the Graphics
                     _logic.render();
-
-                    if(_currentColor == _planeColor.length){
-                        _currentColor = 0;
-                    }
-                    // Set the position of the canvas
                 }
                 finally { // If not, still dispose the Swing Graphics
                     _win.getJGraphics().dispose();

@@ -11,6 +11,8 @@ public interface Engine {
     InputStream openInputStream(String filename);
     
     void setLogic(Logic l);
+
+    void setFPS(int fps);
     
     void HandleException(Exception e);
     

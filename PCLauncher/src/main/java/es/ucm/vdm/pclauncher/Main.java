@@ -1,5 +1,6 @@
 package es.ucm.vdm.pclauncher;
 
+import es.ucm.vdm.logic.Logic;
 import es.ucm.vdm.pcengine.Engine;
 
 public class Main {
@@ -13,7 +14,12 @@ public class Main {
     public static void main(String[] args){
         // Create Engine and Logic
         Engine _eng = new Engine();
+
         // Unify Engine and Logic
+        Logic _log = new Logic(_eng);
+
+        // Set logic in engine for update calls
+        _eng.setLogic(_log);
 
         // Run game
         _eng.run();

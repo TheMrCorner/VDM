@@ -1,6 +1,11 @@
 package es.ucm.vdm.engine;
 
 public abstract class AbstractGraphics implements Graphics {
+    // Canvas
+    public Rect _can;
+
+    public Rect _refCan;
+
     /**
      * Set the logic canvas for reference to scale every image that wil be drawn.
      *
@@ -112,6 +117,26 @@ public abstract class AbstractGraphics implements Graphics {
     } // isInCanvas
 
     /**
+     * Receives a X coordinate in logic reference and converts it to physical reference.
+     *
+     * @param x X coordinate in logic reference.
+     * @return X coordinate in physical reference.
+     */
+    public int repositionX(int x) {
+        return (x * _can.getWidth()) / _refCan.getWidth();
+    } // repositionX
+
+    /**
+     * Receives a Y coordinate in logic reference and converts it to physical reference.
+     *
+     * @param y Y coordinate in logic reference.
+     * @return Y coordinate in physical reference.
+     */
+    public int repositionY(int y) {
+        return (y * _can.getHeight()) / _refCan.getHeight();
+    } // repositionY
+
+    /**
      * Receives a X coordinate in screen axis system an converts it to logic canvas coordinates.
      *
      * @param x X coordinate in physical reference
@@ -139,9 +164,4 @@ public abstract class AbstractGraphics implements Graphics {
     public Rect getCanvas() {
         return _can;
     } // getCanvas
-
-    // Canvas
-    public Rect _can;
-
-    public Rect _refCan;
 }

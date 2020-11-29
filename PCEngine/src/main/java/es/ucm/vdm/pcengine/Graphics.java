@@ -62,7 +62,19 @@ public class Graphics extends AbstractGraphics {
      */
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
-        _win.getJGraphics().drawLine(x1, y1, x2, y2);
+        try{
+            // Reposition coordinates to enter physical canvas
+            x1 = _can.getX() + repositionX(x1);
+            y1 = _can.getY() + repositionY(y1);
+            x2 = _can.getX() + repositionX(x2);
+            y2 = _can.getY() + repositionY(y2);
+
+            // Draw the line
+            _win.getJGraphics().drawLine(x1, y1, x2, y2);
+        } // try
+        catch (Exception e){
+            // TODO: Handle exception
+        } // catch
     } // drawLine
 
     /**
@@ -75,7 +87,17 @@ public class Graphics extends AbstractGraphics {
      */
     @Override
     public void fillRect(int x1, int y1, int x2, int y2) {
-        _win.getJGraphics().fillRect(x1, y1, x2, y2);
+        try {
+            x1 = _can.getX() + repositionX(x1);
+            y1 = _can.getY() + repositionY(y1);
+            x2 = _can.getX() + repositionX(x2);
+            y2 = _can.getY() + repositionY(y2);
+
+            _win.getJGraphics().fillRect(x1, y1, x2, y2);
+        } // try
+        catch(Exception e){
+            // TODO: Hanlde exception
+        } // catch
     } // fillRect
 
 
@@ -146,6 +168,14 @@ public class Graphics extends AbstractGraphics {
      */
     @Override
     public void translate(int x, int y) {
-        _win.getJGraphics().translate(x, y);
+        try {
+            x = _can.getX() + repositionX(x);
+            y = _can.getY() + repositionY(y);
+
+            _win.getJGraphics().translate(x, y);
+        } // try
+        catch(Exception e){
+            // TODO: Handle exception
+        }
     } // translate
 } // Graphics
