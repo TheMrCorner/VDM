@@ -8,6 +8,8 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Comentar
+
 public class Input implements es.ucm.vdm.engine.Input, MouseListener, KeyListener, MouseMotionListener {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------

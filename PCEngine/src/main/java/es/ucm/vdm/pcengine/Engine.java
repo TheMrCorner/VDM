@@ -60,6 +60,9 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
         // Create Graphics instance
         _g = new Graphics(_win);
 
+        // Create input
+        _ip = new Input(_win, _g);
+
         // Initialize some time values
         _lastFrameTime = System.nanoTime(); // System time in ms
         _info = _lastFrameTime; // Information about the fps (debug)
@@ -126,6 +129,9 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
     @Override
     public void setLogic(Logic l) {
         _logic = l;
+        _g.setReferenceCanvas(_logic.getCanvasSize());
+
+        resize();
     } // setLogic
 
     /**
@@ -182,7 +188,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
      * per loop.
      */
     void render(){
-        _g.clear(0); // Clear the whole buffer
+        _g.clear(0x000000); // Clear the whole buffer
 
         // Ideally this will only do 1 iteration per loop
         do {
@@ -243,24 +249,6 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
 
             // Clear and update graphics
             render();
-
-            URDTimeMilliSec = (System.nanoTime() - startTime) / 1000000;
-            waitTime = targetTime - URDTimeMilliSec;
-
-            try{
-                Thread.sleep(waitTime);
-            } // try
-            catch(Exception e){
-                HandleException(e);
-            } // catch
-
-            totalTime += System.nanoTime() - startTime;
-            fCount++;
-            if(fCount == maxFrameRate) {
-                averageFPS = 1000.0 / ((totalTime / fCount) / 1000000);
-                fCount = 0;
-                totalTime = 0;
-            } // if
         } // while
     } // run
 

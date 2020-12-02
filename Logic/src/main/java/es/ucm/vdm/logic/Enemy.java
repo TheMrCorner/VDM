@@ -3,7 +3,11 @@ package es.ucm.vdm.logic;
 import es.ucm.vdm.engine.GameObject;
 import es.ucm.vdm.engine.Graphics;
 
-public class Enemy implements GameObject {
+public class Enemy extends GameObject {
+    public Enemy(int x, int y, int c) {
+        super(x, y, c);
+    }
+
     @Override
     public double getPosX() {
         return 0;
@@ -12,16 +16,6 @@ public class Enemy implements GameObject {
     @Override
     public double getPosY() {
         return 0;
-    }
-
-    @Override
-    public void setPosX() {
-
-    }
-
-    @Override
-    public void setPosY() {
-
     }
 
     @Override

@@ -13,6 +13,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     int _clearColor; // Black
     GameState _currentGameState; // Current GameState instance to call it's methods
     int _fps = 60;
+    Player test;
 
     /**
      * Logic constructor, creates a new instance of Logic with a new Engine.
@@ -27,6 +28,8 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         _cnv = new Rect (640, 0, 0, 480);
         _clearColor = 0x000000;
         _eng.setFPS(_fps);
+
+        test = new Player(0, 0, 0x0000FF, 20, 20, 0, 0);
     } // Logic
 
     /**
@@ -52,10 +55,10 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     @Override
     public void update(double t) {
         // Process actual input
-        _currentGameState.processInput(_eng);
-
+        //_currentGameState.processInput(_eng);
+        test.update(t);
         // Update GameState
-        _currentGameState.update(t);
+        //_currentGameState.update(t);
     } // update
 
     /**
@@ -66,7 +69,17 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         // Clear buffer with black
         _eng.getGraphics().clear(_clearColor);
 
+        Rect tmp = _eng.getGraphics().getCanvas();
+
+        _eng.getGraphics().setColor(0x00FF00);
+        _eng.getGraphics().save();
+        _eng.getGraphics().translate(tmp.getLeft(), tmp.getTop());
+        _eng.getGraphics().fillRect(tmp.getLeft(), tmp.getTop(), tmp.getRight(), tmp.getBottom());
+        _eng.getGraphics().restore();
+
+        test.render(_eng.getGraphics());
+
         // Render GameState
-        _currentGameState.render(_eng.getGraphics());
+        //_currentGameState.render(_eng.getGraphics());
     } // render
 }

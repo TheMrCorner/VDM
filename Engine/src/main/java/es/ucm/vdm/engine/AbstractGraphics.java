@@ -28,11 +28,9 @@ public abstract class AbstractGraphics implements Graphics {
         int width = c.getWidth();
         int height = c.getHeight();
 
-        if(width > dim.getWidth()){
-            width = dim.getWidth();
+        width = dim.getWidth();
 
-            height = (width * c.getHeight()) / c.getWidth();
-        } // if
+        height = (width * c.getHeight()) / c.getWidth();
 
         if(height > dim.getHeight()){
             height = dim.getHeight();
@@ -55,6 +53,7 @@ public abstract class AbstractGraphics implements Graphics {
     @Override
     public void setCanvasPos(int x, int y) {
         _can.setPosition(x, y);
+        translate(x, y);
     } // setCanvasPos
 
 
@@ -72,13 +71,10 @@ public abstract class AbstractGraphics implements Graphics {
         int width = src.getWidth(); // Save the src width
         int height = src.getHeight(); // Save the src height
 
-        // If the src width is higher than the reference width
-        if(width > dim.getWidth()){
-            // Set the new width but resized proportionally
-            width = (width * _can.getWidth()) / _refCan.getWidth();
-            // Change height keeping proportions
-            height = (width * src.getHeight()) / src.getWidth();
-        } // if
+        // Set the new width but resized proportionally
+        width = (width * _can.getWidth()) / _refCan.getWidth();
+        // Change height keeping proportions
+        height = (width * src.getHeight()) / src.getWidth();
 
         // If the src height (or the changed height) is bigger than the reference one
         if(height > dim.getHeight()){

@@ -42,7 +42,7 @@ public class Window extends JFrame{
     private void init(int w, int h) {
         setSize(w, h); // Size of window
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close operation
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Fullscreen
+        //setExtendedState(JFrame.MAXIMIZED_BOTH); // Fullscreen
         //setUndecorated(true);
         setIgnoreRepaint(true); // Active painting
 

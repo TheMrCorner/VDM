@@ -25,6 +25,7 @@ public class Graphics extends AbstractGraphics {
         _win = w;
         _can = new Rect(0, 0, 0, 0);
         _refCan = new Rect(0, 0, 0, 0);
+        _saveStack = new Stack<AffineTransform>();
     } // Graphics
 
     /**
@@ -36,7 +37,11 @@ public class Graphics extends AbstractGraphics {
     @Override
     public void clear(int color) {
         // Paint the hole screen with it.
-        _win.getJGraphics().fillRect(0, 0, _win.getWidth(), _win.getHeight());
+        setColor(color);
+        save();
+        ((Graphics2D)_win.getJGraphics()).translate(0, 0);
+        ((Graphics2D)(_win.getJGraphics())).fillRect(0, 0, _win.getWidth(), _win.getHeight());
+        restore();
     } // clear
 
     /**
@@ -49,7 +54,7 @@ public class Graphics extends AbstractGraphics {
         Color c = new Color(color);
 
         // Set color to paint in the Swing Graphics.
-        _win.getJGraphics().setColor(c);
+        ((Graphics2D)(_win.getJGraphics())).setColor(c);
     } // setColor
 
     /**
@@ -70,7 +75,7 @@ public class Graphics extends AbstractGraphics {
             y2 = _can.getY() + repositionY(y2);
 
             // Draw the line
-            _win.getJGraphics().drawLine(x1, y1, x2, y2);
+            ((Graphics2D)(_win.getJGraphics())).drawLine(x1, y1, x2, y2);
         } // try
         catch (Exception e){
             // TODO: Handle exception
@@ -88,12 +93,12 @@ public class Graphics extends AbstractGraphics {
     @Override
     public void fillRect(int x1, int y1, int x2, int y2) {
         try {
-            x1 = _can.getX() + repositionX(x1);
-            y1 = _can.getY() + repositionY(y1);
-            x2 = _can.getX() + repositionX(x2);
-            y2 = _can.getY() + repositionY(y2);
+            //x1 = _can.getX() + repositionX(x1);
+            //y1 = _can.getY() + repositionY(y1);
+            //x2 = _can.getX() + repositionX(x2);
+            //y2 = _can.getY() + repositionY(y2);
 
-            _win.getJGraphics().fillRect(x1, y1, x2, y2);
+            ((Graphics2D)(_win.getJGraphics())).fillRect(x1, y1, x2, y2);
         } // try
         catch(Exception e){
             // TODO: Hanlde exception
@@ -172,7 +177,7 @@ public class Graphics extends AbstractGraphics {
             x = _can.getX() + repositionX(x);
             y = _can.getY() + repositionY(y);
 
-            _win.getJGraphics().translate(x, y);
+            ((Graphics2D)_win.getJGraphics()).translate(x, y);
         } // try
         catch(Exception e){
             // TODO: Handle exception
