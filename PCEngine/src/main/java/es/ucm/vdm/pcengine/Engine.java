@@ -5,6 +5,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import es.ucm.vdm.engine.Logic;
@@ -115,9 +117,14 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
 
     @Override
     public InputStream openInputStream(String filename) {
-        // TODO: Implementar
+        InputStream data = null;
+        try {
+            data = new FileInputStream("./Data/" + filename);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        return null;
+        return data;
     } // openInputStream
 
     /**
@@ -132,6 +139,8 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
         _g.setReferenceCanvas(_logic.getCanvasSize());
 
         resize();
+
+        _logic.initLogic();
     } // setLogic
 
     /**

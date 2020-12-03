@@ -1,5 +1,16 @@
 package es.ucm.vdm.logic;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import es.ucm.vdm.engine.Engine;
 import es.ucm.vdm.engine.GameState;
 import es.ucm.vdm.engine.Rect;
@@ -13,7 +24,10 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     int _clearColor; // Black
     GameState _currentGameState; // Current GameState instance to call it's methods
     int _fps = 60;
+    int _actualLevel; // number to count the actual level
     Player test;
+    Path test2;
+    JSONArray _levels;
 
     /**
      * Logic constructor, creates a new instance of Logic with a new Engine.
@@ -44,7 +58,22 @@ public class Logic implements es.ucm.vdm.engine.Logic {
 
     @Override
     public void initLogic() {
+        // Load JSON file with all levels and save them into a JSONArray
+        InputStream data = _eng.openInputStream("levels.json");
+        JSONParser pars = new JSONParser();
+        try {
+            _levels = (JSONArray)pars.parse(new InputStreamReader(data, "UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
+        JSONObject l = (JSONObject)_levels.get(5);
+
+        test2 = new Path(_cnv.width/2, _cnv.height/2, 0xFFFFFF, (JSONArray)l.get("paths"));
+
+        // Init first state (Create a main menu state)
     } // initLogic
 
     /**
@@ -69,6 +98,15 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         // Clear buffer with black
         _eng.getGraphics().clear(_clearColor);
 
+        test2.render(_eng.getGraphics());
+
+        //test.render(_eng.getGraphics());
+    } // render
+
+    /**
+     * Function to draw the dimensions of the canvas, for debugging only
+     */
+    public void drawCanvas(){
         Rect tmp = _eng.getGraphics().getCanvas();
 
         _eng.getGraphics().setColor(0x00FF00);
@@ -78,7 +116,5 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         _eng.getGraphics().fillRect(tmp.getLeft(), tmp.getTop(), tmp.getRight(), tmp.getBottom());
 
         _eng.getGraphics().restore();
-
-        test.render(_eng.getGraphics());
-    } // render
-}
+    } // drawCanvas
+} // Logic

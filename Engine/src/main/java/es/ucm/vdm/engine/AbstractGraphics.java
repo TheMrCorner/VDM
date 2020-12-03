@@ -53,7 +53,6 @@ public abstract class AbstractGraphics implements Graphics {
     @Override
     public void setCanvasPos(int x, int y) {
         _can.setPosition(x, y);
-        translate(x, y);
     } // setCanvasPos
 
 

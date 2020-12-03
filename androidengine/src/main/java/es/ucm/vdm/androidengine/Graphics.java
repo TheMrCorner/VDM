@@ -1,11 +1,13 @@
 package es.ucm.vdm.androidengine;
 
+// Android
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.SurfaceView;
 
+// UCM
 import es.ucm.vdm.engine.AbstractGraphics;
 import es.ucm.vdm.engine.Font;
 
@@ -165,6 +167,9 @@ public class Graphics extends AbstractGraphics {
      */
     @Override
     public void translate(int x, int y) {
+        x = _can.getX() + repositionX(x);
+        y = _can.getY() + repositionY(y);
+
         _cnv.translate(x, y);
     } // translate
 } // Graphics

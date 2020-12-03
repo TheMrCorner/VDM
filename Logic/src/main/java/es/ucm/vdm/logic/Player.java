@@ -2,6 +2,7 @@ package es.ucm.vdm.logic;
 
 import es.ucm.vdm.engine.GameObject;
 import es.ucm.vdm.engine.Graphics;
+import es.ucm.vdm.engine.Rect;
 import es.ucm.vdm.engine.Vector2;
 
 public class Player extends GameObject {
@@ -12,6 +13,9 @@ public class Player extends GameObject {
     Vector2 _dir; // Direction, points at where the Player is moving
     float _lv; // Linear velocity
     float _av; // Angular velocity
+    Vector2[] _path; // Path that the player has to follow
+    int _pathDir; // Direction of the path
+    int _lastPoint; // Last point that Player went through
 
 
     public Player(int x, int y, int c, int w, int h, float lv, float av){
@@ -22,6 +26,15 @@ public class Player extends GameObject {
         _lv = lv;
         _av = av;
     } // Player
+
+    /**
+     * Function to call when the path has changed. Sets a coordinate path for the player to follow.
+     *
+     * @param p (Vector2[]) Array with all the different positions.
+     */
+    public void set_path(Vector2[] p){
+        _path = p;
+    } // set_path
 
     /**
      * Updates the position and rotation of the player using time elapsed between frames to
@@ -49,6 +62,9 @@ public class Player extends GameObject {
      */
     @Override
     public void render(Graphics g) {
+        Rect o = new Rect(_w, 0, 0, _h);
+        Rect n = g.scale(o, g.getCanvas());
+
         // Set color to paint the player
         g.setColor(_c);
         // Save actual canvas Transformation matrix
@@ -61,10 +77,10 @@ public class Player extends GameObject {
         g.rotate(_rot);
 
         // Draw square
-        g.drawLine(-_w/2, -_h/2, _w/2, -_h/2);
-        g.drawLine(-_w/2, -_h/2, -_w/2, _h/2);
-        g.drawLine(_w/2, -_h/2, _w/2, _h/2);
-        g.drawLine(-_w/2, _h/2, _w/2, _h/2);
+        g.drawLine(-n.width/2, -n.height/2, n.width/2, -n.height/2);
+        g.drawLine(-n.width/2, -n.height/2, -n.width/2, n.height/2);
+        g.drawLine(n.width/2, -n.height/2, n.width/2, n.height/2);
+        g.drawLine(-n.width/2, n.height/2, n.width/2, n.height/2);
 
         // Reset canvas after drawing
         g.restore();

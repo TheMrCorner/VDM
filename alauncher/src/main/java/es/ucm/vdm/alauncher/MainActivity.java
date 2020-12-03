@@ -1,11 +1,12 @@
 package es.ucm.vdm.alauncher;
 
+// Android
 import androidx.appcompat.app.AppCompatActivity;
-
-import es.ucm.vdm.logic.Logic;
-import es.ucm.vdm.androidengine.Engine;
-
 import android.os.Bundle;
+
+// UCM
+import es.ucm.vdm.androidengine.Engine;
+import es.ucm.vdm.logic.Logic;
 
 public class MainActivity extends AppCompatActivity {
     //---------------------------------------------------------------
@@ -24,11 +25,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        _eng = new Engine();
-        _log = new Logic(); // Must receive Engine
+        _eng = new Engine(this, this);
+        _log = new Logic(_eng); // Must receive Engine
 
-        // Set logic in Engine
-        _eng.run();
+        _eng.setLogic(_log);
     }
 
     /**
