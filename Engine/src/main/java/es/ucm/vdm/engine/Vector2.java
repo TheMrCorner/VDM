@@ -1,5 +1,4 @@
 package es.ucm.vdm.engine;
-import java.math.*;
 
 /**
  * 2 dimensions vector. Used for calculations and positions. Uses double as type of the positions
@@ -32,21 +31,21 @@ public class Vector2 {
     /**
      * Calculates the magnitude (distance) of the vector
      */
-    private void magnitude(){
+    public void magnitude(){
         _magnitude = Math.sqrt(Math.pow(_x, 2) + Math.pow(_y, 2));
     } // magnitude
 
     /**
      * Calculates
      */
-    private void sqMagnitude(){
+    public void sqMagnitude(){
         _squareMagnitude = (Math.pow(_x, 2) + Math.pow(_y, 2));
     } // sqMagnitude
 
     /**
      * Function used to convert the values of the Vector2 into values between 0 and 1
      */
-    private void normalize(){
+    public void normalize(){
         _unit = new Vector2(_x / _magnitude, _y / _magnitude);
     } // normalize
 } // Vector2

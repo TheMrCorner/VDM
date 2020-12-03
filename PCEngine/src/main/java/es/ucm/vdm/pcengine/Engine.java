@@ -237,6 +237,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
             _elapsedTime = (double) _nanoElapsedTime / 1.0E9;
 
             // TODO: Update();
+            _logic.update(_elapsedTime);
 
             // Inform about the fps (Debug only)
             if(_currentTime - _info > 1000000000l){

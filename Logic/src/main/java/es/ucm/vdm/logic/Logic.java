@@ -29,7 +29,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         _clearColor = 0x000000;
         _eng.setFPS(_fps);
 
-        test = new Player(0, 0, 0x0000FF, 20, 20, 0, 0);
+        test = new Player(0, 50, 0x0000FF, 12, 12, 200, 0);
     } // Logic
 
     /**
@@ -74,12 +74,11 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         _eng.getGraphics().setColor(0x00FF00);
         _eng.getGraphics().save();
         _eng.getGraphics().translate(tmp.getLeft(), tmp.getTop());
+
         _eng.getGraphics().fillRect(tmp.getLeft(), tmp.getTop(), tmp.getRight(), tmp.getBottom());
+
         _eng.getGraphics().restore();
 
         test.render(_eng.getGraphics());
-
-        // Render GameState
-        //_currentGameState.render(_eng.getGraphics());
     } // render
 }

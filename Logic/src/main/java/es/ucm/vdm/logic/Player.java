@@ -16,6 +16,7 @@ public class Player extends GameObject {
 
     public Player(int x, int y, int c, int w, int h, float lv, float av){
         super(x, y, c);
+        _dir = new Vector2(0.35, 0);
         _w = w;
         _h = h;
         _lv = lv;
@@ -31,8 +32,14 @@ public class Player extends GameObject {
     @Override
     public void update(double t) {
         // Update position
-        _pos._x += (_dir._x * _lv) * t;
-        _pos._y += (_dir._y * _lv) * t;
+        _pos._x += ((_dir._x * _lv) * t);
+        _pos._y += ((_dir._y * _lv) * t);
+
+        _rot += 180 * t;
+
+        if(_rot > 360){
+            _rot = 0;
+        }
     } // update
 
     /**
@@ -48,7 +55,9 @@ public class Player extends GameObject {
         g.save();
 
         // Change transformation matrix
-        g.translate((int)_pos._x, (int)_pos._y);
+        g.translate(g.getCanvas().getLeft() + (int)_pos._x,
+                g.getCanvas().getTop() + (int)_pos._y);
+
         g.rotate(_rot);
 
         // Draw square

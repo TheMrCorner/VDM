@@ -48,7 +48,7 @@ public abstract class GameObject {
     /**
      * Sets X coordinate that this GO will have.
      */
-    public void setPosX(int x) {
+    public void setPosX(double x) {
         _pos._x = x;
     } // setPosX
 
@@ -57,7 +57,7 @@ public abstract class GameObject {
      *
      * @param y (int) New Y position.
      */
-    public void setPosY(int y) {
+    public void setPosY(double y) {
         _pos._y = y;
     } // setPosY
 

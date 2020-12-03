@@ -29,6 +29,18 @@ public class Graphics extends AbstractGraphics {
     } // Graphics
 
     /**
+     * Translate canvas to its position in screen for painting correctly.
+     *
+     * @param x (int) X coordinate
+     * @param y (int) Y coordinate
+     */
+    @Override
+    public void setCanvasPos(int x, int y) {
+        _can.setPosition(x, y);
+        ((Graphics2D)_win.getJGraphics()).translate(x, y);
+    } // setCanvasPos
+
+    /**
      * This function receives a color and paints the hole screen with that color (white recommended)
      * to clean it from the last painting.
      *
@@ -68,13 +80,6 @@ public class Graphics extends AbstractGraphics {
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
         try{
-            // Reposition coordinates to enter physical canvas
-            x1 = _can.getX() + repositionX(x1);
-            y1 = _can.getY() + repositionY(y1);
-            x2 = _can.getX() + repositionX(x2);
-            y2 = _can.getY() + repositionY(y2);
-
-            // Draw the line
             ((Graphics2D)(_win.getJGraphics())).drawLine(x1, y1, x2, y2);
         } // try
         catch (Exception e){
@@ -93,11 +98,6 @@ public class Graphics extends AbstractGraphics {
     @Override
     public void fillRect(int x1, int y1, int x2, int y2) {
         try {
-            //x1 = _can.getX() + repositionX(x1);
-            //y1 = _can.getY() + repositionY(y1);
-            //x2 = _can.getX() + repositionX(x2);
-            //y2 = _can.getY() + repositionY(y2);
-
             ((Graphics2D)(_win.getJGraphics())).fillRect(x1, y1, x2, y2);
         } // try
         catch(Exception e){
