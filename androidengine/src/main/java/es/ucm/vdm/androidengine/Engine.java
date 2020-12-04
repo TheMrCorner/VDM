@@ -22,6 +22,7 @@ import es.ucm.vdm.engine.Rect;
  * to update and render current game state. Checks the time elapsed between frames and manages all
  * rendering process.
  */
+@SuppressWarnings("ALL")
 public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------

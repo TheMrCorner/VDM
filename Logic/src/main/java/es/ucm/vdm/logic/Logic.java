@@ -25,8 +25,8 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     GameState _currentGameState; // Current GameState instance to call it's methods
     int _fps = 60;
     int _actualLevel; // number to count the actual level
-    Player test;
-    Path test2;
+    PlayGameState test;
+    Item test2;
     JSONArray _levels;
 
     /**
@@ -42,8 +42,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         _cnv = new Rect (640, 0, 0, 480);
         _clearColor = 0x000000;
         _eng.setFPS(_fps);
-
-        test = new Player(0, 50, 0x0000FF, 12, 12, 200, 0);
+        test2 = new Item (30, 250, 0x00FF00, 8, 8, 180);
     } // Logic
 
     /**
@@ -71,7 +70,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
 
         JSONObject l = (JSONObject)_levels.get(5);
 
-        test2 = new Path(_cnv.width/2, _cnv.height/2, 0xFFFFFF, (JSONArray)l.get("paths"));
+        test = new PlayGameState(l, 5, 0, this);
 
         // Init first state (Create a main menu state)
     } // initLogic
@@ -86,6 +85,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         // Process actual input
         //_currentGameState.processInput(_eng);
         test.update(t);
+        test2.update(t);
         // Update GameState
         //_currentGameState.update(t);
     } // update
@@ -98,8 +98,8 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         // Clear buffer with black
         _eng.getGraphics().clear(_clearColor);
 
+        test.render(_eng.getGraphics());
         test2.render(_eng.getGraphics());
-
         //test.render(_eng.getGraphics());
     } // render
 

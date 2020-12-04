@@ -48,9 +48,9 @@ public class Player extends GameObject {
         _pos._x += ((_dir._x * _lv) * t);
         _pos._y += ((_dir._y * _lv) * t);
 
-        _rot += 180 * t;
+        _rot += _av * t;
 
-        if(_rot > 360){
+        if(_rot >= 360){
             _rot = 0;
         }
     } // update

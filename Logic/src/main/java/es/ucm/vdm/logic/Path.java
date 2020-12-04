@@ -95,9 +95,6 @@ public class Path extends GameObject {
 
         g.save();
 
-        g.translate(g.getCanvas().getLeft() + (int)_pos._x,
-                g.getCanvas().getTop() + (int)_pos._y);
-
         int next;
 
         // Change transformation matrix
@@ -110,9 +107,9 @@ public class Path extends GameObject {
                 }
 
                 g.drawLine(g.repositionX((int)_paths.get(i).get(j)._x),
-                        g.repositionY((int)_paths.get(i).get(j)._y),
+                        g.repositionY((int)_paths.get(i).get(j)._y) * (-1),
                         g.repositionX((int)_paths.get(i).get(next)._x),
-                        g.repositionY((int)_paths.get(i).get(next)._y));
+                        g.repositionY((int)_paths.get(i).get(next)._y) * (-1));
             } // vertices for
         } // paths for
 
