@@ -195,6 +195,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
         _g.setReferenceCanvas(_l.getCanvasSize());
 
         resize();
+        _l.initLogic();
     } // setLogic
 
     @Override
