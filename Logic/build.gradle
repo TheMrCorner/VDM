@@ -1,8 +1,17 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
+configurations.all{
+    resolutionStrategy {
+        force 'org.hamcrest:hamcrest-core:1.1'
+    }
+}
+
 dependencies {
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation ('com.googlecode.json-simple:json-simple:1.1.1') {
+        exclude group: 'org.hamcrest',
+        module: 'hamcrest-core'
+    }
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
