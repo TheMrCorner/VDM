@@ -95,6 +95,9 @@ public class Path extends GameObject {
 
         g.save();
 
+        g.translate(g.getCanvas().getLeft() + (int)_pos._x,
+                g.getCanvas().getTop() + (int)_pos._y);
+
         int next;
 
         // Change transformation matrix
@@ -113,7 +116,6 @@ public class Path extends GameObject {
             } // vertices for
         } // paths for
 
-        // Restore canvas position
         g.restore();
     } // render
 } // Path

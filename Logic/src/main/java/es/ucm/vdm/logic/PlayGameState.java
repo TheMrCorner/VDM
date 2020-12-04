@@ -13,6 +13,7 @@ import es.ucm.vdm.engine.GameObject;
 import es.ucm.vdm.engine.GameState;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
+import es.ucm.vdm.engine.Vector2;
 
 public class PlayGameState implements GameState {
     //---------------------------------------------------------------
@@ -59,7 +60,7 @@ public class PlayGameState implements GameState {
         JSONArray e = (JSONArray) level.get("enemies"); // Enemies
 
         // Create Path
-        Path pO = new Path(0, 0, 0xFFFFFF, p); // Path object
+        Path pO = new Path(_posOrX, _posOrY, 0xFFFFFF, p); // Path object
         _go.add(pO);
 
         // Create items
@@ -89,6 +90,7 @@ public class PlayGameState implements GameState {
             } // else
 
             nItem = new Item((int)coordX, (int)coordY, _itemC, _itemWidth, _itemWidth, _aVel);
+            nItem.set_coordOrigin(new Vector2(_posOrX, _posOrY));
             _go.add(nItem);
         } // for
 
@@ -129,17 +131,10 @@ public class PlayGameState implements GameState {
 
     @Override
     public void render(Graphics g) {
-        g.save();
-
-        g.translate(g.getCanvas().getLeft() + _posOrX,
-             g.getCanvas().getTop() + _posOrY);
-
         // Render everything
         for(int i = 0; i < _go.size(); i++) {
             _go.get(i).render(g);
         } // for
-
-        g.restore();
     } // render
 
     /**

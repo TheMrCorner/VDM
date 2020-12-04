@@ -3,6 +3,7 @@ package es.ucm.vdm.logic;
 import es.ucm.vdm.engine.GameObject;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
+import es.ucm.vdm.engine.Vector2;
 
 public class Item extends GameObject {
     //---------------------------------------------------------------
@@ -11,7 +12,7 @@ public class Item extends GameObject {
     int _w, _h; // Width and Height
     float _av; // Angular velocity
     boolean _taken; // Flag to control if the player has taken this item
-
+    Vector2 _coordOrigin; // Origen de coordenadas
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
@@ -51,6 +52,10 @@ public class Item extends GameObject {
         _taken = true;
     } // item_taken
 
+    public void set_coordOrigin(Vector2 or){
+        _coordOrigin = or;
+    }
+
     /**
      * Item update. Rotates the object and scales it if it is taken.
      *
@@ -83,8 +88,8 @@ public class Item extends GameObject {
         // Change transformation matrix
 
         // TODO: Esto no se situa donde debe
-        g.translate(g.getCanvas().getLeft() + (int)_pos._x,
-                g.getCanvas().getTop() + ((int)_pos._y * (-1)));
+        g.translate((int)_coordOrigin._x + (int)_pos._x,
+                (int)_coordOrigin._y - (int)_pos._y);
 
         g.rotate(_rot);
 

@@ -42,7 +42,6 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         _cnv = new Rect (640, 0, 0, 480);
         _clearColor = 0x000000;
         _eng.setFPS(_fps);
-        test2 = new Item (30, 250, 0x00FF00, 8, 8, 180);
     } // Logic
 
     /**
@@ -68,7 +67,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
             e.printStackTrace();
         }
 
-        JSONObject l = (JSONObject)_levels.get(5);
+        JSONObject l = (JSONObject)_levels.get(8);
 
         test = new PlayGameState(l, 5, 0, this);
 
@@ -85,7 +84,6 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         // Process actual input
         //_currentGameState.processInput(_eng);
         test.update(t);
-        test2.update(t);
         // Update GameState
         //_currentGameState.update(t);
     } // update
@@ -99,8 +97,6 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         _eng.getGraphics().clear(_clearColor);
 
         test.render(_eng.getGraphics());
-        test2.render(_eng.getGraphics());
-        //test.render(_eng.getGraphics());
     } // render
 
     /**
