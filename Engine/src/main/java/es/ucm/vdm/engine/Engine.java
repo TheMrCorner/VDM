@@ -16,7 +16,7 @@ public interface Engine {
     
     void HandleException(Exception e);
     
-    int getWidth();
+    int getWinWidth();
     
-    int getHeight();
+    int getWinHeight();
 }

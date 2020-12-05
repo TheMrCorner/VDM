@@ -25,10 +25,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        _eng = new Engine(this, this);
+        _eng = new Engine(this);
         _log = new Logic(_eng); // Must receive Engine
 
         _eng.setLogic(_log);
+
+        setContentView(_eng);
     }
 
     /**

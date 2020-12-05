@@ -19,21 +19,21 @@ public class PlayGameState implements GameState {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
-    ArrayList<GameObject> _go;
+    ArrayList<GameObject> _go; // GameObject pool
     Logic _l; // For changing gamestate
     String _name; // Name of the actual level
     int _nLevel; // Number of level, for writing
-    int _diffLevel;
-    int _posOrX;
-    int _posOrY;
+    int _diffLevel; // Difficulty
+    int _posOrX; // Pos of coord origin X
+    int _posOrY; // Pos of coord origin Y
 
     // Constant values for colors and etc.
-    int _playerC = 0x0000FF;
-    int _itemC = 0xFFF200;
-    int _enemyC = 0xFF0000;
-    int _playerWidth = 12;
-    int _itemWidth = 8;
-    float _aVel = 180; //  angular velocity for all player and items
+    int _playerC = 0xFF0000FF; // Player color ARGB
+    int _itemC = 0xFFFFF200; // Item color ARGB
+    int _enemyC = 0xFFFF0000; // Enemy color ARGB
+    int _playerWidth = 12; // Player width
+    int _itemWidth = 8; // Item width
+    float _aVel = 180; // Angular velocity for all player and items
     // TODO: Igual es necesario hacer un state para el game over
 
     /**
@@ -60,7 +60,7 @@ public class PlayGameState implements GameState {
         JSONArray e = (JSONArray) level.get("enemies"); // Enemies
 
         // Create Path
-        Path pO = new Path(_posOrX, _posOrY, 0xFFFFFF, p); // Path object
+        Path pO = new Path(_posOrX, _posOrY, 0xFFFFFFFF, p); // Path object
         _go.add(pO);
 
         // Create items
@@ -75,6 +75,7 @@ public class PlayGameState implements GameState {
             Object nx = coord.get("x");
             Object ny = coord.get("y");
 
+            // First parse coordinates
             // Check value
             if(nx instanceof Long){ // if Long, parse it to double
                 coordX = ((Long) nx).doubleValue();
@@ -89,7 +90,57 @@ public class PlayGameState implements GameState {
                 coordY = (double)ny;
             } // else
 
-            nItem = new Item((int)coordX, (int)coordY, _itemC, _itemWidth, _itemWidth, _aVel);
+            // Then check if it from rotating type
+            if(coord.containsKey("radius")){
+                // If it is from rotating type
+                Object ang = coord.get("angle");
+                Object mag = coord.get("radius");
+                Object angVel = coord.get("speed");
+                double trueAng;
+                double magnitude;
+                double totalAngularVelocity;
+
+                // First parse the angle to get the position
+                if(ang instanceof Long){
+                    trueAng = ((Long) ang).doubleValue();
+                }
+                else{
+                    trueAng = (double)ang;
+                }
+
+                // Then parse the radius to get the magnitude of the vector (distance really)
+                if(mag instanceof Long){
+                    magnitude = ((Long) mag).doubleValue();
+                }
+                else{
+                    magnitude = (double)mag;
+                }
+
+                // Finally, parse the angular velocity that all items will have.
+                if(angVel instanceof Long){
+                    totalAngularVelocity = ((Long) angVel).doubleValue();
+                }
+                else{
+                    totalAngularVelocity = (double)angVel;
+                }
+
+                // Now, using simple trigonometry, get the position at which the object should be
+                // With multiplication of magnitude by cos and sin we get how much will add to
+                // each coordinate to get the position. Due to Java Math.cos/sin use the angle
+                // value as radians, it is important to convert angle to radians. Then round the
+                // result to get real result, because when cos/sin return values too near to 0
+                // they give a number like 1.89423678*10^-16, too small.
+                coordX += magnitude * Math.round(Math.sin(Math.toRadians(trueAng)));
+                coordY += magnitude * Math.round(Math.cos(Math.toRadians(trueAng)));
+
+                nItem = new Item((int)coordX, (int)coordY, _itemC, _itemWidth,
+                        _itemWidth, _aVel, (float)totalAngularVelocity);
+            }
+            else{
+                // Else create a normal Item
+                nItem = new Item((int)coordX, (int)coordY, _itemC, _itemWidth, _itemWidth, _aVel);
+            }
+
             nItem.set_coordOrigin(new Vector2(_posOrX, _posOrY));
             _go.add(nItem);
         } // for

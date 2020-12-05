@@ -164,7 +164,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
      * @return (int) Window/Screen width
      */
     @Override
-    public int getWidth() {
+    public int getWinWidth() {
         return _width;
     } // getWidth
 
@@ -174,7 +174,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
      * @return (int) Window/Screen height
      */
     @Override
-    public int getHeight() {
+    public int getWinHeight() {
         return _height;
     } // getHeight
 

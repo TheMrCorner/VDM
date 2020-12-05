@@ -57,19 +57,17 @@ public class Graphics extends AbstractGraphics {
     @Override
     public void clear(int color) {
         // Set color
-        _pnt.setColor(color);
+        setColor(color);
 
         // Paint screen
         _cnv.drawRect((float)_can.getX(), (float)_can.getY(),
                 (float)(_can.getX() + _can.getWidth()), (float)(_can.getY() + _can.getHeight()),
                 _pnt);
-
-        // Reset paint
-        _pnt.reset();
     } // clear
 
     @Override
     public void setColor(int color) {
+        int c = 0xFF000000 + color;
         _pnt.setColor(color);
     } // setColor
 

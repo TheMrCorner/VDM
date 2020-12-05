@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -23,11 +24,10 @@ import es.ucm.vdm.engine.Rect;
  * rendering process.
  */
 @SuppressWarnings("ALL")
-public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
+public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Runnable{
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
-    SurfaceView _mSurface;
     SurfaceHolder _holder;
     AssetManager _aMan;
 
@@ -61,15 +61,16 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
      * @param act (Activity) Android activity for painting and management.
      * @param cont (Context) Android activity's context.
      */
-    public Engine(Activity act, Context cont){
-        // Create Surface
-        _mSurface = new SurfaceView(act);
+    public Engine(Context cont){
+        super(cont);
+
+        _holder = getHolder();
 
         // Save the assets to load them later
         _aMan = cont.getAssets();
 
         // Init Graphics with all values needed
-        _g = new Graphics(_mSurface, _aMan);
+        _g = new Graphics(this, _aMan);
 
         // Create the Input
         _ip = new Input(_g);
@@ -80,7 +81,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
         _frames = 0; // Number of frames passed
 
         // Set surface in fullscreen and not showing the upper banner
-        _mSurface.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
+        setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
                 // Inmersion flags and navigation
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -89,10 +90,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
         // Set Input as OnTouchListener
-        _mSurface.setOnTouchListener(_ip);
-
-        // Set ContentView
-        act.setContentView(_mSurface);
+        setOnTouchListener(_ip);
     } // Engine
 
 
@@ -224,8 +222,8 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
      * @return (int) _mSurface Width
      */
     @Override
-    public int getWidth() {
-        return _mSurface.getWidth();
+    public int getWinWidth() {
+        return getWidth();
     } // getWidth
 
     /**
@@ -234,8 +232,8 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
      * @return (int) _mSurface Height
      */
     @Override
-    public int getHeight() {
-        return _mSurface.getHeight();
+    public int getWinHeight() {
+        return getHeight();
     } // getHeight
 
     /**
@@ -248,7 +246,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
 
         // Resize
         // Get window size
-        t2 = new Rect(_mSurface.getWidth(), 0, 0, _mSurface.getHeight());
+        t2 = new Rect(getWidth(), 0, 0, getHeight());
 
         // Get logic canvas
         t1 = _l.getCanvasSize();
@@ -257,8 +255,8 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
         _g.setCanvasSize(t1, t2);
 
         // Set pos
-        _g.setCanvasPos(((_mSurface.getWidth()/2) - (_g.getCanvas().getWidth() / 2)),
-                ((_mSurface.getHeight()/2) - (_g.getCanvas().getHeight() / 2)));
+        _g.setCanvasPos(((getWidth()/2) - (_g.getCanvas().getWidth() / 2)),
+                ((getHeight()/2) - (_g.getCanvas().getHeight() / 2)));
     } // resize
     //---------------------------------------------------------------
     //----------------------Surface and Canvas-----------------------
@@ -287,6 +285,8 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
         // Start the frame
         _g.startFrame(c);
 
+        _g.clear(0xFF000000);
+
         _l.render();
 
         // Show the new information
@@ -306,7 +306,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
         }
 
         // Wait for surface availability
-        while(_running && _mSurface.getWidth() == 0);
+        while(_running && getWidth() == 0);
 
         // Loop
         while(_running){
@@ -333,8 +333,6 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable{
             ++_frames; // Update frames
 
             // Render
-            // Update holder.
-            _holder = _mSurface.getHolder();
 
             // Wait till Surface is ready
             while(!_holder.getSurface().isValid());
