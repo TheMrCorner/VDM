@@ -1,5 +1,6 @@
 package es.ucm.vdm.pcengine;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -80,6 +81,7 @@ public class Graphics extends AbstractGraphics {
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
         try{
+            ((Graphics2D)(_win.getJGraphics())).setStroke(new BasicStroke(2));
             ((Graphics2D)(_win.getJGraphics())).drawLine(x1, y1, x2, y2);
         } // try
         catch (Exception e){

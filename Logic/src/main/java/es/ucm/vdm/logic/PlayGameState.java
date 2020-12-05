@@ -125,7 +125,7 @@ public class PlayGameState implements GameState {
         // Create enemies, if there are enemies
         if(e != null){
             JSONObject enemyData;
-            double length, angle, angSpeed;
+            double length, angle, angSpeed, waitTime;
             Vector2 direction, linearSpeed;
             Enemy nEnemy;
             for(int en = 0; en < e.size(); en++){
@@ -158,28 +158,29 @@ public class PlayGameState implements GameState {
                 if(enemyData.containsKey("offset")){
                     Object offX = ((JSONObject)enemyData.get("offset")).get("x");
                     Object offY = ((JSONObject)enemyData.get("offset")).get("y");
-                    Object timeX = enemyData.get("time1");
-                    Object timeY = enemyData.get("time2");
-
-                    double offsetX = parse_double(offX);
-                    double offsetY = parse_double(offY);
-                    double timeInX = parse_double(timeX);
-                    double timeInY = parse_double(timeY);
+                    Object time1 = enemyData.get("time1");
+                    Object time2 = enemyData.get("time2");
 
                     // Calculate vector between positions
-                    direction = new Vector2(offsetX, offsetY);
+                    direction = new Vector2(parse_double(offX), parse_double(offY));
+
+                    double timeMove = parse_double(time1);
 
                     // Calculate linear speed
-                    linearSpeed = new Vector2(Math.abs(direction._x / (timeInX)),
-                            Math.abs(direction._y / (timeInY)));
+                    linearSpeed = new Vector2(Math.abs(direction._x / timeMove),
+                            Math.abs(direction._y / timeMove));
+
+                    waitTime = parse_double(time2);
                 } // if
                 else{
                     linearSpeed = null;
+                    waitTime = 0;
                     direction = null;
                 } // else
 
 
-                nEnemy = new Enemy((int)coordX, (int)coordY, _enemyC, (int)length, (int)angle, (float)angSpeed, linearSpeed, direction);
+                nEnemy = new Enemy((int)coordX, (int)coordY, _enemyC, (int)length, (int)angle,
+                        (float)angSpeed, linearSpeed, (float)waitTime, direction);
                 nEnemy.set_coordOrigin(new Vector2(_posOrX, _posOrY));
                 _go.add(nEnemy);
             }
