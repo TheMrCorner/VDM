@@ -52,7 +52,9 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
         // Window values
-        _width = gd.getDisplayMode().getWidth();
+        //_width = gd.getDisplayMode().getWidth();
+        //_height = gd.getDisplayMode().getHeight();
+        _width = 200;
         _height = gd.getDisplayMode().getHeight();
         String name = "Off the Line";
 

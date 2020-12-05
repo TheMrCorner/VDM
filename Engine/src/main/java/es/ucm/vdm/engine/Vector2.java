@@ -10,8 +10,8 @@ public class Vector2 {
     //---------------------------------------------------------------
     public double _x;
     public double _y;
-    public double _magnitude;
-    public double _squareMagnitude;
+    public double _magnitude = 0;
+    public double _squareMagnitude = 0;
     public Vector2 _unit;
     //---------------------------------------------------------------
     //---------------------------Atributes---------------------------
@@ -46,6 +46,9 @@ public class Vector2 {
      * Function used to convert the values of the Vector2 into values between 0 and 1
      */
     public void normalize(){
+        if(_magnitude == 0){
+            magnitude();
+        }
         _unit = new Vector2(_x / _magnitude, _y / _magnitude);
     } // normalize
 } // Vector2

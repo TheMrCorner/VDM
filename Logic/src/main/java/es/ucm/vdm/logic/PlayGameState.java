@@ -14,6 +14,7 @@ import es.ucm.vdm.engine.GameState;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
 import es.ucm.vdm.engine.Vector2;
+import static es.ucm.vdm.logic.Utils.parse_double;
 
 public class PlayGameState implements GameState {
     //---------------------------------------------------------------
@@ -67,6 +68,7 @@ public class PlayGameState implements GameState {
         Item nItem;
         JSONObject coord;
         double coordX, coordY;
+
         for(int j = 0; j < i.size(); j++){
             // Get object with coordinates
             coord = (JSONObject)i.get(j);
@@ -77,18 +79,8 @@ public class PlayGameState implements GameState {
 
             // First parse coordinates
             // Check value
-            if(nx instanceof Long){ // if Long, parse it to double
-                coordX = ((Long) nx).doubleValue();
-            } // if
-            else{ // else, assume double
-                coordX = (double)nx;
-            } // else
-            if(ny instanceof Long){
-                coordY = ((Long) ny).doubleValue();
-            } // if
-            else{
-                coordY = (double)ny;
-            } // else
+            coordX = parse_double(nx);
+            coordY = parse_double(ny);
 
             // Then check if it from rotating type
             if(coord.containsKey("radius")){
@@ -101,28 +93,13 @@ public class PlayGameState implements GameState {
                 double totalAngularVelocity;
 
                 // First parse the angle to get the position
-                if(ang instanceof Long){
-                    trueAng = ((Long) ang).doubleValue();
-                }
-                else{
-                    trueAng = (double)ang;
-                }
+                trueAng = parse_double(ang);
 
                 // Then parse the radius to get the magnitude of the vector (distance really)
-                if(mag instanceof Long){
-                    magnitude = ((Long) mag).doubleValue();
-                }
-                else{
-                    magnitude = (double)mag;
-                }
+                magnitude = parse_double(mag);
 
                 // Finally, parse the angular velocity that all items will have.
-                if(angVel instanceof Long){
-                    totalAngularVelocity = ((Long) angVel).doubleValue();
-                }
-                else{
-                    totalAngularVelocity = (double)angVel;
-                }
+                totalAngularVelocity = parse_double(angVel);
 
                 // Now, using simple trigonometry, get the position at which the object should be
                 // With multiplication of magnitude by cos and sin we get how much will add to
@@ -134,7 +111,7 @@ public class PlayGameState implements GameState {
                 coordY += magnitude * Math.round(Math.cos(Math.toRadians(trueAng)));
 
                 nItem = new Item((int)coordX, (int)coordY, _itemC, _itemWidth,
-                        _itemWidth, _aVel, (float)totalAngularVelocity);
+                        _itemWidth, _aVel, (float)totalAngularVelocity, (float)trueAng, (float)magnitude);
             }
             else{
                 // Else create a normal Item
@@ -147,7 +124,65 @@ public class PlayGameState implements GameState {
 
         // Create enemies, if there are enemies
         if(e != null){
+            JSONObject enemyData;
+            double length, angle, angSpeed;
+            Vector2 direction, linearSpeed;
+            Enemy nEnemy;
+            for(int en = 0; en < e.size(); en++){
+                enemyData = (JSONObject) e.get(en);
 
+                Object nx = enemyData.get("x");
+                Object ny = enemyData.get("y");
+                Object le = enemyData.get("length");
+                Object an = enemyData.get("angle");
+
+                // First parse coordinates
+                // Check value
+                coordX = parse_double(nx);
+                coordY = parse_double(ny);
+                // Parse length
+                length = parse_double(le);
+
+                // Parse angle
+                angle = parse_double(an);
+
+                // Parse angular speed
+                if(enemyData.containsKey("speed")){
+                    Object sp = enemyData.get("speed");
+                    angSpeed = parse_double(sp);
+                } // if
+                else{
+                    angSpeed = 0;
+                } // else
+
+                if(enemyData.containsKey("offset")){
+                    Object offX = ((JSONObject)enemyData.get("offset")).get("x");
+                    Object offY = ((JSONObject)enemyData.get("offset")).get("y");
+                    Object timeX = enemyData.get("time1");
+                    Object timeY = enemyData.get("time2");
+
+                    double offsetX = parse_double(offX);
+                    double offsetY = parse_double(offY);
+                    double timeInX = parse_double(timeX);
+                    double timeInY = parse_double(timeY);
+
+                    // Calculate vector between positions
+                    direction = new Vector2(offsetX, offsetY);
+
+                    // Calculate linear speed
+                    linearSpeed = new Vector2(Math.abs(direction._x / (timeInX)),
+                            Math.abs(direction._y / (timeInY)));
+                } // if
+                else{
+                    linearSpeed = null;
+                    direction = null;
+                } // else
+
+
+                nEnemy = new Enemy((int)coordX, (int)coordY, _enemyC, (int)length, (int)angle, (float)angSpeed, linearSpeed, direction);
+                nEnemy.set_coordOrigin(new Vector2(_posOrX, _posOrY));
+                _go.add(nEnemy);
+            }
         } // if
 
         // Lives

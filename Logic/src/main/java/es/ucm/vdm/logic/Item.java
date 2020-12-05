@@ -12,9 +12,9 @@ public class Item extends GameObject {
     int _w, _h; // Width and Height
     float _av; // Angular velocity
     boolean _taken; // Flag to control if the player has taken this item
-    Vector2 _coordOrigin; // Origen de coordenadas
     float _centerAv; // Angular velocity for rotating over one point
     float _totalRot;
+    float _distanceCenter;
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
@@ -44,14 +44,15 @@ public class Item extends GameObject {
         _centerAv = -1;
     } // Item
 
-    public Item(int x, int y, int c, int width, int height, float angVel, float tAngVel){
+    public Item(int x, int y, int c, int width, int height, float angVel, float tAngVel, float rotRefer, float distCenter){
         super(x, y, c);
         _w = width;
         _h = height;
         _av = angVel;
         _taken = false;
         _centerAv = tAngVel;
-        _totalRot = 0;
+        _totalRot = rotRefer;
+        _distanceCenter = distCenter;
     } // Item rotating with a point
 
     //---------------------------------------------------------------
@@ -64,10 +65,6 @@ public class Item extends GameObject {
     public void item_taken(){
         _taken = true;
     } // item_taken
-
-    public void set_coordOrigin(Vector2 or){
-        _coordOrigin = or;
-    } // set_coordOrigin
 
     /**
      * Item update. Rotates the object and scales it if it is taken.
@@ -88,6 +85,9 @@ public class Item extends GameObject {
             if(_totalRot >= 360){
                 _totalRot = 0;
             }
+
+            _pos._x = _coordOrigin._x + _distanceCenter *Math.sin(Math.toRadians(_totalRot));
+            _pos._y = _coordOrigin._y + _distanceCenter * Math.cos(Math.toRadians(_totalRot));
         }
     } // update
 
@@ -103,30 +103,20 @@ public class Item extends GameObject {
 
         // Set the color to paint the coin/item
         g.setColor(_c);
+        // Save the actual canvas transformation matrix
+        g.save();
 
-        // Change transformation matrix
-        if(_centerAv != -1){
-            // Save the actual canvas transformation matrix
-            g.save();
-
-            g.rotate(_totalRot);
-            // TODO: Esto no se situa donde debe
-
-            g.translate((int)_coordOrigin._x + (int)_pos._x,
-                    (int)_coordOrigin._y - (int)_pos._y);
-
-            g.rotate(_rot);
+        // TODO: Esto no se situa donde debe
+        if(_centerAv == -1) {
+            g.translate((int) _coordOrigin._x + (int) _pos._x,
+                    (int) _coordOrigin._y - (int) _pos._y);
         }
         else{
-            // Save the actual canvas transformation matrix
-            g.save();
-
-            // TODO: Esto no se situa donde debe
-            g.translate((int)_coordOrigin._x + (int)_pos._x,
-                    (int)_coordOrigin._y - (int)_pos._y);
-
-            g.rotate(_rot);
+            g.translate((int) _pos._x,
+                    (int) _pos._y);
         }
+
+        g.rotate(_rot);
 
         // Draw square
         g.drawLine(-n.width/2, -n.height/2, n.width/2, -n.height/2);

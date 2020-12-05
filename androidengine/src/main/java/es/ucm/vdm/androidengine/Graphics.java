@@ -60,8 +60,8 @@ public class Graphics extends AbstractGraphics {
         setColor(color);
 
         // Paint screen
-        _cnv.drawRect((float)_can.getX(), (float)_can.getY(),
-                (float)(_can.getX() + _can.getWidth()), (float)(_can.getY() + _can.getHeight()),
+        _cnv.drawRect(0, 0,
+                _sView.getRight(), _sView.getBottom(),
                 _pnt);
     } // clear
 

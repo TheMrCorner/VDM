@@ -9,6 +9,7 @@ public abstract class GameObject {
     protected float _rot; // rotation
     protected int _c; // Color for painting player
     protected boolean _act; // Check if GO is active or not
+    protected Vector2 _coordOrigin; // Origen de coordenadas
 
     public GameObject(int x, int y, int c){
         _pos = _initPos = new Vector2(x, y);
@@ -78,6 +79,11 @@ public abstract class GameObject {
     public void setColor(int c) {
         _c = c;
     } // setColor
+
+
+    public void set_coordOrigin(Vector2 or){
+        _coordOrigin = or;
+    } // set_coordOrigin
 
     // Functions to print GO and update its state
     /**
