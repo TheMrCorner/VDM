@@ -125,6 +125,7 @@ public class PlayGameState implements GameState {
                 _playerWidth, _playerWidth, vel, _aVel, this);
         _player.set_path(_paths.get_paths().get(0), 0, 1);
         _player.set_coordOrigin(new Vector2(_posOrX, _posOrY));
+        _paths.set_activePath(0);
     } // parse_level
 
     /**
@@ -305,6 +306,7 @@ public class PlayGameState implements GameState {
 
                     if(collision != null){
                         _player.path_collide(collision, _paths.get_paths().get(i), j, next);
+                        _paths.set_activePath(i);
                     } // if
                     // If no collision, keep running till infinite
                 } // Vertex for

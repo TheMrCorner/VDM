@@ -46,19 +46,19 @@ public class Path extends GameObject {
         double coordX, coordY;
 
         // Parse level data
-        for(int i = 0; i < paths.size(); i++){
-            temp = (JSONObject)paths.get(i);
-            vert = (JSONArray)temp.get("vertices");
+        for(int i = 0; i < paths.size(); i++) {
+            temp = (JSONObject) paths.get(i);
+            vert = (JSONArray) temp.get("vertices");
 
-            if(temp.containsKey("directions")){
-                dirs = (JSONArray)temp.get("directions");
+            if (temp.containsKey("directions")) {
+                dirs = (JSONArray) temp.get("directions");
             }
 
             t = new ArrayList<Vector2>();
             JSONObject coord;
-            for(int j = 0; j < vert.size(); j++){
+            for (int j = 0; j < vert.size(); j++) {
                 // Get object with coordinates
-                coord = (JSONObject)vert.get(j);
+                coord = (JSONObject) vert.get(j);
 
                 // Get each coordinate value
                 Object nx = coord.get("x");
@@ -73,7 +73,8 @@ public class Path extends GameObject {
             } // vertices for
             _paths.add(t); // Save new vertices group
 
-            if(dirs != null){
+            if(temp.containsKey("directions")){
+                dirs = (JSONArray) temp.get("directions");
                 ArrayList<Vector2> d = new ArrayList<Vector2>();
                 for(int j = 0; j < dirs.size(); j++){
                     // Get object with coordinates
@@ -88,7 +89,7 @@ public class Path extends GameObject {
                     coordY = parse_double(ny);
 
                     v = new Vector2(coordX, coordY);
-                    t.add(v);
+                    d.add(v);
                 } // vertices for
                 _pathsDirs.add(d);
             } // if
@@ -146,6 +147,7 @@ public class Path extends GameObject {
         else {
             return null;
         } // else
+        //return null;
     } // get_jump_dir
 
     /**

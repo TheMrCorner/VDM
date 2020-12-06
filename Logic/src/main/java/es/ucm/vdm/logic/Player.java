@@ -94,6 +94,7 @@ public class Player extends GameObject {
 
             // Calculate direction to follow with the 2 points in order
             calculate_direction(point1, point2);
+            _actualPoint = point1;
         } // if
         else{
             // If moving direction was reverse to the path direction, set moving direction to
@@ -102,6 +103,7 @@ public class Player extends GameObject {
 
             // Calculate direction to follow with 2 points in reverse
             calculate_direction(point2, point1);
+            _actualPoint = point2;
         } // else
 
         _flying = false;
@@ -156,20 +158,23 @@ public class Player extends GameObject {
      * the new direction.
      */
     public void fly(Vector2 dir){
-        _flying = true;
+        if(!_flying) {
+            _flying = true;
 
-        if(dir != null){
-            _dir = dir;
-        } // Set jumping direction
-        else{ // if not, calculate a new one
-            if(_pathDir == -1){
-                _dir = rotVect(_dir, 90);
-            } // if
-            else{
-                _dir = rotVect(_dir, -90);
+            if (dir != null) {
+                _dir = dir;
+            } // Set jumping direction
+            else { // if not, calculate a new one
+                if (_pathDir == -1) {
+                    _dir = rotVect(_dir, 90);
+                } // if
+                else {
+                    _dir = rotVect(_dir, -90);
+                } // else
             } // else
+
             _dir.normalize();
-        } // else
+        } // if
     } // fly
 
     /**
@@ -192,10 +197,10 @@ public class Player extends GameObject {
         if(_act) {
             // Update position
             if (!_flying) {
-                double x = _pos._x;
-                double y = _pos._y;
-                double x2 = _pos._x + (_dir._unit._x) * (_w / 2);
-                double y2 = _pos._y + (_dir._unit._y) * (_h / 2);
+                double x = _pos._x - (_dir._unit._x);
+                double y = _pos._y - (_dir._unit._y);
+                double x2 = _pos._x + (_dir._unit._x) * (_w / 4);
+                double y2 = _pos._y + (_dir._unit._y) * (_h / 4);
 
                 _pos._x = (_pos._x) + (((_dir._unit._x) * _lv) * t);
                 _pos._y = (_pos._y) + (((_dir._unit._y) * _lv) * t);
@@ -223,11 +228,11 @@ public class Player extends GameObject {
                 } // else
             } // if
             else {
-                double x = _pos._x + (_dir._unit._x) * (_w / 10);
-                double y = _pos._y + (_dir._unit._y) * (_h / 10);
+                double x = _pos._x + (_dir._unit._x) * (_w / 9.1);
+                double y = _pos._y + (_dir._unit._y) * (_h / 9.1);
 
-                _pos._x = (_pos._x) + (((_dir._unit._x) * _flv) * t);
-                _pos._y = (_pos._y) + (((_dir._unit._y) * _flv) * t);
+                _pos._x = (_pos._x) + (((_dir._unit._x) * _flv) * t) + (_dir._unit._x) * (_w / 9.7);
+                _pos._y = (_pos._y) + (((_dir._unit._y) * _flv) * t) + (_dir._unit._y) * (_h / 9.7);
 
                 _pg.check_collisions(new Vector2(x, y), _pos);
             } // else

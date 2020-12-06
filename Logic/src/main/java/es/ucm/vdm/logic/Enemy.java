@@ -5,6 +5,8 @@ import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Vector2;
 
 import static es.ucm.vdm.logic.Utils.rotVect;
+import static es.ucm.vdm.logic.Utils.subVect;
+import static es.ucm.vdm.logic.Utils.sumVect;
 
 public class Enemy extends GameObject {
     //---------------------------------------------------------------
@@ -47,12 +49,25 @@ public class Enemy extends GameObject {
     public Vector2[] get_segment(){
         // Create a vector array with 2 positions
         Vector2[] seg = new Vector2[2];
+        Vector2 init = null;
+        Vector2 end = null;
 
-        // First calculate init point rotating the lower half of the enemy
-        Vector2 init = rotVect(new Vector2(_pos._x - (_len/2), _pos._y), _rot);
+        double m = Math.round(1/Math.tan(Math.toRadians(_rot)));
 
-        // then calculate ending point rotating the upper half of the enemy
-        Vector2 end = rotVect(new Vector2(_pos._x + (_len/2), _pos._y), -_rot);
+        if(m == 0){ // If 0, segment is vertical
+            init = new Vector2(_pos._x, _pos._y - (_len/2));
+            end = new Vector2(_pos._x, _pos._y + (_len/2));
+        } // if
+        else{
+            m = 1 / m;
+            double b = _pos._y - (m * (_pos._x));
+            // Calculate point
+            Vector2 n = new Vector2(3, ((m * 3) + b));
+            Vector2 dir = new Vector2(1, m);
+            dir.normalize();
+            init = sumVect(_pos, new Vector2((_len/2) * dir._x, (_len/2) * dir._y));
+            end = subVect(_pos, new Vector2((_len/2) * dir._x, (_len/2) * dir._y));
+        } // else
 
         seg[0] = init;
         seg[1] = end;
