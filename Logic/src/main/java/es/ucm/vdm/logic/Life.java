@@ -68,7 +68,7 @@ public class Life extends GameObject {
         // Draw square or cross
         if(_lost){
             // Cross
-            for(int i = 1; i > -1; i-=2){
+            for(int i = 1; i >= -1; i-=2){
                 g.save();
                 g.rotate(_rot * i);
                 g.drawLine(-g.repositionX((int)_diag/ 2),  0, g.repositionX((int)_diag / 2), 0);

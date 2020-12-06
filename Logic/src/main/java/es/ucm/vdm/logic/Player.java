@@ -205,7 +205,7 @@ public class Player extends GameObject {
                 _pos._x = (_pos._x) + (((_dir._unit._x) * _lv) * t);
                 _pos._y = (_pos._y) + (((_dir._unit._y) * _lv) * t);
 
-                _pg.check_collisions(new Vector2(x, y), new Vector2(x2, y2));
+                _pg.check_collisions(new Vector2(x, y), new Vector2(_pos._x, _pos._y));
 
                 // Check for looping path
                 int next = check_loop();

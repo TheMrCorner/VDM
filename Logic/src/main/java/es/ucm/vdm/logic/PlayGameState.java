@@ -33,12 +33,14 @@ public class PlayGameState implements GameState {
     //---------------------------------------------------------------
     Logic _l; // For changing gamestate
     String _name; // Name of the actual level
+    JSONObject _level;
     int _nLevel; // Number of level, for writing
     int _diffLevel; // Difficulty
     int _posOrX; // Pos of coord origin X
     int _posOrY; // Pos of coord origin Y
     boolean _dead; // Flag to check that player is dead
-    double countdown = 0; // Variable to count
+    double _countdown = 0; // Variable to count
+
 
     // Constant values for colors and etc.
     int _playerC = 0xFF0000FF; // Player color ARGB
@@ -48,7 +50,8 @@ public class PlayGameState implements GameState {
     int _itemWidth = 8; // Item width
     float _aVel = 180; // Angular velocity for all player and items
     int _currLife = 0; // Current life (last life lost)
-    double countdownInit = 1000; // Count down to wait for dead resolution or win resolution (1 second)
+    int _playerVel;
+    double _countdownInit = 1; // Count down to wait for dead resolution or win resolution (1 second)
 
     /**
      * Generates a new level from a JSONObject provided in the constructor.
@@ -60,8 +63,6 @@ public class PlayGameState implements GameState {
     public PlayGameState(JSONObject level, int nlev, int diff, Logic l){
         // Init GameObject pool
         //_go = new ArrayList<GameObject>();
-        _it = new ArrayList<GameObject>();
-        _en = new ArrayList<GameObject>();
         _lf = new ArrayList<GameObject>();
         _diffLevel = diff;
         _l = l;
@@ -71,6 +72,33 @@ public class PlayGameState implements GameState {
 
         // Parse all data from the level
         _nLevel = nlev + 1;
+
+        // Create lifes
+        // Lifes
+        int numLifes, lifeXposition, lifeYposition, vel;
+        // Check number of lifes depending on game difficulty
+        if(_diffLevel == 0){
+            numLifes = 10;
+            _playerVel = 250;
+        } // if
+        else{
+            numLifes = 5;
+            _playerVel = 400;
+        } // else
+
+        // Then create lifes and place them in scene.
+        Life nLife;
+        lifeYposition = 20; // Set Y position
+        for(int lf = 0; lf < numLifes; lf++){
+            // Set X position relative to number of lifes and canvas width
+            lifeXposition = _l.getCanvasSize().width - (20 * (lf + 1));
+            nLife = new Life(lifeXposition, lifeYposition, _playerC, _enemyC,
+                    _playerWidth, _playerWidth, 45);
+            _lf.add(nLife);
+        } // for
+
+        // Save level for reseting
+        _level = level;
 
         parse_level(level);
     } // PlayGameState
@@ -82,6 +110,8 @@ public class PlayGameState implements GameState {
      * @param level (JSONObject) And Object with all the information about the actual level
      */
     private void parse_level(JSONObject level){
+        _it = new ArrayList<GameObject>();
+        _en = new ArrayList<GameObject>();
         _name = (String) level.get("name"); // Name of the level
         JSONArray p = (JSONArray) level.get("paths"); // Paths of the level
         JSONArray i = (JSONArray) level.get("items"); // Items
@@ -97,32 +127,9 @@ public class PlayGameState implements GameState {
             create_enemies(e);
         } // if
 
-        // Lifes
-        int numLifes, lifeXposition, lifeYposition, vel;
-        // Check number of lifes depending on game difficulty
-        if(_diffLevel == 0){
-            numLifes = 10;
-            vel = 250;
-        } // if
-        else{
-            numLifes = 5;
-            vel = 400;
-        } // else
-
-        // Then create lifes and place them in scene.
-        Life nLife;
-        lifeYposition = 20; // Set Y position
-        for(int l = 0; l < numLifes; l++){
-            // Set X position relative to number of lifes and canvas width
-            lifeXposition = _l.getCanvasSize().width - (20 * (l + 1));
-            nLife = new Life(lifeXposition, lifeYposition, _playerC, _enemyC,
-                    _playerWidth, _playerWidth, 45);
-            _lf.add(nLife);
-        } // for
-
         // Player
         _player =  new Player(_paths.get_init_pos()._x, _paths.get_init_pos()._y, _playerC,
-                _playerWidth, _playerWidth, vel, _aVel, this);
+                _playerWidth, _playerWidth, _playerVel, _aVel, this);
         _player.set_path(_paths.get_paths().get(0), 0, 1);
         _player.set_coordOrigin(new Vector2(_posOrX, _posOrY));
         _paths.set_activePath(0);
@@ -285,8 +292,7 @@ public class PlayGameState implements GameState {
             collision = segmentsIntersection(segINIT, segEND, enSeg[0], enSeg[1]);
             if(collision != null){
                 // KILL PLAYER
-                _dead = true;
-                _player.setActive(false);
+                kill_player();
             } // if
         } // for
 
@@ -311,14 +317,17 @@ public class PlayGameState implements GameState {
                     // If no collision, keep running till infinite
                 } // Vertex for
             } // Paths for
-
-            // Now, check if it is out of boundings
-            if(segEND._x >= (int)_l._cnv.width || segEND._y >= (int)_l._cnv.height){
-                _player.setActive(false);
-                _dead = true;
-            } // if
         } // is_flying
     } // check_collisions
+
+    private void kill_player(){
+        _player.setActive(false);
+        _dead = true;
+        ((Life)_lf.get(_currLife)).lose_life();
+        _currLife++;
+
+        _countdown = _countdownInit;
+    } // kill_player
 
     /**
      * Update all the objects in this state and check the colisions between Player and the rest of
@@ -329,17 +338,27 @@ public class PlayGameState implements GameState {
     @Override
     public void update(double t) {
         // Then render items
-        for(int i = 0; i < _it.size(); i++) {
+        for (int i = 0; i < _it.size(); i++) {
             _it.get(i).update(t);
         } // for
 
         // Next render enemies
-        for(int i = 0; i < _en.size(); i++) {
+        for (int i = 0; i < _en.size(); i++) {
             _en.get(i).update(t);
         } // for
 
-        // Then render Player
-        _player.update(t);
+        if(_countdown <= 0) {
+            // Then render Player
+            _player.update(t);
+        }
+        else{
+            _countdown -= t;
+
+            if(_countdown <= 0){
+                // !!!!Esto se debería hacer de otra manera, pero no me da tiempo a tenerlo para ahora
+                parse_level(_level);
+            }
+        }
     } // update
 
     @Override
