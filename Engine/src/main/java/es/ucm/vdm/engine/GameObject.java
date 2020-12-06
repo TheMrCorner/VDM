@@ -11,56 +11,50 @@ public abstract class GameObject {
     protected boolean _act; // Check if GO is active or not
     protected Vector2 _coordOrigin; // Origen de coordenadas
 
-    public GameObject(int x, int y, int c){
+    /**
+     * Constructor of the GameObject. Creates a new GameObject and assigns the position, the color
+     * and the rotation that the object will have. To make this generic, initializes _rot to 0.
+     *
+     * @param x (double) X coordinate.
+     * @param y (double) Y coordinate
+     * @param c (int) Color
+     */
+    public GameObject(double x, double y, int c){
         _pos = _initPos = new Vector2(x, y);
         setColor(c);
         _rot = 0;
-    }
+    } // GameObject
 
     // Functions and methods to access GO position
-    /**
-     * Gives access to the GO position (if needed for calculations)
-     *
-     * @return (double) Actual X position
-     */
-    public double getPosX() {
-        return _pos._x;
-    } // getPosX
 
     /**
-     * Gives access to the GO position (if needed for calculations)
+     * Function that returns the actual position of the GameObject as a Vector2.
      *
-     * @return (double) Actual Y position
+     * @return (Vector2) Actual position.
      */
-    public double getPosY(){
-        return _pos._y;
-    } // getPosY
+    public Vector2 get_pos() {
+        return _pos;
+    } // get_pos
 
     /**
      * Check if GO is active or not.
      *
-     * @return
+     * @return (boolean) Actual active state.
      */
     public boolean isActive(){
         return _act;
     } // isActive
 
     // Functions and methods to place the GO
-    /**
-     * Sets X coordinate that this GO will have.
-     */
-    public void setPosX(double x) {
-        _pos._x = x;
-    } // setPosX
 
     /**
-     * Sets the position Y of the GO to the position provided.
+     * Sets a new position for this GameObject.
      *
-     * @param y (int) New Y position.
+     * @param nPos (Vector2) New position to set the player.
      */
-    public void setPosY(double y) {
-        _pos._y = y;
-    } // setPosY
+    public void set_pos(Vector2 nPos){
+        _pos = nPos;
+    } // set_pos
 
     /**
      * Change actual GO state to provided active state (true or false)

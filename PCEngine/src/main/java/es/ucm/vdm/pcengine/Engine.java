@@ -229,9 +229,8 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
         int fCount = 0; // FrameCount
         int maxFrameRate = 30; // Max FPS (Default 30, can change)
 
-        long targetTime = 1000 / FPS; // Time to run at FPS
+        long targetTime = 1000000000l / FPS; // Time to run at FPS
 
-        // TODO: Change to while(running)
         //Main Loop
         while(true){
             startTime = System.nanoTime();
@@ -245,7 +244,6 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
             _lastFrameTime = _currentTime;
             _elapsedTime = (double) _nanoElapsedTime / 1.0E9;
 
-            // TODO: Update();
             _logic.update(_elapsedTime);
 
             // Inform about the fps (Debug only)
@@ -259,6 +257,18 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
 
             // Clear and update graphics
             render();
+
+            // Frame cap
+            totalTime = System.nanoTime() - startTime;
+
+            if(totalTime < targetTime){
+                try {
+                    Thread.sleep((targetTime - totalTime) / 1000000);
+                } // try
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                } // catch
+            } // if
         } // while
     } // run
 

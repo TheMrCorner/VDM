@@ -5,10 +5,6 @@ import es.ucm.vdm.engine.GameState;
 import es.ucm.vdm.engine.Graphics;
 
 public class MainMenuState implements GameState {
-    @Override
-    public void initState() {
-
-    }
 
     @Override
     public void update(double t) {

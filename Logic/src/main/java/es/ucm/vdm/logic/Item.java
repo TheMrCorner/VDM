@@ -28,14 +28,14 @@ public class Item extends GameObject {
      * Constructor of an item. Receives the position of the item and the color that will be used
      * to draw it. Also receives width and height with an angular velocity for rotation.
      *
-     * @param x (int) X position in canvas
-     * @param y (int) Y position in canvas
+     * @param x (double) X position in canvas
+     * @param y (double) Y position in canvas
      * @param c (int) Color to draw this GO
      * @param width (int) Width of the square
      * @param height (int) Height of the square
      * @param angVel (float) Angular velocity the Object will have for rotation
      */
-    public Item(int x, int y, int c, int width, int height, float angVel) {
+    public Item(double x, double y, int c, int width, int height, float angVel) {
         super(x, y, c);
         _w = width;
         _h = height;
@@ -44,7 +44,7 @@ public class Item extends GameObject {
         _centerAv = -1;
     } // Item
 
-    public Item(int x, int y, int c, int width, int height, float angVel, float tAngVel, float rotRefer, float distCenter){
+    public Item(double x, double y, int c, int width, int height, float angVel, float tAngVel, float rotRefer, float distCenter){
         super(x, y, c);
         _w = width;
         _h = height;
@@ -106,7 +106,6 @@ public class Item extends GameObject {
         // Save the actual canvas transformation matrix
         g.save();
 
-        // TODO: Esto no se situa donde debe
         if(_centerAv == -1) {
             g.translate((int) _coordOrigin._x + (int) _pos._x,
                     (int) _coordOrigin._y - (int) _pos._y);

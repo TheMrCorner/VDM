@@ -85,7 +85,7 @@ public class Graphics extends AbstractGraphics {
             ((Graphics2D)(_win.getJGraphics())).drawLine(x1, y1, x2, y2);
         } // try
         catch (Exception e){
-            // TODO: Handle exception
+            e.printStackTrace();
         } // catch
     } // drawLine
 
@@ -103,7 +103,7 @@ public class Graphics extends AbstractGraphics {
             ((Graphics2D)(_win.getJGraphics())).fillRect(x1, y1, x2, y2);
         } // try
         catch(Exception e){
-            // TODO: Hanlde exception
+            e.printStackTrace();
         } // catch
     } // fillRect
 
@@ -182,7 +182,7 @@ public class Graphics extends AbstractGraphics {
             ((Graphics2D)_win.getJGraphics()).translate(x, y);
         } // try
         catch(Exception e){
-            // TODO: Handle exception
+            e.printStackTrace();
         }
     } // translate
 } // Graphics

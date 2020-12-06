@@ -4,6 +4,8 @@ import es.ucm.vdm.engine.GameObject;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Vector2;
 
+import static es.ucm.vdm.logic.Utils.rotVect;
+
 public class Enemy extends GameObject {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -20,7 +22,7 @@ public class Enemy extends GameObject {
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
 
-    public Enemy(int x, int y, int c, int length, float angle, float angularSpeed,
+    public Enemy(double x, double y, int c, int length, float angle, float angularSpeed,
                  Vector2 linearSpeed, float waitTime, Vector2 direction){
         super(x, y,c);
         _len = length;
@@ -37,13 +39,34 @@ public class Enemy extends GameObject {
         _waiting = false;
     } // Enemy
 
+    /**
+     * Returns the segment made by this enemy.
+     *
+     * @return (Vector2[])
+     */
+    public Vector2[] get_segment(){
+        // Create a vector array with 2 positions
+        Vector2[] seg = new Vector2[2];
+
+        // First calculate init point rotating the lower half of the enemy
+        Vector2 init = rotVect(new Vector2(_pos._x - (_len/2), _pos._y), _rot);
+
+        // then calculate ending point rotating the upper half of the enemy
+        Vector2 end = rotVect(new Vector2(_pos._x + (_len/2), _pos._y), -_rot);
+
+        seg[0] = init;
+        seg[1] = end;
+
+        return seg;
+    } // get_segment
+
     @Override
     public void update(double t) {
         _rot += _aSp * t;
 
         if(_rot >= 360){
             _rot = 0;
-        }
+        } // if
 
         if(_dir != null){
             if(!_waiting) {
@@ -66,13 +89,13 @@ public class Enemy extends GameObject {
                     waited = _wait * 1000;
                     _waiting = true;
                 } // if
-            }
+            } // if
             else{
-                waited -= 1;
+                waited -= t * 1000;
                 if(waited <= 0){
                     _waiting = false;
-                }
-            }
+                } // if
+            } // else
         } // if
     } // update
 

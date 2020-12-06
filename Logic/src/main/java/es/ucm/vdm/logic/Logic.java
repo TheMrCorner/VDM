@@ -67,7 +67,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
             e.printStackTrace();
         }
 
-        JSONObject l = (JSONObject)_levels.get(16);
+        JSONObject l = (JSONObject)_levels.get(1);
 
         test = new PlayGameState(l, 5, 0, this);
 
@@ -82,7 +82,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     @Override
     public void update(double t) {
         // Process actual input
-        //_currentGameState.processInput(_eng);
+        test.processInput(_eng);
         test.update(t);
         // Update GameState
         //_currentGameState.update(t);

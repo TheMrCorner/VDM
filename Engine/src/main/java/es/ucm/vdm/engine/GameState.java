@@ -2,11 +2,6 @@ package es.ucm.vdm.engine;
 
 public interface GameState {
     /**
-     * Initializes the GameState.
-     */
-    public void initState(); // initState
-
-    /**
      * Updates all GameObjects in this State with the time passed since the las update.
      *
      * @param t (double) Time elapsed since the last frame.
