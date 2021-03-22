@@ -9,28 +9,21 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import es.ucm.vdm.engine.AbstractEngine;
 import es.ucm.vdm.engine.Logic;
 import es.ucm.vdm.engine.Rect;
 
 // TODO: Comentar un poco lo que hace la calse y demás.
-public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentListener {
+public class Engine extends AbstractEngine implements Runnable, ComponentListener {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
     // Initializing
     Window _win;
-    Graphics _g;
-    Input _ip;
-    Logic _logic;
 
     // Time and Calculations
-    long _lastFrameTime;
-    long _currentTime, _nanoElapsedTime;
-    double _elapsedTime;
     int _width;
     int _height;
-    int _frames;
-    long _info;
     int FPS;
     double averageFPS;
     boolean forward = true;
@@ -63,7 +56,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
         _g = new Graphics(_win);
 
         // Create input
-        _ip = new Input(_win, _g);
+        _ip = new Input(_win, (Graphics)_g);
 
         // Initialize some time values
         _lastFrameTime = System.nanoTime(); // System time in ms
@@ -86,7 +79,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
         temp2 = new Rect(_win.getWidth(), 0, 0, _win.getHeight());
 
         // Get Logic's canvas
-        temp = _logic.getCanvasSize();
+        temp = _l.getCanvasSize();
 
         // Resize the Logic's canvas with that reference
         _g.setCanvasSize(temp, temp2);
@@ -102,7 +95,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
      */
     @Override
     public Graphics getGraphics() {
-        return _g;
+        return (Graphics)_g;
     } // getGraphics
 
     /**
@@ -112,7 +105,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
      */
     @Override
     public Input getInput() {
-        return _ip;
+        return (Input)_ip;
     } // getInput
 
     @Override
@@ -135,13 +128,27 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
      */
     @Override
     public void setLogic(Logic l) {
-        _logic = l;
-        _g.setReferenceCanvas(_logic.getCanvasSize());
-
-        resize();
-
-        _logic.initLogic();
+        _tempLogic = l;
     } // setLogic
+
+    /**
+     * Function called when a change in Logic has happened. Resets everything to meet the Logic's
+     * conditions.
+     */
+    @Override
+    public void resetLogic(){
+        // Checking that _tempLogic is truly null to avoid callings from other objects.
+        if(_tempLogic != null) {
+            _l = _tempLogic;
+
+            _g.setReferenceCanvas(_l.getCanvasSize());
+
+            resize();
+
+            _l.initLogic();
+            _tempLogic = null;
+        } // if
+    } // resetLogic
 
     /**
      * Sets the max frame rate to keep all running at the same velocity
@@ -204,7 +211,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
             do {
                 _win.setGraphics();
                 try { // Try to paint in the Graphics
-                    _logic.render();
+                    _l.render();
                 }
                 finally { // If not, still dispose the Swing Graphics
                     _win.getJGraphics().dispose();
@@ -244,7 +251,7 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
             _lastFrameTime = _currentTime;
             _elapsedTime = (double) _nanoElapsedTime / 1.0E9;
 
-            _logic.update(_elapsedTime);
+            _l.update(_elapsedTime);
 
             // Inform about the fps (Debug only)
             if(_currentTime - _info > 1000000000l){
@@ -268,6 +275,10 @@ public class Engine implements es.ucm.vdm.engine.Engine, Runnable, ComponentList
                 catch (InterruptedException e) {
                     e.printStackTrace();
                 } // catch
+            } // if
+
+            if(_tempLogic != null) {
+                resetLogic();
             } // if
         } // while
     } // run

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 // UCM
+import es.ucm.vdm.engine.AbstractEngine;
 import es.ucm.vdm.engine.Logic;
 import es.ucm.vdm.engine.Rect;
 
@@ -23,28 +24,16 @@ import es.ucm.vdm.engine.Rect;
  * to update and render current game state. Checks the time elapsed between frames and manages all
  * rendering process.
  */
-@SuppressWarnings("ALL")
-public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Runnable{
+public class Engine extends AbstractEngine implements Runnable {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
-    SurfaceHolder _holder;
+    AndroidWindow _win;
     AssetManager _aMan;
 
     Thread _renderThread;
 
     volatile boolean _running = false;
-
-    Graphics _g;
-    Input _ip;
-    Logic _l;
-
-    // Atributes for calculations and time.
-    long _lastFrameTime;
-    long _currentTime, _nanoElapsedTime;
-    double _elapsedTime;
-    int _frames;
-    long _info;
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
@@ -58,22 +47,19 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
      * Prepares the SurfaceView to see it Fullscreen and without the upper banner with the app name.
      * Set the content view and the OnTouchListener.
      *
-     * @param act (Activity) Android activity for painting and management.
      * @param cont (Context) Android activity's context.
      */
     public Engine(Context cont){
-        super(cont);
-
-        _holder = getHolder();
+        _win = new AndroidWindow(cont);
 
         // Save the assets to load them later
         _aMan = cont.getAssets();
 
         // Init Graphics with all values needed
-        _g = new Graphics(this, _aMan);
+        _g = new Graphics(_win, _aMan);
 
         // Create the Input
-        _ip = new Input(_g);
+        _ip = new Input((Graphics)_g);
 
         // Initialize some time values
         _lastFrameTime = System.nanoTime(); // System time in ms
@@ -81,7 +67,7 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
         _frames = 0; // Number of frames passed
 
         // Set surface in fullscreen and not showing the upper banner
-        setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
+        _win.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
                 // Inmersion flags and navigation
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -90,7 +76,7 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
         // Set Input as OnTouchListener
-        setOnTouchListener(_ip);
+        _win.setOnTouchListener((View.OnTouchListener)_ip);
     } // Engine
 
 
@@ -149,7 +135,7 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
      */
     @Override
     public Graphics getGraphics() {
-        return _g;
+        return (Graphics)_g;
     } // getGraphics
 
     /**
@@ -159,7 +145,7 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
      */
     @Override
     public Input getInput() {
-        return _ip;
+        return (Input)_ip;
     } // getInput
 
     /**
@@ -189,12 +175,19 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
      */
     @Override
     public void setLogic(Logic l) {
-        _l = l;
+        _tempLogic = l;
+    } // setLogic
+
+    @Override
+    public void resetLogic(){
+        _l = _tempLogic;
+
         _g.setReferenceCanvas(_l.getCanvasSize());
 
         resize();
         _l.initLogic();
-    } // setLogic
+        _tempLogic = null;
+    }
 
     @Override
     public void setFPS(int fps) { }
@@ -223,7 +216,7 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
      */
     @Override
     public int getWinWidth() {
-        return getWidth();
+        return _win.width();
     } // getWidth
 
     /**
@@ -233,7 +226,7 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
      */
     @Override
     public int getWinHeight() {
-        return getHeight();
+        return _win.height();
     } // getHeight
 
     /**
@@ -246,7 +239,7 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
 
         // Resize
         // Get window size
-        t2 = new Rect(getWidth(), 0, 0, getHeight());
+        t2 = new Rect(_win.width(), 0, 0, _win.height());
 
         // Get logic canvas
         t1 = _l.getCanvasSize();
@@ -255,8 +248,8 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
         _g.setCanvasSize(t1, t2);
 
         // Set pos
-        _g.setCanvasPos(((getWidth()/2) - (_g.getCanvas().getWidth() / 2)),
-                ((getHeight()/2) - (_g.getCanvas().getHeight() / 2)));
+        _g.setCanvasPos(((_win.width()/2) - (_g.getCanvas().getWidth() / 2)),
+                ((_win.height()/2) - (_g.getCanvas().getHeight() / 2)));
     } // resize
     //---------------------------------------------------------------
     //----------------------Surface and Canvas-----------------------
@@ -280,17 +273,17 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
      */
     protected void render(){
         // Get holder canvas
-        Canvas c = _holder.lockCanvas();
+        Canvas c = _win.getSurfaceHolder().lockCanvas();
 
         // Start the frame
-        _g.startFrame(c);
+        ((Graphics)_g).startFrame(c);
 
         _g.clear(0xFF000000);
 
         _l.render();
 
         // Show the new information
-        _holder.unlockCanvasAndPost(c);
+        _win.getSurfaceHolder().unlockCanvasAndPost(c);
     } // render
 
     /**
@@ -306,7 +299,7 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
         }
 
         // Wait for surface availability
-        while(_running && getWidth() == 0);
+        while(_running && _win.width() == 0);
 
         // Loop
         while(_running){
@@ -335,10 +328,14 @@ public class Engine extends SurfaceView implements es.ucm.vdm.engine.Engine, Run
             // Render
 
             // Wait till Surface is ready
-            while(!_holder.getSurface().isValid());
+            while(!_win.surfaceValid());
 
             // Render result
             render();
+
+            if(_tempLogic != null) {
+                resetLogic();
+            } // if
         }// while running
     } // run
     //---------------------------------------------------------------

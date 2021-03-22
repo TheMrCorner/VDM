@@ -12,6 +12,8 @@ public interface Engine {
     
     void setLogic(Logic l);
 
+    void resetLogic();
+
     void setFPS(int fps);
     
     void HandleException(Exception e);
