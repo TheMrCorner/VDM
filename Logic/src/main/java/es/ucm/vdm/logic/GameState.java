@@ -1,4 +1,7 @@
-package es.ucm.vdm.engine;
+package es.ucm.vdm.logic;
+
+import es.ucm.vdm.engine.Engine;
+import es.ucm.vdm.engine.Graphics;
 
 public interface GameState {
     /**

@@ -1,9 +1,5 @@
 package es.ucm.vdm.logic;
 
-import java.util.Vector;
-
-import es.ucm.vdm.engine.Vector2;
-
 public final class Utils {
 
 	public static Vector2 segmentsIntersection(Vector2 seg1Or, Vector2 seg1End, Vector2 seg2Or, Vector2 seg2End) {

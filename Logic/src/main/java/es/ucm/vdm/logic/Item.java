@@ -1,9 +1,7 @@
 package es.ucm.vdm.logic;
 
-import es.ucm.vdm.engine.GameObject;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
-import es.ucm.vdm.engine.Vector2;
 
 public class Item extends GameObject {
     //---------------------------------------------------------------

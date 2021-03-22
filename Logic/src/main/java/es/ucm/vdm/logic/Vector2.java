@@ -1,4 +1,4 @@
-package es.ucm.vdm.engine;
+package es.ucm.vdm.logic;
 
 /**
  * 2 dimensions vector. Used for calculations and positions. Uses double as type of the positions

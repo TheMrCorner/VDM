@@ -1,6 +1,5 @@
 package es.ucm.vdm.logic;
 
-import es.ucm.vdm.engine.GameObject;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
 

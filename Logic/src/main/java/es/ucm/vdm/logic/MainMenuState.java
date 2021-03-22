@@ -1,7 +1,6 @@
 package es.ucm.vdm.logic;
 
 import es.ucm.vdm.engine.Engine;
-import es.ucm.vdm.engine.GameState;
 import es.ucm.vdm.engine.Graphics;
 
 public class MainMenuState implements GameState {

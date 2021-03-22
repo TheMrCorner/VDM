@@ -9,11 +9,9 @@ import java.util.List;
 
 // UCM
 import es.ucm.vdm.engine.Engine;
-import es.ucm.vdm.engine.GameObject;
-import es.ucm.vdm.engine.GameState;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
-import es.ucm.vdm.engine.Vector2;
+
 import static es.ucm.vdm.logic.Utils.parse_double;
 import static es.ucm.vdm.logic.Utils.segmentsIntersection;
 

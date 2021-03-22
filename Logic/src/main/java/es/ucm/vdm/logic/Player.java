@@ -2,10 +2,8 @@ package es.ucm.vdm.logic;
 
 import java.util.ArrayList;
 
-import es.ucm.vdm.engine.GameObject;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
-import es.ucm.vdm.engine.Vector2;
 
 import static es.ucm.vdm.logic.Utils.rotVect;
 import static es.ucm.vdm.logic.Utils.subVect;

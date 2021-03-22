@@ -1,10 +1,14 @@
+/**
+ * Logic
+ *
+ * Implementation of Logic's Interface
+ */
+
 package es.ucm.vdm.logic;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -12,18 +16,18 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import es.ucm.vdm.engine.Engine;
-import es.ucm.vdm.engine.GameState;
 import es.ucm.vdm.engine.Rect;
 
 public class Logic implements es.ucm.vdm.engine.Logic {
+    // Public - Protected - Private
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
     Engine _eng; // Instance of Engine for loading levels and resources
-    Rect _cnv; // Canvas of the game (surface for painting graphics)
+    Rect _cnv; // Surface to paint current GameState
     int _clearColor; // Black
-    GameState _currentGameState; // Current GameState instance to call it's methods
-    int _fps = 60;
+    GameState _currentGameState; // Current GameState instance
+    final int FPS = 60;
     int _actualLevel; // number to count the actual level
     PlayGameState test;
     Item test2;
@@ -41,7 +45,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         // Init everything
         _cnv = new Rect (640, 0, 0, 480);
         _clearColor = 0x000000;
-        _eng.setFPS(_fps);
+        _eng.setFPS(FPS);
     } // Logic
 
     /**

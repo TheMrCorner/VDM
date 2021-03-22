@@ -5,9 +5,7 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-import es.ucm.vdm.engine.GameObject;
 import es.ucm.vdm.engine.Graphics;
-import es.ucm.vdm.engine.Vector2;
 
 import static es.ucm.vdm.logic.Utils.parse_double;
 
