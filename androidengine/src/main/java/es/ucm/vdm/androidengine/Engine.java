@@ -128,25 +128,6 @@ public class Engine extends AbstractEngine implements Runnable {
     //---------------------------------------------------------------
     //----------------------Getters and Setters----------------------
     //---------------------------------------------------------------
-    /**
-     * Returns the instance of Graphics when needed to draw or making calculations.
-     *
-     * @return (Graphics) Graphics instance saved here.
-     */
-    @Override
-    public Graphics getGraphics() {
-        return (Graphics)_g;
-    } // getGraphics
-
-    /**
-     * Return Input Instance when needed for processing Input and etc.
-     *
-     * @return (Input) Input instance saved here.
-     */
-    @Override
-    public Input getInput() {
-        return (Input)_ip;
-    } // getInput
 
     /**
      * Creates an input stream of a file.
@@ -166,28 +147,6 @@ public class Engine extends AbstractEngine implements Runnable {
 
         return data;
     } // openInputStream
-
-    /**
-     * Save an instance of the logic of the game. Used to call the different necessary methods
-     * lates (render and update) and for scaling the canvas correctly.
-     *
-     * @param l (Logic) Logic's instance created previously.
-     */
-    @Override
-    public void setLogic(Logic l) {
-        _tempLogic = l;
-    } // setLogic
-
-    @Override
-    public void resetLogic(){
-        _l = _tempLogic;
-
-        _g.setReferenceCanvas(_l.getCanvasSize());
-
-        resize();
-        _l.initLogic();
-        _tempLogic = null;
-    }
 
     @Override
     public void setFPS(int fps) { }
@@ -229,28 +188,6 @@ public class Engine extends AbstractEngine implements Runnable {
         return _win.height();
     } // getHeight
 
-    /**
-     * Resizes the canvas to make it fit the screen. Called when the screen has changed it's
-     * position.
-     */
-    public void resize(){
-        Rect t1;
-        Rect t2;
-
-        // Resize
-        // Get window size
-        t2 = new Rect(_win.width(), 0, 0, _win.height());
-
-        // Get logic canvas
-        t1 = _l.getCanvasSize();
-
-        // Resize
-        _g.setCanvasSize(t1, t2);
-
-        // Set pos
-        _g.setCanvasPos(((_win.width()/2) - (_g.getCanvas().getWidth() / 2)),
-                ((_win.height()/2) - (_g.getCanvas().getHeight() / 2)));
-    } // resize
     //---------------------------------------------------------------
     //----------------------Surface and Canvas-----------------------
     //---------------------------------------------------------------
@@ -259,12 +196,6 @@ public class Engine extends AbstractEngine implements Runnable {
     //---------------------------------------------------------------
     //----------------------Main Loop Management---------------------
     //---------------------------------------------------------------
-    /**
-     * Update method. Is called once per frame and updates the logic with the elapsedTime value.
-     */
-    protected void update(){
-        _l.update(_elapsedTime);
-    } // update
 
     /**
      * Renders all new information.

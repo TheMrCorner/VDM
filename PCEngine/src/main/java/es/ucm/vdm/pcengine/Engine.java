@@ -66,48 +66,6 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
         _win.addComponentListener(this);
     } // Engine
 
-    /**
-     * Resize canvas to fit the screen. Only called when the window is resized. (Fullscreen, or
-     * anything else.
-     */
-    public void resize(){
-        Rect temp;
-        Rect temp2;
-
-        // RESIZE
-        // Get window size (as a rectangle)
-        temp2 = new Rect(_win.getWidth(), 0, 0, _win.getHeight());
-
-        // Get Logic's canvas
-        temp = _l.getCanvasSize();
-
-        // Resize the Logic's canvas with that reference
-        _g.setCanvasSize(temp, temp2);
-
-        _g.setCanvasPos(((_win.getWidth()/2) - (_g.getCanvas().getWidth() / 2)),
-                ((_win.getHeight()/2) - (_g.getCanvas().getHeight() / 2)));
-    } // resize
-
-    /**
-     * Returns access to the Graphics instance saved here for the Logic to paint it's updates.
-     *
-     * @return (Graphics) Graphics instance.
-     */
-    @Override
-    public Graphics getGraphics() {
-        return (Graphics)_g;
-    } // getGraphics
-
-    /**
-     * Returns access to the Input(Manager) for input management in Logic.
-     *
-     * @return (Input) Input instance.
-     */
-    @Override
-    public Input getInput() {
-        return (Input)_ip;
-    } // getInput
-
     @Override
     public InputStream openInputStream(String filename) {
         InputStream data = null;
@@ -119,36 +77,6 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
 
         return data;
     } // openInputStream
-
-    /**
-     * Function to save an instance of the logic and call all it's functions (update, render, handle
-     * Input, etc.)
-     *
-     * @param l (Logic) Instance of Logic
-     */
-    @Override
-    public void setLogic(Logic l) {
-        _tempLogic = l;
-    } // setLogic
-
-    /**
-     * Function called when a change in Logic has happened. Resets everything to meet the Logic's
-     * conditions.
-     */
-    @Override
-    public void resetLogic(){
-        // Checking that _tempLogic is truly null to avoid callings from other objects.
-        if(_tempLogic != null) {
-            _l = _tempLogic;
-
-            _g.setReferenceCanvas(_l.getCanvasSize());
-
-            resize();
-
-            _l.initLogic();
-            _tempLogic = null;
-        } // if
-    } // resetLogic
 
     /**
      * Sets the max frame rate to keep all running at the same velocity
@@ -239,45 +167,47 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
         long targetTime = 1000000000l / FPS; // Time to run at FPS
 
         //Main Loop
-        while(true){
-            startTime = System.nanoTime();
+        while(true){ // TODO: Sustituir esto por una variable boolean _running (como en android)
+            if(_l != null) {
+                startTime = System.nanoTime();
 
-            // Update width and height
-            _width = _win.getWidth();
-            _height = _win.getHeight();
-            // Calculate time passed between frames and convert it to seconds
-            _currentTime = System.nanoTime();
-            _nanoElapsedTime = _currentTime - _lastFrameTime;
-            _lastFrameTime = _currentTime;
-            _elapsedTime = (double) _nanoElapsedTime / 1.0E9;
+                // Update width and height
+                _width = _win.getWidth();
+                _height = _win.getHeight();
+                // Calculate time passed between frames and convert it to seconds
+                _currentTime = System.nanoTime();
+                _nanoElapsedTime = _currentTime - _lastFrameTime;
+                _lastFrameTime = _currentTime;
+                _elapsedTime = (double) _nanoElapsedTime / 1.0E9;
 
-            _l.update(_elapsedTime);
+                update();
 
-            // Inform about the fps (Debug only)
-            if(_currentTime - _info > 1000000000l){
-                long fps = _frames * 1000000000l / (_currentTime - _info);
-                System.out.println("Info: " + fps + " fps");
-                _frames = 0;
-                _info = _currentTime;
+                // Inform about the fps (Debug only)
+                if (_currentTime - _info > 1000000000l) {
+                    long fps = _frames * 1000000000l / (_currentTime - _info);
+                    System.out.println("Info: " + fps + " fps");
+                    _frames = 0;
+                    _info = _currentTime;
+                } // if
+                ++_frames; // Update frames
+
+                // Clear and update graphics
+                render();
+
+                // Frame cap
+                totalTime = System.nanoTime() - startTime;
+
+                if (totalTime < targetTime) {
+                    try {
+                        Thread.sleep((targetTime - totalTime) / 1000000);
+                    } // try
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } // catch
+                } // if
             } // if
-            ++_frames; // Update frames
 
-            // Clear and update graphics
-            render();
-
-            // Frame cap
-            totalTime = System.nanoTime() - startTime;
-
-            if(totalTime < targetTime){
-                try {
-                    Thread.sleep((targetTime - totalTime) / 1000000);
-                } // try
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                } // catch
-            } // if
-
-            if(_tempLogic != null) {
+            if (_tempLogic != null) {
                 resetLogic();
             } // if
         } // while
