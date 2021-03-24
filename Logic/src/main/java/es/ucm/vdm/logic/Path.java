@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import es.ucm.vdm.engine.Graphics;
 
-import static es.ucm.vdm.logic.Utils.parse_double;
+import static es.ucm.vdm.logic.Utils.parseDouble;
 
 /**
  * This class stores all important information relative to the path of that the player must
@@ -63,8 +63,8 @@ public class Path extends GameObject {
                 Object ny = coord.get("y");
 
                 // Coords
-                coordX = parse_double(nx);
-                coordY = parse_double(ny);
+                coordX = parseDouble(nx);
+                coordY = parseDouble(ny);
 
                 v = new Vector2(coordX, coordY);
                 t.add(v);
@@ -83,8 +83,8 @@ public class Path extends GameObject {
                     Object ny = coord.get("y");
 
                     // Coords
-                    coordX = parse_double(nx);
-                    coordY = parse_double(ny);
+                    coordX = parseDouble(nx);
+                    coordY = parseDouble(ny);
 
                     v = new Vector2(coordX, coordY);
                     d.add(v);
@@ -99,7 +99,7 @@ public class Path extends GameObject {
      *
      * @param a (int) New path to set active.
      */
-    public void set_activePath(int a){
+    public void setActivePath(int a){
         _activePath = a;
     } // set_activePath
 
@@ -108,7 +108,7 @@ public class Path extends GameObject {
      *
      * @return (int) actual active path
      */
-    public int get_activePath(){
+    public int getActivePath(){
         return _activePath;
     } // get_activePath
 
@@ -117,7 +117,7 @@ public class Path extends GameObject {
      *
      * @return (ArrayList) ArrayList of all vertices for this level.
      */
-    public ArrayList<ArrayList<Vector2>> get_paths(){
+    public ArrayList<ArrayList<Vector2>> getPaths(){
         return _paths;
     } // get_paths
 
@@ -126,7 +126,7 @@ public class Path extends GameObject {
      *
      * @return (Vector2) Initial position.
      */
-    public Vector2 get_init_pos(){
+    public Vector2 getInitPos(){
         return _paths.get(0).get(0);
     } // get_init_pos()
 
@@ -137,7 +137,7 @@ public class Path extends GameObject {
      * @param v (int) Vertex
      * @return (Vector2) Direction jump (null if not exists)
      */
-    public Vector2 get_jump_dir(int p, int v) {
+    public Vector2 getJumpDir(int p, int v) {
         // If list is not empty, that means that there is directions set for every path
         if(!_pathsDirs.isEmpty()){
             return _pathsDirs.get(p).get(v); // Return the jump direction of this path and vertex

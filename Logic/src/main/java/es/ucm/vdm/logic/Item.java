@@ -60,7 +60,7 @@ public class Item extends GameObject {
     /**
      * Function called when an item is taken by the player.
      */
-    public void item_taken(){
+    public void itemTaken(){
         _taken = true;
     } // item_taken
 

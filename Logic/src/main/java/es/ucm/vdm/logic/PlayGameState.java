@@ -12,7 +12,7 @@ import es.ucm.vdm.engine.Engine;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
 
-import static es.ucm.vdm.logic.Utils.parse_double;
+import static es.ucm.vdm.logic.Utils.parseDouble;
 import static es.ucm.vdm.logic.Utils.segmentsIntersection;
 
 public class PlayGameState implements GameState {
@@ -98,7 +98,7 @@ public class PlayGameState implements GameState {
         // Save level for reseting
         _level = level;
 
-        parse_level(level);
+        parseLevel(level);
     } // PlayGameState
 
     /**
@@ -107,7 +107,7 @@ public class PlayGameState implements GameState {
      *
      * @param level (JSONObject) And Object with all the information about the actual level
      */
-    private void parse_level(JSONObject level){
+    private void parseLevel(JSONObject level){
         _it = new ArrayList<GameObject>();
         _en = new ArrayList<GameObject>();
         _name = (String) level.get("name"); // Name of the level
@@ -118,19 +118,19 @@ public class PlayGameState implements GameState {
         // Create Path
         _paths = new Path(_posOrX, _posOrY, 0xFFFFFFFF, p); // Path object
 
-        create_items(i);
+        createItems(i);
 
         // Create enemies, if there are enemies
         if(e != null){
-            create_enemies(e);
+            createEnemies(e);
         } // if
 
         // Player
-        _player =  new Player(_paths.get_init_pos()._x, _paths.get_init_pos()._y, _playerC,
+        _player =  new Player(_paths.getInitPos()._x, _paths.getInitPos()._y, _playerC,
                 _playerWidth, _playerWidth, _playerVel, _aVel, this);
-        _player.set_path(_paths.get_paths().get(0), 0, 1);
-        _player.set_coordOrigin(new Vector2(_posOrX, _posOrY));
-        _paths.set_activePath(0);
+        _player.setPath(_paths.getPaths().get(0), 0, 1);
+        _player.setCoordOrigin(new Vector2(_posOrX, _posOrY));
+        _paths.setActivePath(0);
     } // parse_level
 
     /**
@@ -138,7 +138,7 @@ public class PlayGameState implements GameState {
      *
      * @param i (JSONArray) An array with all the different items.
      */
-    private void create_items(JSONArray i){
+    private void createItems(JSONArray i){
         // Create items
         Item nItem;
         JSONObject coord;
@@ -154,8 +154,8 @@ public class PlayGameState implements GameState {
 
             // First parse coordinates
             // Check value
-            coordX = parse_double(nx);
-            coordY = parse_double(ny);
+            coordX = parseDouble(nx);
+            coordY = parseDouble(ny);
 
             // Then check if it from rotating type
             if(coord.containsKey("radius")){
@@ -168,13 +168,13 @@ public class PlayGameState implements GameState {
                 double totalAngularVelocity;
 
                 // First parse the angle to get the position
-                trueAng = parse_double(ang);
+                trueAng = parseDouble(ang);
 
                 // Then parse the radius to get the magnitude of the vector (distance really)
-                magnitude = parse_double(mag);
+                magnitude = parseDouble(mag);
 
                 // Finally, parse the angular velocity that all items will have.
-                totalAngularVelocity = parse_double(angVel);
+                totalAngularVelocity = parseDouble(angVel);
 
                 // Now, using simple trigonometry, get the position at which the object should be
                 // With multiplication of magnitude by cos and sin we get how much will add to
@@ -193,7 +193,7 @@ public class PlayGameState implements GameState {
                 nItem = new Item(coordX, coordY, _itemC, _itemWidth, _itemWidth, _aVel);
             }
 
-            nItem.set_coordOrigin(new Vector2(_posOrX, _posOrY));
+            nItem.setCoordOrigin(new Vector2(_posOrX, _posOrY));
             _it.add(nItem);
         } // for
     } // create_items
@@ -203,7 +203,7 @@ public class PlayGameState implements GameState {
      *
      * @param e (JSONArray) An array with all the enemies.
      */
-    private void create_enemies(JSONArray e) {
+    private void createEnemies(JSONArray e) {
         double coordX, coordY;
         JSONObject enemyData;
         double length, angle, angSpeed, waitTime;
@@ -219,18 +219,18 @@ public class PlayGameState implements GameState {
 
             // First parse coordinates
             // Check value
-            coordX = parse_double(nx);
-            coordY = parse_double(ny);
+            coordX = parseDouble(nx);
+            coordY = parseDouble(ny);
             // Parse length
-            length = parse_double(le);
+            length = parseDouble(le);
 
             // Parse angle
-            angle = parse_double(an);
+            angle = parseDouble(an);
 
             // Parse angular speed
             if (enemyData.containsKey("speed")) {
                 Object sp = enemyData.get("speed");
-                angSpeed = parse_double(sp);
+                angSpeed = parseDouble(sp);
             } // if
             else {
                 angSpeed = 0;
@@ -243,15 +243,15 @@ public class PlayGameState implements GameState {
                 Object time2 = enemyData.get("time2");
 
                 // Calculate vector between positions
-                direction = new Vector2(parse_double(offX), parse_double(offY));
+                direction = new Vector2(parseDouble(offX), parseDouble(offY));
 
-                double timeMove = parse_double(time1);
+                double timeMove = parseDouble(time1);
 
                 // Calculate linear speed
                 linearSpeed = new Vector2(Math.abs(direction._x / timeMove),
                         Math.abs(direction._y / timeMove));
 
-                waitTime = parse_double(time2);
+                waitTime = parseDouble(time2);
             } // if
             else {
                 linearSpeed = null;
@@ -261,7 +261,7 @@ public class PlayGameState implements GameState {
 
             nEnemy = new Enemy(coordX, coordY, _enemyC, (int) length, (int) angle,
                     (float) angSpeed, linearSpeed, (float) waitTime, direction);
-            nEnemy.set_coordOrigin(new Vector2(_posOrX, _posOrY));
+            nEnemy.setCoordOrigin(new Vector2(_posOrX, _posOrY));
             _en.add(nEnemy);
         } // for
     } // create_enemies
@@ -272,7 +272,7 @@ public class PlayGameState implements GameState {
      *
      * @param l (Logic) Logic's instance.
      */
-    public void set_logic(Logic l){
+    public void setLogic(Logic l){
         _l = l;
     } // set_logic
 
@@ -282,35 +282,35 @@ public class PlayGameState implements GameState {
      * @param segINIT (Vector2) Initial point of the segment to check.
      * @param segEND (Vector2) Ending point of the segment to check.
      */
-    public void check_collisions(Vector2 segINIT, Vector2 segEND){
+    public void checkCollisions(Vector2 segINIT, Vector2 segEND){
         // First check enemies
         Vector2 collision;
         for(int i = 0; i < _en.size(); i++){
-            Vector2[] enSeg = ((Enemy)_en.get(i)).get_segment();
+            Vector2[] enSeg = ((Enemy)_en.get(i)).getSegment();
             collision = segmentsIntersection(segINIT, segEND, enSeg[0], enSeg[1]);
             if(collision != null){
                 // KILL PLAYER
-                kill_player();
+                killPlayer();
             } // if
         } // for
 
         // ONLY WHEN FLYING AND NOT DEAD
-        if(_player.is_flying() && !_dead) {
+        if(_player.isFlying() && !_dead) {
             // Then check items
 
             // Lastly, check paths
-            for(int i = 0; i < _paths.get_paths().size(); i++){
-                for(int j = 0; j < _paths.get_paths().get(i).size(); j++){
+            for(int i = 0; i < _paths.getPaths().size(); i++){
+                for(int j = 0; j < _paths.getPaths().get(i).size(); j++){
                     int next = j +1;
-                    if(next == _paths.get_paths().get(i).size()){
+                    if(next == _paths.getPaths().get(i).size()){
                         next = 0;
                     } // if toroid
                     collision = segmentsIntersection(segINIT, segEND,
-                            _paths.get_paths().get(i).get(j), _paths.get_paths().get(i).get(next));
+                            _paths.getPaths().get(i).get(j), _paths.getPaths().get(i).get(next));
 
                     if(collision != null){
-                        _player.path_collide(collision, _paths.get_paths().get(i), j, next);
-                        _paths.set_activePath(i);
+                        _player.pathCollide(collision, _paths.getPaths().get(i), j, next);
+                        _paths.setActivePath(i);
                     } // if
                     // If no collision, keep running till infinite
                 } // Vertex for
@@ -318,10 +318,10 @@ public class PlayGameState implements GameState {
         } // is_flying
     } // check_collisions
 
-    private void kill_player(){
+    private void killPlayer(){
         _player.setActive(false);
         _dead = true;
-        ((Life)_lf.get(_currLife)).lose_life();
+        ((Life)_lf.get(_currLife)).loseLife();
         _currLife++;
 
         _countdown = _countdownInit;
@@ -354,7 +354,7 @@ public class PlayGameState implements GameState {
 
             if(_countdown <= 0){
                 // !!!!Esto se debería hacer de otra manera, pero no me da tiempo a tenerlo para ahora
-                parse_level(_level);
+                parseLevel(_level);
             }
         }
     } // update
@@ -409,8 +409,8 @@ public class PlayGameState implements GameState {
                 case KEY_TYPED:
                     // Same mechanism as with mouse or touchscreen but with keyboard.
                     // Tell the _player to begin flight
-                    _player.fly(_paths.get_jump_dir(_paths.get_activePath(),
-                            _player.get_actualPoint()));
+                    _player.fly(_paths.getJumpDir(_paths.getActivePath(),
+                            _player.getActualPoint()));
                     break;
                 default:
                     // Ignore the rest

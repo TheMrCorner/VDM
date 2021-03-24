@@ -27,7 +27,6 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     Rect _cnv; // Surface to paint current GameState
     int _clearColor; // Black
     GameState _currentGameState; // Current GameState instance
-    final int FPS = 60;
     int _actualLevel; // number to count the actual level
     PlayGameState test;
     Item test2;
@@ -45,7 +44,6 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         // Init everything
         _cnv = new Rect (640, 0, 0, 480);
         _clearColor = 0x000000;
-        _eng.setFPS(FPS);
     } // Logic
 
     /**

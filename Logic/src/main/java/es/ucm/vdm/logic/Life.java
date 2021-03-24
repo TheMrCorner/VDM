@@ -35,7 +35,7 @@ public class Life extends GameObject {
     /**
      * Mark this life as lost.
      */
-    public void lose_life(){
+    public void loseLife(){
         _lost = true;
     } // lose_life
 

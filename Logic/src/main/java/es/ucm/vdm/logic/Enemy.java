@@ -43,7 +43,7 @@ public class Enemy extends GameObject {
      *
      * @return (Vector2[])
      */
-    public Vector2[] get_segment(){
+    public Vector2[] getSegment(){
         // Create a vector array with 2 positions
         Vector2[] seg = new Vector2[2];
         Vector2 init = null;

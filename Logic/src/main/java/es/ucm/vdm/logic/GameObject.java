@@ -34,7 +34,7 @@ public abstract class GameObject {
      *
      * @return (Vector2) Actual position.
      */
-    public Vector2 get_pos() {
+    public Vector2 getPos() {
         return _pos;
     } // get_pos
 
@@ -54,7 +54,7 @@ public abstract class GameObject {
      *
      * @param nPos (Vector2) New position to set the player.
      */
-    public void set_pos(Vector2 nPos){
+    public void setPos(Vector2 nPos){
         _pos = nPos;
     } // set_pos
 
@@ -77,7 +77,7 @@ public abstract class GameObject {
     } // setColor
 
 
-    public void set_coordOrigin(Vector2 or){
+    public void setCoordOrigin(Vector2 or){
         _coordOrigin = or;
     } // set_coordOrigin
 

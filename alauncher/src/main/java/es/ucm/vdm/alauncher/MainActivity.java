@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         _eng.setLogic(_log);
 
-        setContentView(_eng);
+        setContentView(_eng.getView());
     }
 
     /**

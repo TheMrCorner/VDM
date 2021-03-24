@@ -148,9 +148,6 @@ public class Engine extends AbstractEngine implements Runnable {
         return data;
     } // openInputStream
 
-    @Override
-    public void setFPS(int fps) { }
-
     /**
      * Handles an exception received. Print out the message of the exception.
      *
@@ -171,7 +168,7 @@ public class Engine extends AbstractEngine implements Runnable {
     /**
      * Return the SurfaceWidth if needed for calculations
      *
-     * @return (int) _mSurface Width
+     * @return (int) _win Width
      */
     @Override
     public int getWinWidth() {
@@ -181,13 +178,19 @@ public class Engine extends AbstractEngine implements Runnable {
     /**
      * Return the SurfaceWidth if needed for calculations
      *
-     * @return (int) _mSurface Height
+     * @return (int) _win Height
      */
     @Override
     public int getWinHeight() {
         return _win.height();
     } // getHeight
 
+    /**
+     * Returns the View, needed from the Main Activity in setContentView
+     *
+     * @return (View) _win View
+     */
+    public View getView() {return _win.getRootView();}
     //---------------------------------------------------------------
     //----------------------Surface and Canvas-----------------------
     //---------------------------------------------------------------
@@ -234,6 +237,10 @@ public class Engine extends AbstractEngine implements Runnable {
 
         // Loop
         while(_running){
+            if(_tempLogic != null) {
+                resetLogic();
+            } // if
+
             // Update
             // Calculate time passed between frames and convert it to seconds
             _currentTime = System.nanoTime();
@@ -264,9 +271,6 @@ public class Engine extends AbstractEngine implements Runnable {
             // Render result
             render();
 
-            if(_tempLogic != null) {
-                resetLogic();
-            } // if
         }// while running
     } // run
     //---------------------------------------------------------------

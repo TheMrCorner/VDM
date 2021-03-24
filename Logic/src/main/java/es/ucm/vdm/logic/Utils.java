@@ -57,7 +57,7 @@ public final class Utils {
      * @param o (Object) Object parsed from json.
      * @return (double) Object value converted to double
      */
-    public static double parse_double(Object o){
+    public static double parseDouble(Object o){
         if(o instanceof Long){ // if Long, parse it to double
             return ((Long) o).doubleValue();
         } // if

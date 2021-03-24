@@ -83,7 +83,6 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
      *
      * @param fps (int) Max frame rate.
      */
-    @Override
     public void setFPS(int fps) {
         FPS = fps;
     } // setFPS

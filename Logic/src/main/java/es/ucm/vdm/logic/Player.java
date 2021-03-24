@@ -56,10 +56,10 @@ public class Player extends GameObject {
      *
      * @param p (ArrayList) Array with all the different positions.
      */
-    public void set_path(ArrayList p, int initPoint, int endingPoint){
+    public void setPath(ArrayList p, int initPoint, int endingPoint){
         _path = p;
 
-        calculate_direction(initPoint, endingPoint);
+        calculateDirection(initPoint, endingPoint);
     } // set_path
 
     /**
@@ -67,7 +67,7 @@ public class Player extends GameObject {
      *
      * @return (boolean) Flying state.
      */
-    public boolean is_flying(){
+    public boolean isFlying(){
         return _flying;
     } // is_flying
 
@@ -80,8 +80,8 @@ public class Player extends GameObject {
      * @param point1 (int) First point that made the collision
      * @param point2 (int) Second point that made the collision
      */
-    public void path_collide(Vector2 nPosition, ArrayList<Vector2> nPath, int point1, int point2){
-        set_pos(nPosition); // set player position to collide point
+    public void pathCollide(Vector2 nPosition, ArrayList<Vector2> nPath, int point1, int point2){
+        setPos(nPosition); // set player position to collide point
         _path = nPath;
 
         // Now calculate the new direction to fit with the direction that player had before
@@ -91,7 +91,7 @@ public class Player extends GameObject {
             _pathDir = 1;
 
             // Calculate direction to follow with the 2 points in order
-            calculate_direction(point1, point2);
+            calculateDirection(point1, point2);
             _actualPoint = point1;
         } // if
         else{
@@ -100,7 +100,7 @@ public class Player extends GameObject {
             _pathDir = -1;
 
             // Calculate direction to follow with 2 points in reverse
-            calculate_direction(point2, point1);
+            calculateDirection(point2, point1);
             _actualPoint = point2;
         } // else
 
@@ -112,7 +112,7 @@ public class Player extends GameObject {
      *
      * @return (Vector2) Actual direction.
      */
-    public Vector2 get_dir(){
+    public Vector2 getDir(){
         return _dir;
     } // get_dir
 
@@ -122,7 +122,7 @@ public class Player extends GameObject {
      * @param p (int) Initial point.
      * @param n (int) Next point.
      */
-    private void calculate_direction(int p, int n){
+    private void calculateDirection(int p, int n){
         Vector2 init = _path.get(p);
         Vector2 next = _path.get(n);
 
@@ -136,7 +136,7 @@ public class Player extends GameObject {
      *
      * @return (int)
      */
-    public int check_loop(){
+    public int checkLoop(){
         // Toroid
         if(_actualPoint + _pathDir == _path.size()){
             return 0;
@@ -180,7 +180,7 @@ public class Player extends GameObject {
      *
      * @return (int) Actual point where the player is moving.
      */
-    public int get_actualPoint(){
+    public int getActualPoint(){
         return _actualPoint;
     } // get_actualPoint
 
@@ -203,10 +203,10 @@ public class Player extends GameObject {
                 _pos._x = (_pos._x) + (((_dir._unit._x) * _lv) * t);
                 _pos._y = (_pos._y) + (((_dir._unit._y) * _lv) * t);
 
-                _pg.check_collisions(new Vector2(x, y), new Vector2(_pos._x, _pos._y));
+                _pg.checkCollisions(new Vector2(x, y), new Vector2(_pos._x, _pos._y));
 
                 // Check for looping path
-                int next = check_loop();
+                int next = checkLoop();
 
                 // Check path
                 if ((Math.min((_path.get(_actualPoint)._x), _pos._x) <= (_path.get(next)._x) &&
@@ -214,11 +214,11 @@ public class Player extends GameObject {
                         (Math.min((_path.get(_actualPoint)._y), _pos._y) <= (_path.get(next)._y) &&
                                 (_path.get(next)._y) <= Math.max((_path.get(_actualPoint)._y), _pos._y))) {
                     _actualPoint = next;
-                    next = check_loop();
+                    next = checkLoop();
 
                     _pos._x = _path.get(_actualPoint)._x;
                     _pos._y = _path.get(_actualPoint)._y;
-                    calculate_direction(_actualPoint, next);
+                    calculateDirection(_actualPoint, next);
                 } // if
                 else {
                     _pos._x = x + ((_dir._unit._x * _lv) * t);
@@ -232,7 +232,7 @@ public class Player extends GameObject {
                 _pos._x = (_pos._x) + (((_dir._unit._x) * _flv) * t) + (_dir._unit._x) * (_w / 9.7);
                 _pos._y = (_pos._y) + (((_dir._unit._y) * _flv) * t) + (_dir._unit._y) * (_h / 9.7);
 
-                _pg.check_collisions(new Vector2(x, y), _pos);
+                _pg.checkCollisions(new Vector2(x, y), _pos);
             } // else
 
             // Rotation is always happening
