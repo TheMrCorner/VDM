@@ -387,18 +387,14 @@ public class PlayGameState implements GameState {
     } // render
 
 
-
     /**
      * Process all input incoming form the Input class. If mouse clicked or screen touched, throw
      * player to his right until it hits a new line or leaves the play zone.
      *
-     * @param eng (Engine) Engine instance to access Input.
+     * @param e (List<Input.TouchEvent>) Event list taken from the Input class
      */
     @Override
-    public void processInput(Engine eng) {
-        // Get list of touch events from processing them
-        List<Input.TouchEvent> e = eng.getInput().getTouchEvent();
-
+    public void processInput(List<Input.TouchEvent> e) {
         int ptr = e.size() - 1; // Pointer to roam the list
 
         while(!e.isEmpty() && ptr >= -1){ // While list is not empty...

@@ -1,7 +1,10 @@
 package es.ucm.vdm.logic;
 
+import java.util.List;
+
 import es.ucm.vdm.engine.Engine;
 import es.ucm.vdm.engine.Graphics;
+import es.ucm.vdm.engine.Input;
 
 public interface GameState {
     /**
@@ -22,7 +25,7 @@ public interface GameState {
     /**
      * Method that processes the Input received from the Logic.
      *
-     * @param eng (Engine) Engine instance to access Input.
+     * @param e (List<Input.TouchEvent>) Event list taken from the Input class
      */
-    public void processInput (Engine eng); // processInput
+    public void processInput (List<Input.TouchEvent> e); // processInput
 } // GameState
