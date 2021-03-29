@@ -23,6 +23,8 @@ public class Main {
         // Set logic in engine for update calls
         _eng.setLogic(_log);
 
+        _log.initLogic();
+
         _eng.setFPS(FPS);
 
         // Run game

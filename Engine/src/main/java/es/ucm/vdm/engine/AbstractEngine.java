@@ -63,7 +63,6 @@ public abstract class AbstractEngine implements Engine {
 
             resize();
 
-            _l.initLogic();
             _tempLogic = null;
         } // if
     } // resetLogic
