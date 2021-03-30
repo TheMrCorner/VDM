@@ -395,9 +395,10 @@ public class PlayGameState implements GameState {
      */
     @Override
     public void processInput(List<Input.TouchEvent> e) {
-        int ptr = e.size() - 1; // Pointer to roam the list
+        // int ptr = e.size() - 1; // Pointer to roam the list
+        int ptr = 0;
 
-        while(!e.isEmpty() && ptr >= -1){ // While list is not empty...
+        while(ptr < e.size()){ // While list is not empty...
             Input.TouchEvent te = e.get(ptr); // Get touch event at pointers position
 
             switch(te.getType()){
@@ -413,8 +414,7 @@ public class PlayGameState implements GameState {
                     break;
             } // switch
 
-            e.remove(ptr);
-            ptr--;
+            ptr++;
         } // while
     } // processInput
 } // PlayGameState
