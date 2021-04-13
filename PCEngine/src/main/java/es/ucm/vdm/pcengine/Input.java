@@ -51,7 +51,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
      */
     @Override
     public void keyTyped(KeyEvent keyEvent) {
-        TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_TYPED, (int)keyEvent.getKeyChar());
+        TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_TYPED);
 
         addEvent(aux);
     }
@@ -64,7 +64,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
      */
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_PRESSED, keyEvent.getKeyCode());
+        TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_PRESSED);
 
         addEvent(aux);
     }
@@ -77,7 +77,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
      */
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_RELEASED, keyEvent.getID());
+        TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_RELEASED);
 
         addEvent(aux);
     }
@@ -107,7 +107,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
                 y = mouseEvent.getY();
             }
 
-            TouchEvent aux = new TouchEvent(x, y, TouchEvent.TouchType.CLICKED, 0);
+            TouchEvent aux = new TouchEvent(x, y, TouchEvent.TouchType.CLICKED);
 
             addEvent(aux);
         }
@@ -124,7 +124,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
     public void mousePressed(MouseEvent mouseEvent) {
         //Left click
         if(mouseEvent.getButton() == MouseEvent.BUTTON1) {
-            TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.PRESSED_DOWN, 0);
+            TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.PRESSED_DOWN);
 
             addEvent(aux);
         }
@@ -140,7 +140,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
         if(mouseEvent.getButton() == MouseEvent.BUTTON1) {
-            TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.RELEASED, 0);
+            TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.RELEASED);
 
             addEvent(aux);
         }
@@ -168,7 +168,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
      */
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
-        TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.MOVED, 0);
+        TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.MOVED);
 
         addEvent(aux);
     }

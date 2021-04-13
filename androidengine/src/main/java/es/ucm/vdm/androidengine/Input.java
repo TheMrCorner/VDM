@@ -69,8 +69,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Vie
                     y = (int)motionEvent.getY();
                 }
                 // Create a new TouchEvent with all the parameters needed
-                _te = new TouchEvent(x, y, TouchEvent.TouchType.CLICKED,
-                        motionEvent.getActionIndex());
+                _te = new TouchEvent(x, y, TouchEvent.TouchType.CLICKED);
 
                 // Add event to the list
                 addEvent(_te);
@@ -92,7 +91,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Vie
                     y = (int)motionEvent.getY();
                 }
                 // Create a new TouchEvent with all the parameters needed
-                _te = new TouchEvent(x, y, TouchEvent.TouchType.RELEASED, motionEvent.getActionIndex());
+                _te = new TouchEvent(x, y, TouchEvent.TouchType.RELEASED);
 
                 // Add that event to the list
                 addEvent(_te);

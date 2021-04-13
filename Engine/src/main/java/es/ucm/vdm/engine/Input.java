@@ -23,11 +23,10 @@ public interface Input {
          * @param y Position Y (pixels)
          * @param t TouchType of the event
          */
-        public TouchEvent(int x, int y, TouchType t, int i){
+        public TouchEvent(int x, int y, TouchType t){
             _x = x;
             _y = y;
             _t = t;
-            _fingerId = i;
         }
 
         /**
@@ -46,10 +45,6 @@ public interface Input {
             return _y;
         }
 
-        public int getIdf(){
-            return _fingerId;
-        }
-
         /**
          * Return the type of the event, to be handled by the Logic
          * @return TouchType
@@ -62,8 +57,6 @@ public interface Input {
         // Position X and Y
         int _x, _y;
 
-        // finger identifier
-        int _fingerId;
 
         /**
          * TouchType of the TouchEvent.
