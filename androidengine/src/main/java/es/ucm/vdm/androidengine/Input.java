@@ -6,16 +6,17 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.ucm.vdm.engine.AbstractInput;
+
 /**
  * Class that manages the input. Get Input events generated from Android and manage them with the
- * usage we want to give them. Implements Input interface and OnTouchListener interface. Transforms
- * android touch events into Engine's touch events.
+ * usage we want to give them. Implements AbstractInput class and OnTouchListener interface.
+ * Transforms android touch events into Engine's touch events.
  */
-public class Input implements es.ucm.vdm.engine.Input, View.OnTouchListener {
+public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, View.OnTouchListener {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
-    List<TouchEvent> _touchEventList;
     Graphics _g;
 
     /**
@@ -27,32 +28,11 @@ public class Input implements es.ucm.vdm.engine.Input, View.OnTouchListener {
      */
     Input(Graphics g){
         // Init list
-        _touchEventList = new ArrayList<TouchEvent>();
+        _touchEvn = new ArrayList<TouchEvent>();
         // Save Graphics
         _g = g;
     } // Input
 
-    /**
-     * Returns all the events stored in the event list, then cleans the internal list for future
-     * use.
-     *
-     * @return (List<TouchEvent>) List of the events.
-     */
-    @Override
-    public List<TouchEvent> getTouchEvent() {
-        // Create a temporal list to return events
-        List<TouchEvent> tmp;
-
-        synchronized (this){
-            // Copy internal list
-            tmp = new ArrayList<TouchEvent>(_touchEventList);
-            // Clear internal list
-            _touchEventList.clear();
-        } // synchronized
-
-        // Return event list
-        return tmp;
-    } // getTouchEvent
 
     /**
      * Called when the screen is touched. Gets the android event and processes it to create our own
@@ -93,10 +73,7 @@ public class Input implements es.ucm.vdm.engine.Input, View.OnTouchListener {
                         motionEvent.getActionIndex());
 
                 // Add event to the list
-                synchronized (this){
-                    // Synchronize all threads with the same list
-                    _touchEventList.add(_te);
-                } // synchronized
+                addEvent(_te);
 
                 touched = true;
                 break;
@@ -118,10 +95,8 @@ public class Input implements es.ucm.vdm.engine.Input, View.OnTouchListener {
                 _te = new TouchEvent(x, y, TouchEvent.TouchType.RELEASED, motionEvent.getActionIndex());
 
                 // Add that event to the list
-                synchronized (this){
-                    // Synchronize all threads with same list
-                    _touchEventList.add(_te);
-                } // synchronized
+                addEvent(_te);
+
                 touched = true;
                 break;
         } // switch

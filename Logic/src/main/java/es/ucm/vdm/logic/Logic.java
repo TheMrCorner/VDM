@@ -84,7 +84,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     @Override
     public void update(double t) {
         // Process actual input
-        test.processInput(_eng.getInput().getTouchEvent());
+        test.processInput(_eng.getInput().getTouchEvents());
         test.update(t);
         // Update GameState
         //_currentGameState.update(t);

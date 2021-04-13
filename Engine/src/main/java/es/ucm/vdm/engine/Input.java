@@ -27,7 +27,7 @@ public interface Input {
             _x = x;
             _y = y;
             _t = t;
-            _idf = i;
+            _fingerId = i;
         }
 
         /**
@@ -47,7 +47,7 @@ public interface Input {
         }
 
         public int getIdf(){
-            return _idf;
+            return _fingerId;
         }
 
         /**
@@ -62,8 +62,8 @@ public interface Input {
         // Position X and Y
         int _x, _y;
 
-        // Identifier
-        int _idf;
+        // finger identifier
+        int _fingerId;
 
         /**
          * TouchType of the TouchEvent.
@@ -71,5 +71,5 @@ public interface Input {
         TouchType _t;
     }
 
-    List<TouchEvent> getTouchEvent();
+    List<TouchEvent> getTouchEvents();
 }

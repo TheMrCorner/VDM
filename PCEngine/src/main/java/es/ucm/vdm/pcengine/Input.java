@@ -8,15 +8,18 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Comentar
+import es.ucm.vdm.engine.AbstractInput;
 
-public class Input implements es.ucm.vdm.engine.Input, MouseListener, KeyListener, MouseMotionListener {
+
+/**
+ * Class that manages the input. Get Input events generated from the various input listeners and
+ * manage them with the usage we want to give them. Implements AbstractInput class and MouseListener,
+ *  KeyListener and MouseMotionListener interface. Transforms these events into Engine's touch events.
+ */
+public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, MouseListener, KeyListener, MouseMotionListener {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
-    // Event list (Or even Queue)
-    List<TouchEvent> _touchEvn;
-
 
     // Instance of Graphics for checking position
     Graphics _g;
@@ -38,56 +41,58 @@ public class Input implements es.ucm.vdm.engine.Input, MouseListener, KeyListene
         _g = g;
     }
 
-    /**
-     * Returns an event of touching something in the window (mouse click etc.) Saves the list in a
-     * temporary Variable and then clears it.
-     * @return TouchEvent List
-     */
-    @Override
-    public synchronized List<TouchEvent> getTouchEvent() {
-        List<TouchEvent> tmp;
-
-        synchronized (this) {
-            tmp = new ArrayList<TouchEvent>(_touchEvn);
-            _touchEvn.clear();
-        }
-
-        return tmp;
-    }
-
     //-----------------------KeyboardEvent---------------------------
 
+    /**
+     * Called when a key is typed. Gets the listener event and processes it to create our own
+     * TouchEvent and add it to the TouchEvent list. Gives it a TouchType value.
+     *
+     * @param keyEvent (KeyEvent) KE received from the listener
+     */
     @Override
     public void keyTyped(KeyEvent keyEvent) {
         TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_TYPED, (int)keyEvent.getKeyChar());
 
-        synchronized (this){
-            _touchEvn.add(aux);
-        }
+        addEvent(aux);
     }
 
+    /**
+     * Called when a key is pressed. Gets the listener event and processes it to create our own
+     * TouchEvent and add it to the TouchEvent list. Gives it a TouchType value.
+     *
+     * @param keyEvent (KeyEvent) KE received from the listener
+     */
     @Override
     public void keyPressed(KeyEvent keyEvent) {
         TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_PRESSED, keyEvent.getKeyCode());
 
-        synchronized (this){
-            _touchEvn.add(aux);
-        }
+        addEvent(aux);
     }
 
+    /**
+     * Called when a key is released. Gets the listener event and processes it to create our own
+     * TouchEvent and add it to the TouchEvent list. Gives it a TouchType value.
+     *
+     * @param keyEvent (KeyEvent) KE received from the listener
+     */
     @Override
     public void keyReleased(KeyEvent keyEvent) {
         TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_RELEASED, keyEvent.getID());
 
-        synchronized (this){
-            _touchEvn.add(aux);
-        }
+        addEvent(aux);
     }
 
     //-----------------------KeyboardEvent---------------------------
 
     //------------------------MouseEvent-----------------------------
 
+    /**
+     * Called when the mouse is clicked. Gets the listener event and processes it to create our own
+     * TouchEvent and add it to the TouchEvent list. Repositions coordinates of the event and gives
+     * it a TouchType value.
+     *
+     * @param mouseEvent (MouseEvent) ME received from the listener
+     */
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         if(mouseEvent.getButton() == MouseEvent.BUTTON1) {
@@ -103,30 +108,41 @@ public class Input implements es.ucm.vdm.engine.Input, MouseListener, KeyListene
             }
 
             TouchEvent aux = new TouchEvent(x, y, TouchEvent.TouchType.CLICKED, 0);
-            synchronized (this){
-                _touchEvn.add(aux);
-            }
+
+            addEvent(aux);
         }
     }
 
+    /**
+     * Called when the mouse is pressed. Gets the listener event and processes it to create our own
+     * TouchEvent and add it to the TouchEvent list. Picks the coordinates of the event and gives
+     * it a TouchType value.
+     *
+     * @param mouseEvent (MouseEvent) ME received from the listener
+     */
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
         //Left click
         if(mouseEvent.getButton() == MouseEvent.BUTTON1) {
             TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.PRESSED_DOWN, 0);
-            synchronized (this){
-                _touchEvn.add(aux);
-            }
+
+            addEvent(aux);
         }
     }
 
+    /**
+     * Called when the mouse is released. Gets the listener event and processes it to create our own
+     * TouchEvent and add it to the TouchEvent list. Picks the coordinates of the event and gives
+     * it a TouchType value.
+     *
+     * @param mouseEvent (MouseEvent) ME received from the listener
+     */
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
         if(mouseEvent.getButton() == MouseEvent.BUTTON1) {
             TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.RELEASED, 0);
-            synchronized (this){
-                _touchEvn.add(aux);
-            }
+
+            addEvent(aux);
         }
     }
 
@@ -143,12 +159,18 @@ public class Input implements es.ucm.vdm.engine.Input, MouseListener, KeyListene
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {    }
 
+    /**
+     * Called when the mouse is moved. Gets the listener event and processes it to create our own
+     * TouchEvent and add it to the TouchEvent list. Gets the coords from the event and gives it
+     * a TouchType value.
+     *
+     * @param mouseEvent (MouseEvent) ME received from the listener
+     */
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.MOVED, 0);
-        synchronized (this){
-            _touchEvn.add(aux);
-        }
+
+        addEvent(aux);
     }
 
     //------------------------MouseMotionEvent-----------------------
