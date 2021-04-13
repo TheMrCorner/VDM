@@ -69,7 +69,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Vie
                     y = (int)motionEvent.getY();
                 }
                 // Create a new TouchEvent with all the parameters needed
-                _te = new TouchEvent(x, y, TouchEvent.TouchType.CLICKED);
+                _te = new TouchEvent(x, y, TouchEvent.TouchType.PRESSED_DOWN);
 
                 // Add event to the list
                 addEvent(_te);
