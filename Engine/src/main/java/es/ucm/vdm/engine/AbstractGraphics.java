@@ -102,13 +102,8 @@ public abstract class AbstractGraphics implements Graphics {
      */
     public boolean isInCanvas(int x, int y) {
         // Checking if coordinates are inside the canvas Rectangle.
-        if( ((x >= _can.getX()) && (x < (_can.getX() + _can.getWidth())))
-                && ((y >= _can.getY()) && (y < (_can.getY() + _can.getHeight())))){
-            return true;
-        } // if
-        else {
-            return false;
-        } // else
+        return ((x >= _can.getX()) && (x < (_can.getX() + _can.getWidth())))
+                && ((y >= _can.getY()) && (y < (_can.getY() + _can.getHeight())));
     } // isInCanvas
 
     /**

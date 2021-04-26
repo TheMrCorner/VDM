@@ -25,13 +25,12 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
     int _width;
     int _height;
     int FPS;
-    double averageFPS;
     boolean forward = true;
 
     // Testing
     int _currentColor = 0; //Background sprites iterator
     //GREEN, TURQUOISE, LIGHTBLUE, BLUE, PURPLE, DARKBLUE, YELLOW, ORANGE, BROWN
-    int _planeColor[] = {0xff41a85f, 0xff00a885, 0xff3d8eb9, 0xff2969b0, 0xff553982, 0xff28324e, 0xfff37934,
+    int[] _planeColor = {0xff41a85f, 0xff00a885, 0xff3d8eb9, 0xff2969b0, 0xff553982, 0xff28324e, 0xfff37934,
             0xffd14b41, 0xff75706b};
 
     /**
@@ -155,55 +154,47 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
     @Override
     public void run() {
         // FPS
-        long startTime; // Starting loop time
-        long URDTimeMilliSec; // Time since start in millisecond
-        long waitTime; // Waiting time for next frame
+        long startTime = System.nanoTime(); // Starting loop time
         long totalTime = 0; // Total time
 
-        int fCount = 0; // FrameCount
-        int maxFrameRate = 30; // Max FPS (Default 30, can change)
-
-        long targetTime = 1000000000l / FPS; // Time to run at FPS
+        long targetTime = 1000000000L / FPS; // Time to run at FPS
 
         //Main Loop
         while(true){ // TODO: Sustituir esto por una variable boolean _running (como en android)
             if(_l != null) {
-                startTime = System.nanoTime();
-
-                // Update width and height
-                _width = _win.getWidth();
-                _height = _win.getHeight();
-                // Calculate time passed between frames and convert it to seconds
-                _currentTime = System.nanoTime();
-                _nanoElapsedTime = _currentTime - _lastFrameTime;
-                _lastFrameTime = _currentTime;
-                _elapsedTime = (double) _nanoElapsedTime / 1.0E9;
-
-                update();
-
-                // Inform about the fps (Debug only)
-                if (_currentTime - _info > 1000000000l) {
-                    long fps = _frames * 1000000000l / (_currentTime - _info);
-                    System.out.println("Info: " + fps + " fps");
-                    _frames = 0;
-                    _info = _currentTime;
-                } // if
-                ++_frames; // Update frames
-
-                // Clear and update graphics
-                render();
-
                 // Frame cap
                 totalTime = System.nanoTime() - startTime;
 
                 if (totalTime < targetTime) {
-                    try {
-                        Thread.sleep((targetTime - totalTime) / 1000000);
-                    } // try
-                    catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } // catch
+                    continue;
                 } // if
+                else {
+                    // Update width and height
+                    _width = _win.getWidth();
+                    _height = _win.getHeight();
+
+                    // Calculate time passed between frames and convert it to seconds
+                    _currentTime = System.nanoTime();
+                    _nanoElapsedTime = _currentTime - _lastFrameTime;
+                    _lastFrameTime = _currentTime;
+                    _elapsedTime = (double) _nanoElapsedTime / 1.0E9;
+
+                    update();
+
+                    // Inform about the fps
+                    if (_currentTime - _info > 1000000000L) {
+                        long fps = _frames * 1000000000L / (_currentTime - _info);
+                        System.out.println("Info: " + fps + " fps");
+                        _frames = 0;
+                        _info = _currentTime;
+                    } // if
+                    ++_frames; // Update frames
+
+                    // Clear and update graphics
+                    render();
+
+                    startTime = System.nanoTime();
+                } // else
             } // if
 
             if (_tempLogic != null) {
