@@ -30,8 +30,8 @@ public class Path extends GameObject {
      * @param c (int) Color to paint the paths
      * @param paths (JSONArray) Array with all the paths
      */
-    public Path(int x, int y, int c, JSONArray paths) {
-        super(x, y, c);
+    public Path(int x, int y, int c, int thickness, JSONArray paths) {
+        super(x, y, c, thickness);
 
         _paths = new ArrayList<>();
         _pathsDirs = new ArrayList<>();
@@ -177,7 +177,7 @@ public class Path extends GameObject {
                 g.drawLine(g.repositionX((int)_paths.get(i).get(j)._x),
                         g.repositionY((int)_paths.get(i).get(j)._y) * (-1),
                         g.repositionX((int)_paths.get(i).get(next)._x),
-                        g.repositionY((int)_paths.get(i).get(next)._y) * (-1));
+                        g.repositionY((int)_paths.get(i).get(next)._y) * (-1), _lineThickness);
             } // vertices for
         } // paths for
 

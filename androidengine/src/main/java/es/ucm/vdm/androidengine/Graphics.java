@@ -80,9 +80,9 @@ public class Graphics extends AbstractGraphics {
      * @param y2 (int) Y position of the ending point
      */
     @Override
-    public void drawLine(int x1, int y1, int x2, int y2) {
+    public void drawLine(int x1, int y1, int x2, int y2, int thickness) {
         _cnv.setDensity(1);
-        _pnt.setStrokeWidth(2);
+        _pnt.setStrokeWidth(thickness);
         _cnv.drawLine(x1, y1, x2, y2, _pnt);
     } // drawLine
 

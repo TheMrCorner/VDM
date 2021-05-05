@@ -33,8 +33,8 @@ public class Item extends GameObject {
      * @param height (int) Height of the square
      * @param angVel (float) Angular velocity the Object will have for rotation
      */
-    public Item(double x, double y, int c, int width, int height, float angVel) {
-        super(x, y, c);
+    public Item(double x, double y, int c, int width, int height, float angVel, int thickness) {
+        super(x, y, c, thickness);
         _w = width;
         _h = height;
         _av = angVel;
@@ -42,8 +42,9 @@ public class Item extends GameObject {
         _centerAv = -1;
     } // Item
 
-    public Item(double x, double y, int c, int width, int height, float angVel, float tAngVel, float rotRefer, float distCenter){
-        super(x, y, c);
+    public Item(double x, double y, int c, int width, int height, float angVel, int thickness,
+                float tAngVel, float rotRefer, float distCenter){
+        super(x, y, c, thickness);
         _w = width;
         _h = height;
         _av = angVel;
@@ -116,10 +117,14 @@ public class Item extends GameObject {
         g.rotate(_rot);
 
         // Draw square
-        g.drawLine(-n.width/2, -n.height/2, n.width/2, -n.height/2);
-        g.drawLine(-n.width/2, -n.height/2, -n.width/2, n.height/2);
-        g.drawLine(n.width/2, -n.height/2, n.width/2, n.height/2);
-        g.drawLine(-n.width/2, n.height/2, n.width/2, n.height/2);
+        g.drawLine(-n.width/2, -n.height/2,
+                n.width/2, -n.height/2, _lineThickness);
+        g.drawLine(-n.width/2, -n.height/2,
+                -n.width/2, n.height/2, _lineThickness);
+        g.drawLine(n.width/2, -n.height/2,
+                n.width/2, n.height/2, _lineThickness);
+        g.drawLine(-n.width/2, n.height/2,
+                n.width/2, n.height/2, _lineThickness);
 
         // Reset canvas after drawing
         g.restore();

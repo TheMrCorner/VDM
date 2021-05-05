@@ -70,7 +70,7 @@ public interface Graphics {
      * @param y2 (int) Y position of the ending point
      * @param x2 (int) X position of the ending point
      */
-    void drawLine(int x1, int y1, int x2, int y2);
+    void drawLine(int x1, int y1, int x2, int y2, int thickness);
 
     void fillRect(int x1, int y1, int x2, int y2);
 

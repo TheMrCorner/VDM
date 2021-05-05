@@ -23,8 +23,9 @@ public class Life extends GameObject {
      * @param y (double) Y coordinate
      * @param c (int) Color
      */
-    public Life(double x, double y, int c, int secondColor, int w, int h, int crossRot) {
-        super(x, y, c);
+    public Life(double x, double y, int c, int secondColor, int w, int h,
+                int crossRot, int thickness) {
+        super(x, y, c, thickness);
         _w = w;
         _h = h;
         _color2 = secondColor;
@@ -70,16 +71,21 @@ public class Life extends GameObject {
             for(int i = 1; i >= -1; i-=2){
                 g.save();
                 g.rotate(_rot * i);
-                g.drawLine(-g.repositionX((int)_diag/ 2),  0, g.repositionX((int)_diag / 2), 0);
+                g.drawLine(-g.repositionX((int)_diag/ 2),  0,
+                        g.repositionX((int)_diag / 2), 0, _lineThickness);
                 g.restore();
             }
         } // if
         else {
             // Square
-            g.drawLine(-n.width / 2, -n.height / 2, n.width / 2, -n.height / 2);
-            g.drawLine(-n.width / 2, -n.height / 2, -n.width / 2, n.height / 2);
-            g.drawLine(n.width / 2, -n.height / 2, n.width / 2, n.height / 2);
-            g.drawLine(-n.width / 2, n.height / 2, n.width / 2, n.height / 2);
+            g.drawLine(-n.width / 2, -n.height / 2,
+                    n.width / 2, -n.height / 2, _lineThickness);
+            g.drawLine(-n.width / 2, -n.height / 2,
+                    -n.width / 2, n.height / 2, _lineThickness);
+            g.drawLine(n.width / 2, -n.height / 2,
+                    n.width / 2, n.height / 2, _lineThickness);
+            g.drawLine(-n.width / 2, n.height / 2,
+                    n.width / 2, n.height / 2, _lineThickness);
         } // else
 
         // Reset canvas after drawing

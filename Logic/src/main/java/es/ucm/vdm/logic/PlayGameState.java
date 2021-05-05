@@ -44,6 +44,7 @@ public class PlayGameState implements GameState {
     int _playerC = 0xFF0000FF; // Player color ARGB
     int _itemC = 0xFFFFF200; // Item color ARGB
     int _enemyC = 0xFFFF0000; // Enemy color ARGB
+    int _lineThickness = 4;
     int _playerWidth = 12; // Player width
     int _itemWidth = 8; // Item width
     float _aVel = 180; // Angular velocity for all player and items
@@ -91,7 +92,7 @@ public class PlayGameState implements GameState {
             // Set X position relative to number of lifes and canvas width
             lifeXposition = _l.getCanvasSize().width - (20 * (lf + 1));
             nLife = new Life(lifeXposition, lifeYposition, _playerC, _enemyC,
-                    _playerWidth, _playerWidth, 45);
+                    _playerWidth, _playerWidth, 45, _lineThickness);
             _lf.add(nLife);
         } // for
 
@@ -116,7 +117,7 @@ public class PlayGameState implements GameState {
         JSONArray e = (JSONArray) level.get("enemies"); // Enemies
 
         // Create Path
-        _paths = new Path(_posOrX, _posOrY, 0xFFFFFFFF, p); // Path object
+        _paths = new Path(_posOrX, _posOrY, 0xFFFFFFFF, _lineThickness, p); // Path object
 
         createItems(i);
 
@@ -127,7 +128,7 @@ public class PlayGameState implements GameState {
 
         // Player
         _player =  new Player(_paths.getInitPos()._x, _paths.getInitPos()._y, _playerC,
-                _playerWidth, _playerWidth, _playerVel, _aVel, this);
+                _playerWidth, _playerWidth, _lineThickness, _playerVel, _aVel, this);
         _player.setPath(_paths.getPaths().get(0), 0, 1);
         _player.setCoordOrigin(new Vector2(_posOrX, _posOrY));
         _paths.setActivePath(0);
@@ -186,11 +187,12 @@ public class PlayGameState implements GameState {
                 coordY += magnitude * Math.round(Math.cos(Math.toRadians(trueAng)));
 
                 nItem = new Item(coordX, coordY, _itemC, _itemWidth,
-                        _itemWidth, _aVel, (float)totalAngularVelocity, (float)trueAng, (float)magnitude);
+                        _itemWidth, _aVel, _lineThickness, (float)totalAngularVelocity,
+                        (float)trueAng, (float)magnitude);
             }
             else{
                 // Else create a normal Item
-                nItem = new Item(coordX, coordY, _itemC, _itemWidth, _itemWidth, _aVel);
+                nItem = new Item(coordX, coordY, _itemC, _itemWidth, _itemWidth, _aVel, _lineThickness);
             }
 
             nItem.setCoordOrigin(new Vector2(_posOrX, _posOrY));
@@ -259,7 +261,7 @@ public class PlayGameState implements GameState {
                 direction = null;
             } // else
 
-            nEnemy = new Enemy(coordX, coordY, _enemyC, (int) length, (int) angle,
+            nEnemy = new Enemy(coordX, coordY, _enemyC, _lineThickness, (int) length, (int) angle,
                     (float) angSpeed, linearSpeed, (float) waitTime, direction);
             nEnemy.setCoordOrigin(new Vector2(_posOrX, _posOrY));
             _en.add(nEnemy);

@@ -39,8 +39,8 @@ public class Player extends GameObject {
      * @param lv (float) Linear velocity
      * @param av (float) Angular velocity
      */
-    public Player(double x, double y, int c, int w, int h, float lv, float av, PlayGameState pg){
-        super(x, y, c);
+    public Player(double x, double y, int c, int w, int h, int thickness, float lv, float av, PlayGameState pg){
+        super(x, y, c, thickness);
         _dir = new Vector2(0.35, 0);
         _w = w;
         _h = h;
@@ -267,10 +267,14 @@ public class Player extends GameObject {
             g.rotate(_rot);
 
             // Draw square
-            g.drawLine(-n.width / 2, -n.height / 2, n.width / 2, -n.height / 2);
-            g.drawLine(-n.width / 2, -n.height / 2, -n.width / 2, n.height / 2);
-            g.drawLine(n.width / 2, -n.height / 2, n.width / 2, n.height / 2);
-            g.drawLine(-n.width / 2, n.height / 2, n.width / 2, n.height / 2);
+            g.drawLine(-n.width / 2, -n.height / 2,
+                    n.width / 2, -n.height / 2, _lineThickness);
+            g.drawLine(-n.width / 2, -n.height / 2,
+                    -n.width / 2, n.height / 2, _lineThickness);
+            g.drawLine(n.width / 2, -n.height / 2,
+                    n.width / 2, n.height / 2, _lineThickness);
+            g.drawLine(-n.width / 2, n.height / 2,
+                    n.width / 2, n.height / 2, _lineThickness);
 
             // Reset canvas after drawing
             g.restore();

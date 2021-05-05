@@ -21,9 +21,9 @@ public class Enemy extends GameObject {
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
 
-    public Enemy(double x, double y, int c, int length, float angle, float angularSpeed,
-                 Vector2 linearSpeed, float waitTime, Vector2 direction){
-        super(x, y,c);
+    public Enemy(double x, double y, int c, int thickness, int length, float angle,
+                 float angularSpeed, Vector2 linearSpeed, float waitTime, Vector2 direction){
+        super(x, y, c, thickness);
         _len = length;
         _rot = angle;
         _aSp = angularSpeed;
@@ -124,7 +124,8 @@ public class Enemy extends GameObject {
 
         g.rotate(-_rot);
 
-        g.drawLine(-g.repositionX(_len/ 2),  0, g.repositionX(_len / 2), 0);
+        g.drawLine(-g.repositionX(_len/ 2),  0,
+                g.repositionX(_len / 2), 0, _lineThickness);
 
         // Reset canvas after drawing
         g.restore();

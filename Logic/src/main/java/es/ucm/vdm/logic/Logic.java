@@ -69,9 +69,9 @@ public class Logic implements es.ucm.vdm.engine.Logic {
             e.printStackTrace();
         }
 
-        JSONObject l = (JSONObject)_levels.get(16);
+        JSONObject l = (JSONObject)_levels.get(12);
 
-        test = new PlayGameState(l, 5, 0, this);
+        test = new PlayGameState(l, 15, 0, this);
 
         // Init first state (Create a main menu state)
     } // initLogic

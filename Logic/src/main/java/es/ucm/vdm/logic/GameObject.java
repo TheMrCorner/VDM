@@ -10,6 +10,7 @@ public abstract class GameObject {
     protected Vector2 _initPos;
     protected float _rot; // rotation
     protected int _c; // Color for painting player
+    protected int _lineThickness;
     protected boolean _act; // Check if GO is active or not
     protected Vector2 _coordOrigin; // Origen de coordenadas
 
@@ -21,10 +22,11 @@ public abstract class GameObject {
      * @param y (double) Y coordinate
      * @param c (int) Color
      */
-    public GameObject(double x, double y, int c){
+    public GameObject(double x, double y, int c, int thickness){
         _pos = _initPos = new Vector2(x, y);
         setColor(c);
         _rot = 0;
+        _lineThickness = thickness;
     } // GameObject
 
     // Functions and methods to access GO position

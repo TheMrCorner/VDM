@@ -79,9 +79,9 @@ public class Graphics extends AbstractGraphics {
      * @param y2 (int) Y position of the ending point
      */
     @Override
-    public void drawLine(int x1, int y1, int x2, int y2) {
+    public void drawLine(int x1, int y1, int x2, int y2, int thickness) {
         try{
-            ((Graphics2D)(_win.getJGraphics())).setStroke(new BasicStroke(2));
+            ((Graphics2D)(_win.getJGraphics())).setStroke(new BasicStroke(thickness));
             ((Graphics2D)(_win.getJGraphics())).drawLine(x1, y1, x2, y2);
         } // try
         catch (Exception e){
