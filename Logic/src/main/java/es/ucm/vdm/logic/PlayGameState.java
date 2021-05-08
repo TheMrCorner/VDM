@@ -330,35 +330,36 @@ public class PlayGameState implements GameState {
     } // kill_player
 
     /**
-     * Update all the objects in this state and check the colisions between Player and the rest of
+     * Update all the objects in this state and check the collisions between Player and the rest of
      * the objects.
      *
      * @param t (double) Time elapsed since the last frame.
      */
     @Override
     public void update(double t) {
-        // Then render items
+        // First update all items
         for (int i = 0; i < _it.size(); i++) {
             _it.get(i).update(t);
         } // for
 
-        // Next render enemies
+        // Then update enemies
         for (int i = 0; i < _en.size(); i++) {
             _en.get(i).update(t);
         } // for
 
+        // Update player
         if(_countdown <= 0) {
-            // Then render Player
             _player.update(t);
         }
         else{
             _countdown -= t;
 
             if(_countdown <= 0){
-                // !!!!Esto se debería hacer de otra manera, pero no me da tiempo a tenerlo para ahora
+                // !!!!Esto se debería hacer de otra manera,
+                // pero no me da tiempo a tenerlo para ahora
                 parseLevel(_level);
-            }
-        }
+            } // if
+        } // else
     } // update
 
     @Override
