@@ -59,9 +59,19 @@ public class Item extends GameObject {
     //---------------------------------------------------------------
 
     /**
+     * Function to reset the Item to it's initial value.
+     */
+    public void resetItem(){
+        _taken = false;
+        _act = true;
+        _rot = 0;
+    } // resetItem
+
+    /**
      * Function called when an item is taken by the player.
      */
     public void itemTaken(){
+        _act = false;
         _taken = true;
     } // item_taken
 
@@ -76,18 +86,18 @@ public class Item extends GameObject {
 
         if(_rot >= 360){
             _rot = 0;
-        }
+        } // if
 
         if(_centerAv != -1){
             _totalRot += _centerAv * t;
 
             if(_totalRot >= 360){
                 _totalRot = 0;
-            }
+            } // if
 
             _pos._x = _coordOrigin._x + _distanceCenter *Math.sin(Math.toRadians(_totalRot));
             _pos._y = _coordOrigin._y + _distanceCenter * Math.cos(Math.toRadians(_totalRot));
-        }
+        } // if
     } // update
 
     /**

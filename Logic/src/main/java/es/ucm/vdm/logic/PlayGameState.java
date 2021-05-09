@@ -135,6 +135,21 @@ public class PlayGameState implements GameState {
     } // parse_level
 
     /**
+     * Function to reset the level and put everything to how it was at the beginning
+     */
+    private void resetLevel(){
+        // Reset items
+        for(int i = 0; i < _it.size(); i++){
+            ((Item)_it.get(i)).resetItem();
+        } // for
+
+        // Reset player position
+        _player.resetPlayer(_paths.getInitPos(), _paths.getPaths().get(0));
+        _paths.setActivePath(0);
+        _dead = false;
+    } // resetLevel
+
+    /**
      * Function that parses and creates all the items in the scene.
      *
      * @param i (JSONArray) An array with all the different items.
@@ -189,11 +204,11 @@ public class PlayGameState implements GameState {
                 nItem = new Item(coordX, coordY, _itemC, _itemWidth,
                         _itemWidth, _aVel, _lineThickness, (float)totalAngularVelocity,
                         (float)trueAng, (float)magnitude);
-            }
+            } // if
             else{
                 // Else create a normal Item
                 nItem = new Item(coordX, coordY, _itemC, _itemWidth, _itemWidth, _aVel, _lineThickness);
-            }
+            } // else
 
             nItem.setCoordOrigin(new Vector2(_posOrX, _posOrY));
             _it.add(nItem);
@@ -261,7 +276,7 @@ public class PlayGameState implements GameState {
                 direction = null;
             } // else
 
-            nEnemy = new Enemy(coordX, coordY, _enemyC, _lineThickness, (int) length, (int) angle,
+            nEnemy = new Enemy(coordX, coordY, _enemyC, _lineThickness, (int) length - 2, (int) angle,
                     (float) angSpeed, linearSpeed, (float) waitTime, direction);
             nEnemy.setCoordOrigin(new Vector2(_posOrX, _posOrY));
             _en.add(nEnemy);
@@ -357,7 +372,7 @@ public class PlayGameState implements GameState {
             if(_countdown <= 0){
                 // !!!!Esto se debería hacer de otra manera,
                 // pero no me da tiempo a tenerlo para ahora
-                parseLevel(_level);
+                resetLevel();
             } // if
         } // else
     } // update

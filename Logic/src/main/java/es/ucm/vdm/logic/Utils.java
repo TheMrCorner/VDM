@@ -23,14 +23,14 @@ public final class Utils {
         return null;
     } // segmentsIntersection
 
-	/*public static int sqrDistancePointSegment() {
+	public static int sqrDistancePointSegment() {
+        return 0;
+    } // sqrDistancePointSegment
 
-    }*/
-
-	public static Vector2 rotVect(Vector2 v, float ang){
+	public static Vector2 rotVect(Vector2 v, double ang){
         return new Vector2(
                 Math.round(Math.cos(Math.toRadians(ang)) * (v._x)) - Math.round(Math.sin(Math.toRadians(ang)) * (v._y)),
-                Math.round(Math.sin(Math.toRadians(ang)) * (v._x)) - Math.round(Math.cos(Math.toRadians(ang)) * (v._y))
+                Math.round(Math.sin(Math.toRadians(ang)) * (v._x)) + Math.round(Math.cos(Math.toRadians(ang)) * (v._y))
         );
     } // rotVect
 

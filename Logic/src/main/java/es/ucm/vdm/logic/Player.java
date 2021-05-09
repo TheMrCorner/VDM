@@ -14,6 +14,8 @@ public class Player extends GameObject {
     //---------------------------------------------------------------
     int _w, _h;
     Vector2 _dir; // Direction, points at where the Player is moving
+    Vector2 _ipos; // Initial path position
+    double _dist; // distance to initial position of the path
     float _lv; // Linear velocity
     final float _flv = 1500; // Flying linear velocity (constant)
     float _av; // Angular velocity
@@ -41,7 +43,7 @@ public class Player extends GameObject {
      */
     public Player(double x, double y, int c, int w, int h, int thickness, float lv, float av, PlayGameState pg){
         super(x, y, c, thickness);
-        _dir = new Vector2(0.35, 0);
+        _dir = new Vector2(0, 0);
         _w = w;
         _h = h;
         _lv = lv;
@@ -49,6 +51,7 @@ public class Player extends GameObject {
         _act = true;
         _pg = pg;
         _pathDir = 1;
+        _flying = false;
     } // Player
 
     /**
@@ -61,6 +64,17 @@ public class Player extends GameObject {
 
         calculateDirection(initPoint, endingPoint);
     } // set_path
+
+    public void resetPlayer(Vector2 pos, ArrayList p){
+        _dir = new Vector2(0, 0);
+        _pos = _initPos = new Vector2(pos._x, pos._y);
+        _rot = 0;
+        _pathDir = 1;
+        _act = true;
+        _flying = false;
+        _actualPoint = 0;
+        setPath(p, 0, 1);
+    } // resetPlayer
 
     /**
      * Function to check if player is flying.
@@ -224,7 +238,7 @@ public class Player extends GameObject {
                     _pos._x = x + ((_dir._unit._x * _lv) * t);
                     _pos._y = y + ((_dir._unit._y * _lv) * t);
                 } // else
-            } // if
+            } // if not flying
             else {
                 double x = _pos._x + (_dir._unit._x) * (_w / 9.1);
                 double y = _pos._y + (_dir._unit._y) * (_h / 9.1);
@@ -235,7 +249,7 @@ public class Player extends GameObject {
                 _pg.checkCollisions(new Vector2(x, y), _pos);
             } // else
 
-            // Rotation is always happening
+            // Rotation is constant
             _rot += _av * t;
 
             if (_rot >= 360) {

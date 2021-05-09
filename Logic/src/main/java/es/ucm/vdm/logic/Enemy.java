@@ -46,8 +46,8 @@ public class Enemy extends GameObject {
     public Vector2[] getSegment(){
         // Create a vector array with 2 positions
         Vector2[] seg = new Vector2[2];
-        Vector2 init = null;
-        Vector2 end = null;
+        Vector2 init = new Vector2(0, 0);
+        Vector2 end = new Vector2(0, 0);
 
         double m = Math.round(1/Math.tan(Math.toRadians(_rot)));
 
@@ -56,14 +56,16 @@ public class Enemy extends GameObject {
             end = new Vector2(_pos._x, _pos._y + (_len/2));
         } // if
         else{
-            m = 1 / m;
-            double b = _pos._y - (m * (_pos._x));
-            // Calculate point
-            Vector2 n = new Vector2(3, ((m * 3) + b));
-            Vector2 dir = new Vector2(1, m);
-            dir.normalize();
-            init = sumVect(_pos, new Vector2((_len/2) * dir._x, (_len/2) * dir._y));
-            end = subVect(_pos, new Vector2((_len/2) * dir._x, (_len/2) * dir._y));
+            // Calculate init
+            double a = (_len/2) * Math.cos(Math.toRadians(_rot));
+            double b = (_len/2) * Math.sin(Math.toRadians(_rot));
+
+            init._x = _pos._x - a;
+            init._y = _pos._y - b;
+
+            // Calculate end
+            end._x = _pos._x + a;
+            end._y = _pos._y + b;
         } // else
 
         seg[0] = init;
