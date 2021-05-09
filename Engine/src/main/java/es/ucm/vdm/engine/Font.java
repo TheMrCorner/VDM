@@ -12,7 +12,9 @@ public interface Font {
      * @param fontSize (int) size of the text
      * @param fontColor (int) color of the text, in hex format
      */
-    public boolean initializeFont(String contents, int fontSize, int fontColor);
+    public boolean initializeFont(String contents, int fontSize, int fontColor, boolean isBold);
+
+    public void setContents(String contents);
 
     public void render();
 
