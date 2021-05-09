@@ -17,6 +17,8 @@ public class Graphics extends AbstractGraphics {
     Window _win;
     Stack<AffineTransform> _saveStack; // Stack to save transformation matrix states
 
+    PCFont _font;
+
     /**
      * Graphics constructor.
      *
@@ -111,12 +113,17 @@ public class Graphics extends AbstractGraphics {
     @Override
     public void drawText(String text, int x, int y) {
         // TODO: Implement
+        _font.setContents(text);
+        _font.setPosition(x, y);
+        _font.render();
     } // drawText
 
     @Override
     public Font newFont(String filename, int size, boolean isBold) {
-        // TODO: Implement
-        return null;
+        _font = new PCFont();
+        _font.initializeFont(filename, size, 0xffffff, isBold);
+        _font.setCanvas((Graphics2D)_win.getJGraphics());
+        return _font;
     } // newFont
 
     /**

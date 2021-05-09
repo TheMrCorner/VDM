@@ -29,7 +29,7 @@ public class PCFont implements es.ucm.vdm.engine.Font {
     Graphics _graphics = null;
 
     @Override
-    public boolean initializeFont(String contents, int fontSize, int fontColor) {
+    public boolean initializeFont(String filename, int fontSize, int fontColor, boolean isBold) {
         // Loading the font from the .ttf file
         Font baseFont;
 
@@ -42,9 +42,12 @@ public class PCFont implements es.ucm.vdm.engine.Font {
             return false;
         }
 
-        _font = baseFont.deriveFont(Font.BOLD, fontSize);
+        if (isBold)
+            _font = baseFont.deriveFont(Font.BOLD, fontSize);
+        else
+            _font = baseFont.deriveFont(Font.PLAIN, fontSize);
 
-        _contents = contents;
+        _contents = filename;
         _fontSize = fontSize;
         int r = (fontColor & 0xFF0000) >> 16;
         int g = (fontColor & 0xFF00) >> 8;
@@ -53,6 +56,13 @@ public class PCFont implements es.ucm.vdm.engine.Font {
 
         return true;
     }
+
+
+    @Override
+    public void setContents(String contents) {
+        _contents = contents;
+    }
+
 
     @Override
     public void render() {
@@ -74,5 +84,5 @@ public class PCFont implements es.ucm.vdm.engine.Font {
      * Sets the Graphics attribute used for rendering
      * @param g (Graphics) Graphics component for rendering purposes
      */
-    void getCanvas(Graphics g) { _graphics = g;}
+    public void setCanvas(Graphics g) { _graphics = g;}
 }
