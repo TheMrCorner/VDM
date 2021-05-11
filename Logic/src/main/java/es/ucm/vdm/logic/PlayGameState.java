@@ -400,6 +400,10 @@ public class PlayGameState implements GameState {
             _lf.get(i).render(g);
         } // for
 
+        //TODO: change this to actual level info
+        g.newFont("Resources/Fonts/Bungee-Regular.ttf", 20, false);
+        g.drawText("test", 200, 200);
+
         // Render UI
 
     } // render
