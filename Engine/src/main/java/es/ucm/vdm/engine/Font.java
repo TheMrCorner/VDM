@@ -8,15 +8,27 @@ public interface Font {
 
     /**
      * Creates a platform specific instance of a font object with the supplied data
-     * @param contents (String) string that we want to display
+     * @param filename (String) string containing the path of the font
      * @param fontSize (int) size of the text
      * @param fontColor (int) color of the text, in hex format
      */
-    public boolean initializeFont(String contents, int fontSize, int fontColor, boolean isBold);
+    public boolean initializeFont(String filename, int fontSize, int fontColor, boolean isBold);
 
+    /**
+     * Sets the content/text
+     * @param contents (String) text we want to display
+     */
     public void setContents(String contents);
 
+    /**
+     * Uses platform-appropriate methods to render the text
+     */
     public void render();
 
+    /**
+     * Sets the screen position of the text
+     * @param x (int) horizontal value
+     * @param y (int) vertical value
+     */
     public void setPosition(int x, int y);
 }

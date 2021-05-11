@@ -9,7 +9,7 @@ import android.view.SurfaceView;
 
 // UCM
 import es.ucm.vdm.engine.AbstractGraphics;
-import es.ucm.vdm.engine.Font;
+import es.ucm.vdm.androidengine.Font;
 
 /**
  * Graphics class that implements the interface from the engine and uses android API to draw lines
@@ -24,6 +24,7 @@ public class Graphics extends AbstractGraphics {
     AssetManager _aMan;
     Paint _pnt;
     Canvas _cnv;
+    es.ucm.vdm.androidengine.Font _font;
 
     /**
      * Constructor. Receives and saves an instance of the SurfaceView to paint there later. Also
@@ -36,6 +37,7 @@ public class Graphics extends AbstractGraphics {
     public Graphics(SurfaceView sv, AssetManager am){
         _sView = sv;
         _aMan = am;
+
         _pnt = new Paint();
     } // Graphics
 
@@ -103,13 +105,21 @@ public class Graphics extends AbstractGraphics {
 
     @Override
     public void drawText(String text, int x, int y) {
-        // TODO: Implementar
+        _font.setContents(text);
+        _font.setPosition(x, y);
+        _font.render();
     } // drawText
 
     @Override
     public Font newFont(String filename, int size, boolean isBold) {
-        // TODO: Implementar
-        return null;
+        _font = new Font();
+
+        _font.setView(_sView);
+        _font.setPaint(_pnt);
+        _font.setCanvas(_cnv);
+        _font.initializeFont(filename,size,0xffffffff, isBold);
+
+        return _font;
     } // newFont
 
     /**
