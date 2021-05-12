@@ -3,8 +3,11 @@ package es.ucm.vdm.pcengine;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -32,6 +35,14 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
     //GREEN, TURQUOISE, LIGHTBLUE, BLUE, PURPLE, DARKBLUE, YELLOW, ORANGE, BROWN
     int[] _planeColor = {0xff41a85f, 0xff00a885, 0xff3d8eb9, 0xff2969b0, 0xff553982, 0xff28324e, 0xfff37934,
             0xffd14b41, 0xff75706b};
+
+    // Window listeners for resizing and maximizing/minimizing
+    WindowStateListener _stateList = new WindowStateListener() {
+        @Override
+        public void windowStateChanged(WindowEvent windowEvent) {
+            windowResized();
+        } // windowStateChanged
+    }; // _list
 
     /**
      * Class constructor. Creates a new Engine instance and sets everything for game to run
@@ -63,6 +74,8 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
         _frames = 0; // Number of frames passed
 
         _win.addComponentListener(this);
+
+        _win.addWindowStateListener(_stateList);
     } // Engine
 
     @Override
@@ -118,8 +131,15 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
      */
     @Override
     public void componentResized(ComponentEvent componentEvent) {
+        windowResized();
         resize();
     } // componentResized
+
+
+    public void windowResized(){
+        _width = _win.getWidth();
+        _height = _win.getHeight();
+    } // windowResized
 
     /**
      * Render function.
@@ -169,9 +189,6 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
                     continue;
                 } // if
                 else {
-                    // Update width and height
-                    _width = _win.getWidth();
-                    _height = _win.getHeight();
 
                     // Calculate time passed between frames and convert it to seconds
                     _currentTime = System.nanoTime();

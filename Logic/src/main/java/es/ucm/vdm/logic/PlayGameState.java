@@ -401,9 +401,15 @@ public class PlayGameState implements GameState {
         } // for
 
         //TODO: change this to actual level info
-        g.newFont("Resources/Fonts/Bungee-Regular.ttf", 20, false);
-        g.drawText("test", 200, 200);
+        g.newFont("Resources/Fonts/Bungee-Regular.ttf", g.repositionX(20), false);
 
+        g.save();
+
+        g.translate(_posOrX, _posOrY);
+
+        g.drawText("test", 0, 0);
+
+        g.restore();
         // Render UI
 
     } // render

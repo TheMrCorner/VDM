@@ -69,7 +69,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
             e.printStackTrace();
         }
 
-        JSONObject l = (JSONObject)_levels.get(10);
+        JSONObject l = (JSONObject)_levels.get(15);
 
         test = new PlayGameState(l, 11, 0, this);
 
