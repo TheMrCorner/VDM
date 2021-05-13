@@ -8,7 +8,10 @@ public class Item extends GameObject {
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
     int _w, _h; // Width and Height
+    double _cW, _cH; // Current width and height
     float _av; // Angular velocity
+    float _exv; // Expansion velocity
+    float _transpVel; // alpha change velocity
     boolean _taken; // Flag to control if the player has taken this item
     float _centerAv; // Angular velocity for rotating over one point
     float _totalRot;
@@ -33,17 +36,24 @@ public class Item extends GameObject {
      * @param height (int) Height of the square
      * @param angVel (float) Angular velocity the Object will have for rotation
      */
-    public Item(double x, double y, int c, int width, int height, float angVel, int thickness) {
+    public Item(double x, double y, int c, int width, int height, float angVel, int thickness,
+                float expansionVel, float transparencyVel) {
         super(x, y, c, thickness);
+        // TODO: Meter la configuración de la velocidad de expansión y de transparencia.
         _w = width;
         _h = height;
+        _cW = _w;
+        _cH = _h;
         _av = angVel;
         _taken = false;
         _centerAv = -1;
+        _exv = expansionVel;
+        _transpVel = transparencyVel;
     } // Item
 
     public Item(double x, double y, int c, int width, int height, float angVel, int thickness,
-                float tAngVel, float rotRefer, float distCenter){
+                float tAngVel, float rotRefer, float distCenter,
+                float expansionVel, float transparencyVel){
         super(x, y, c, thickness);
         _w = width;
         _h = height;
@@ -52,6 +62,8 @@ public class Item extends GameObject {
         _centerAv = tAngVel;
         _totalRot = rotRefer;
         _distanceCenter = distCenter;
+        _exv = expansionVel;
+        _transpVel = transparencyVel;
     } // Item rotating with a point
 
     //---------------------------------------------------------------
@@ -65,13 +77,15 @@ public class Item extends GameObject {
         _taken = false;
         _act = true;
         _rot = 0;
+        _cW = _w;
+        _cH = _h;
     } // resetItem
 
     /**
      * Function called when an item is taken by the player.
      */
     public void itemTaken(){
-        _act = false;
+        //_act = false;
         _taken = true;
     } // item_taken
 
@@ -98,6 +112,11 @@ public class Item extends GameObject {
             _pos._x = _coordOrigin._x + _distanceCenter *Math.sin(Math.toRadians(_totalRot));
             _pos._y = _coordOrigin._y + _distanceCenter * Math.cos(Math.toRadians(_totalRot));
         } // if
+
+        if(_taken) {
+            _cW += _exv * t;
+            _cH += _exv * t;
+        } // if
     } // update
 
     /**
@@ -107,36 +126,84 @@ public class Item extends GameObject {
      */
     @Override
     public void render(Graphics g) {
-        Rect o = new Rect(_w, 0, 0, _h);
-        Rect n = g.scale(o, g.getCanvas());
+        if(_act) {
+            if(!_taken) {
+                Rect o = new Rect(_w, 0, 0, _h);
+                Rect n = g.scale(o, g.getCanvas());
 
-        // Set the color to paint the coin/item
-        g.setColor(_c);
-        // Save the actual canvas transformation matrix
-        g.save();
+                // Set the color to paint the coin/item
+                g.setColor(_c);
+                // Save the actual canvas transformation matrix
+                g.save();
 
-        if(_centerAv == -1) {
-            g.translate((int) _coordOrigin._x + (int) _pos._x,
-                    (int) _coordOrigin._y - (int) _pos._y);
-        }
-        else{
-            g.translate((int) _pos._x,
-                    (int) _pos._y);
-        }
+                if (_centerAv == -1) {
+                    g.translate((int) _coordOrigin._x + (int) _pos._x,
+                            (int) _coordOrigin._y - (int) _pos._y);
+                } else {
+                    g.translate((int) _pos._x,
+                            (int) _pos._y);
+                }
 
-        g.rotate(_rot);
+                g.rotate(_rot);
 
-        // Draw square
-        g.drawLine(-n.width/2, -n.height/2,
-                n.width/2, -n.height/2, _lineThickness);
-        g.drawLine(-n.width/2, -n.height/2,
-                -n.width/2, n.height/2, _lineThickness);
-        g.drawLine(n.width/2, -n.height/2,
-                n.width/2, n.height/2, _lineThickness);
-        g.drawLine(-n.width/2, n.height/2,
-                n.width/2, n.height/2, _lineThickness);
+                // Draw square
+                g.drawLine(-n.width / 2, -n.height / 2,
+                        n.width / 2, -n.height / 2, _lineThickness);
+                g.drawLine(-n.width / 2, -n.height / 2,
+                        -n.width / 2, n.height / 2, _lineThickness);
+                g.drawLine(n.width / 2, -n.height / 2,
+                        n.width / 2, n.height / 2, _lineThickness);
+                g.drawLine(-n.width / 2, n.height / 2,
+                        n.width / 2, n.height / 2, _lineThickness);
 
-        // Reset canvas after drawing
-        g.restore();
+                // Reset canvas after drawing
+                g.restore();
+            }
+            else{
+                Rect o = new Rect((int)_cW, 0, 0, (int)_cH);
+
+                String width = String.valueOf(_cW);
+                String height = String.valueOf(_cH);
+                String widthOR = String.valueOf(_w);
+                String heightOR = String.valueOf(_h);
+
+                System.out.println("Anchura nueva: " + width);
+                System.out.println("Altura nueva: " + height);
+                System.out.println("Anchura vieja: " + widthOR);
+                System.out.println("Altura vieja: " + heightOR);
+
+                Rect n = g.scale(o, g.getCanvas());
+
+                int lineThick = (int)(_cW * _lineThickness / _w);
+
+                // Set the color to paint the coin/item
+                g.setColor(_c);
+                // Save the actual canvas transformation matrix
+                g.save();
+
+                if (_centerAv == -1) {
+                    g.translate((int) _coordOrigin._x + (int) _pos._x,
+                            (int) _coordOrigin._y - (int) _pos._y);
+                } else {
+                    g.translate((int) _pos._x,
+                            (int) _pos._y);
+                }
+
+                g.rotate(_rot);
+
+                // Draw square
+                g.drawLine(-n.width / 2, -n.height / 2,
+                        n.width / 2, -n.height / 2, lineThick);
+                g.drawLine(-n.width / 2, -n.height / 2,
+                        -n.width / 2, n.height / 2, lineThick);
+                g.drawLine(n.width / 2, -n.height / 2,
+                        n.width / 2, n.height / 2, lineThick);
+                g.drawLine(-n.width / 2, n.height / 2,
+                        n.width / 2, n.height / 2, lineThick);
+
+                // Reset canvas after drawing
+                g.restore();
+            }
+        } // if
     } // render
 } // Item

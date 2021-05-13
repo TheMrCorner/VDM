@@ -27,6 +27,7 @@ public abstract class GameObject {
         setColor(c);
         _rot = 0;
         _lineThickness = thickness;
+        _act = true;
     } // GameObject
 
     // Functions and methods to access GO position
@@ -57,7 +58,8 @@ public abstract class GameObject {
      * @param nPos (Vector2) New position to set the player.
      */
     public void setPos(Vector2 nPos){
-        _pos = nPos;
+        _pos._x = nPos._x;
+        _pos._y = nPos._y;
     } // set_pos
 
     /**

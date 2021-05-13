@@ -11,6 +11,7 @@ import java.util.List;
 import es.ucm.vdm.engine.Engine;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
+import sun.security.ssl.Debug;
 
 import static es.ucm.vdm.logic.Utils.parseDouble;
 import static es.ucm.vdm.logic.Utils.segmentsIntersection;
@@ -47,10 +48,13 @@ public class PlayGameState implements GameState {
     int _lineThickness = 4;
     int _playerWidth = 12; // Player width
     int _itemWidth = 8; // Item width
+    int _itemDist = 20;
     float _aVel = 180; // Angular velocity for all player and items
     int _currLife = 0; // Current life (last life lost)
     int _playerVel;
     double _countdownInit = 1; // Count down to wait for dead resolution or win resolution (1 second)
+    float _expansionVel = 5;
+    float _transpVel = 1;
 
     /**
      * Generates a new level from a JSONObject provided in the constructor.
@@ -203,11 +207,12 @@ public class PlayGameState implements GameState {
 
                 nItem = new Item(coordX, coordY, _itemC, _itemWidth,
                         _itemWidth, _aVel, _lineThickness, (float)totalAngularVelocity,
-                        (float)trueAng, (float)magnitude);
+                        (float)trueAng, (float)magnitude, _expansionVel, _transpVel);
             } // if
             else{
                 // Else create a normal Item
-                nItem = new Item(coordX, coordY, _itemC, _itemWidth, _itemWidth, _aVel, _lineThickness);
+                nItem = new Item(coordX, coordY, _itemC, _itemWidth,
+                        _itemWidth, _aVel, _lineThickness, _expansionVel, _transpVel);
             } // else
 
             nItem.setCoordOrigin(new Vector2(_posOrX, _posOrY));
@@ -314,15 +319,24 @@ public class PlayGameState implements GameState {
         // ONLY WHEN FLYING AND NOT DEAD
         if(_player.isFlying() && !_dead) {
             // Then check items
+            for(int i = 0; i < _it.size(); i++) {
+                double dist = Math.sqrt(Utils.sqrDistancePointSegment(_player.getJumpPos(), segEND, _it.get(i).getPos()));
 
-            // Lastly, check paths
+                if (dist != -1) {
+                    if (dist < _itemDist) {
+                        ((Item) _it.get(i)).itemTaken();
+                    } // if
+                } // if
+            } // for
+
+            // Check paths
             for(int i = 0; i < _paths.getPaths().size(); i++){
                 for(int j = 0; j < _paths.getPaths().get(i).size(); j++){
-                    int next = j +1;
+                    int next = j + 1;
                     if(next == _paths.getPaths().get(i).size()){
                         next = 0;
                     } // if toroid
-                    collision = segmentsIntersection(segINIT, segEND,
+                    collision = segmentsIntersection(_player.getJumpPos(), segEND,
                             _paths.getPaths().get(i).get(j), _paths.getPaths().get(i).get(next));
 
                     if(collision != null){
@@ -332,6 +346,13 @@ public class PlayGameState implements GameState {
                     // If no collision, keep running till infinite
                 } // Vertex for
             } // Paths for
+
+            // Check boundaries
+            int posX = _posOrX + (int) segEND._x;
+            int posY = _posOrY + ((int) segEND._y * (-1));
+            if(_l.checkWindowBoundaries(posX, posY)){
+                killPlayer();
+            } // if
         } // is_flying
     } // check_collisions
 
@@ -401,7 +422,7 @@ public class PlayGameState implements GameState {
         } // for
 
         //TODO: change this to actual level info
-        g.newFont("Resources/Fonts/Bungee-Regular.ttf", g.repositionX(20), false);
+        /*g.newFont("Resources/Fonts/Bungee-Regular.ttf", g.repositionX(20), false);
 
         g.save();
 
@@ -409,7 +430,7 @@ public class PlayGameState implements GameState {
 
         g.drawText("test", 0, 0);
 
-        g.restore();
+        g.restore();*/
         // Render UI
 
     } // render

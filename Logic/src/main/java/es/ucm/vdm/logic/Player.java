@@ -14,7 +14,6 @@ public class Player extends GameObject {
     //---------------------------------------------------------------
     int _w, _h;
     Vector2 _dir; // Direction, points at where the Player is moving
-    Vector2 _ipos; // Initial path position
     double _dist; // distance to initial position of the path
     float _lv; // Linear velocity
     final float _flv = 1500; // Flying linear velocity (constant)
@@ -22,7 +21,8 @@ public class Player extends GameObject {
     ArrayList<Vector2> _path; // Path that the player has to follow
     int _pathDir; // Direction of the path
     int _actualPoint; // Last point that Player went through
-    boolean _flying;
+    boolean _flying; // flag to detect if player is flying
+    Vector2 _jumpPos;
     PlayGameState _pg; // Instance of PlayGameState to communicate with and check collisions
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -52,6 +52,7 @@ public class Player extends GameObject {
         _pg = pg;
         _pathDir = 1;
         _flying = false;
+        _dist = 0;
     } // Player
 
     /**
@@ -61,6 +62,8 @@ public class Player extends GameObject {
      */
     public void setPath(ArrayList p, int initPoint, int endingPoint){
         _path = p;
+
+        _initPos = (Vector2)p.get(initPoint);
 
         calculateDirection(initPoint, endingPoint);
     } // set_path
@@ -73,6 +76,7 @@ public class Player extends GameObject {
         _act = true;
         _flying = false;
         _actualPoint = 0;
+        _dist = 0;
         setPath(p, 0, 1);
     } // resetPlayer
 
@@ -107,6 +111,8 @@ public class Player extends GameObject {
             // Calculate direction to follow with the 2 points in order
             calculateDirection(point1, point2);
             _actualPoint = point1;
+            _dist = Math.abs(Utils.subVect(_path.get(point2), nPosition).magnitude());
+            _initPos = (Vector2)nPath.get(point1);
         } // if
         else{
             // If moving direction was reverse to the path direction, set moving direction to
@@ -116,8 +122,9 @@ public class Player extends GameObject {
             // Calculate direction to follow with 2 points in reverse
             calculateDirection(point2, point1);
             _actualPoint = point2;
+            _dist = Math.abs(Utils.subVect(_path.get(point1), nPosition).magnitude());
+            _initPos = (Vector2)nPath.get(point2);
         } // else
-
         _flying = false;
     } // path_collide
 
@@ -186,8 +193,14 @@ public class Player extends GameObject {
             } // else
 
             _dir.normalize();
+            _jumpPos = new Vector2(_pos._x + ((_w / 8) * _dir._x),
+                                   _pos._y + ((_w / 8) * _dir._y));
         } // if
     } // fly
+
+    public Vector2 getJumpPos(){
+        return _jumpPos;
+    } // getJumpPos
 
     /**
      * Gets the index of path which points the actual point.
@@ -209,36 +222,31 @@ public class Player extends GameObject {
         if(_act) {
             // Update position
             if (!_flying) {
-                double x = _pos._x - (_dir._unit._x);
-                double y = _pos._y - (_dir._unit._y);
-                double x2 = _pos._x + (_dir._unit._x) * (_w / 4);
-                double y2 = _pos._y + (_dir._unit._y) * (_h / 4);
+                _dist += _lv * t;
 
-                _pos._x = (_pos._x) + (((_dir._unit._x) * _lv) * t);
-                _pos._y = (_pos._y) + (((_dir._unit._y) * _lv) * t);
+                _pos._x = _initPos._x + (_dist * _dir._unit._x);
+                _pos._y = _initPos._y + (_dist * _dir._unit._y);
 
-                _pg.checkCollisions(new Vector2(x, y), new Vector2(_pos._x, _pos._y));
+                _pg.checkCollisions(new Vector2(_initPos._x, _initPos._y), new Vector2(_pos._x, _pos._y));
 
                 // Check for looping path
                 int next = checkLoop();
 
+                Vector2 pathDist = Utils.subVect(_path.get(_actualPoint), _path.get(next));
+
                 // Check path
-                if ((Math.min((_path.get(_actualPoint)._x), _pos._x) <= (_path.get(next)._x) &&
-                        (_path.get(next)._x) <= Math.max((_path.get(_actualPoint)._x), _pos._x)) &&
-                        (Math.min((_path.get(_actualPoint)._y), _pos._y) <= (_path.get(next)._y) &&
-                                (_path.get(next)._y) <= Math.max((_path.get(_actualPoint)._y), _pos._y))) {
+                if (_dist > Math.abs(pathDist.magnitude())) {
                     _actualPoint = next;
                     next = checkLoop();
 
                     _pos._x = _path.get(_actualPoint)._x;
                     _pos._y = _path.get(_actualPoint)._y;
+
+                    _dist = 0;
+                    _initPos = _path.get(_actualPoint);
                     calculateDirection(_actualPoint, next);
-                } // if
-                else {
-                    _pos._x = x + ((_dir._unit._x * _lv) * t);
-                    _pos._y = y + ((_dir._unit._y * _lv) * t);
-                } // else
-            } // if not flying
+                } // if distance
+            } // if
             else {
                 double x = _pos._x + (_dir._unit._x) * (_w / 9.1);
                 double y = _pos._y + (_dir._unit._y) * (_h / 9.1);

@@ -69,12 +69,19 @@ public class Logic implements es.ucm.vdm.engine.Logic {
             e.printStackTrace();
         }
 
-        JSONObject l = (JSONObject)_levels.get(15);
+        JSONObject l = (JSONObject)_levels.get(11);
 
         test = new PlayGameState(l, 11, 0, this);
 
         // Init first state (Create a main menu state)
     } // initLogic
+
+    public boolean checkWindowBoundaries(int x, int y) {
+        x = _eng.getGraphics().repositionX(x);
+        y = _eng.getGraphics().repositionY(y);
+
+        return x < 0 || x > _eng.getWinWidth() || y < 0 || y > _eng.getWinHeight();
+    } // checkWIndowBoundaries
 
     /**
      * Updates the game variables and data for the next frame render.

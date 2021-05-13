@@ -23,8 +23,27 @@ public final class Utils {
         return null;
     } // segmentsIntersection
 
-	public static int sqrDistancePointSegment() {
-        return 0;
+	public static double sqrDistancePointSegment(Vector2 a, Vector2 b, Vector2 c) {
+	    Vector2 segment = subVect(a, b);
+	    Vector2 point = subVect(c, b);
+
+        double cos = dotProduct(point, segment) /
+                (point.magnitude() * segment.magnitude());
+
+        if(cos == 0){ // Perpendicular, the distance is trivial
+            return Math.abs(point.magnitude());
+        } // if
+        else if(Math.acos(cos) > (Math.PI / 2) && Math.acos(cos) < Math.PI){ // Out of range
+            return -1;
+        } // else if
+        else if(Math.acos(cos) < ((3 * Math.PI) / 2) && Math.acos(cos) > Math.PI){ // Out of range
+            return -1;
+        } // else if
+        else{
+            double cat = point.magnitude() * cos;
+
+            return Math.abs((Math.pow(point.magnitude(), 2) - Math.pow(cat, 2)));
+        } // else
     } // sqrDistancePointSegment
 
 	public static Vector2 rotVect(Vector2 v, double ang){
@@ -49,6 +68,10 @@ public final class Utils {
 
 	    return res;
     } // scalarProduct
+
+    public static double dotProduct(Vector2 v, Vector2 w) {
+	    return ((v._x * w._x) + (v._y * w._y));
+    } // dotProduct
 
     /**
      * Function to parse data from JSON, checks if it is a Long or a double and converts it to

@@ -17,7 +17,7 @@ import es.ucm.vdm.engine.Logic;
 import es.ucm.vdm.engine.Rect;
 
 // TODO: Comentar un poco lo que hace la calse y demás.
-public class Engine extends AbstractEngine implements Runnable, ComponentListener {
+public class Engine extends AbstractEngine implements Runnable, ComponentListener, WindowStateListener {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
@@ -35,14 +35,6 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
     //GREEN, TURQUOISE, LIGHTBLUE, BLUE, PURPLE, DARKBLUE, YELLOW, ORANGE, BROWN
     int[] _planeColor = {0xff41a85f, 0xff00a885, 0xff3d8eb9, 0xff2969b0, 0xff553982, 0xff28324e, 0xfff37934,
             0xffd14b41, 0xff75706b};
-
-    // Window listeners for resizing and maximizing/minimizing
-    WindowStateListener _stateList = new WindowStateListener() {
-        @Override
-        public void windowStateChanged(WindowEvent windowEvent) {
-            windowResized();
-        } // windowStateChanged
-    }; // _list
 
     /**
      * Class constructor. Creates a new Engine instance and sets everything for game to run
@@ -74,8 +66,7 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
         _frames = 0; // Number of frames passed
 
         _win.addComponentListener(this);
-
-        _win.addWindowStateListener(_stateList);
+        _win.addWindowStateListener(this);
     } // Engine
 
     @Override
@@ -135,6 +126,11 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
         resize();
     } // componentResized
 
+    @Override
+    public void windowStateChanged(WindowEvent windowEvent) {
+        windowResized();
+    } // windowStateChanged
+
 
     public void windowResized(){
         _width = _win.getWidth();
@@ -189,7 +185,6 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
                     continue;
                 } // if
                 else {
-
                     // Calculate time passed between frames and convert it to seconds
                     _currentTime = System.nanoTime();
                     _nanoElapsedTime = _currentTime - _lastFrameTime;

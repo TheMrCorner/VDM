@@ -31,15 +31,17 @@ public class Vector2 {
     /**
      * Calculates the magnitude (distance) of the vector
      */
-    public void magnitude(){
+    public double magnitude(){
         _magnitude = Math.sqrt(Math.pow(_x, 2) + Math.pow(_y, 2));
+        return _magnitude;
     } // magnitude
 
     /**
      * Calculates
      */
-    public void sqMagnitude(){
+    public double sqMagnitude(){
         _squareMagnitude = (Math.pow(_x, 2) + Math.pow(_y, 2));
+        return _squareMagnitude;
     } // sqMagnitude
 
     /**
