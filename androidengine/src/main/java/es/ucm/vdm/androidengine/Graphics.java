@@ -5,11 +5,13 @@ import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Color;
 import android.view.SurfaceView;
 
 // UCM
 import es.ucm.vdm.engine.AbstractGraphics;
 import es.ucm.vdm.androidengine.Font;
+import es.ucm.vdm.engine.VDMColor;
 
 /**
  * Graphics class that implements the interface from the engine and uses android API to draw lines
@@ -57,7 +59,7 @@ public class Graphics extends AbstractGraphics {
      * @param color (int) Color to paint
      */
     @Override
-    public void clear(int color) {
+    public void clear(VDMColor color) {
         // Set color
         setColor(color);
 
@@ -68,9 +70,9 @@ public class Graphics extends AbstractGraphics {
     } // clear
 
     @Override
-    public void setColor(int color) {
-        int c = 0xFF000000 + color;
-        _pnt.setColor(color);
+    public void setColor(VDMColor color) {
+        int c = Color.argb(color._a, color._r, color._g, color._b);
+        _pnt.setColor(c);
     } // setColor
 
     /**

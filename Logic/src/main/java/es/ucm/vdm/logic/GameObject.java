@@ -1,6 +1,7 @@
 package es.ucm.vdm.logic;
 
 import es.ucm.vdm.engine.Graphics;
+import es.ucm.vdm.engine.VDMColor;
 
 public abstract class GameObject {
     //---------------------------------------------------------------
@@ -9,7 +10,7 @@ public abstract class GameObject {
     protected Vector2 _pos;
     protected Vector2 _initPos;
     protected float _rot; // rotation
-    protected int _c; // Color for painting player
+    protected VDMColor _c; // Color for painting player
     protected int _lineThickness;
     protected boolean _act; // Check if GO is active or not
     protected Vector2 _coordOrigin; // Origen de coordenadas
@@ -22,7 +23,7 @@ public abstract class GameObject {
      * @param y (double) Y coordinate
      * @param c (int) Color
      */
-    public GameObject(double x, double y, int c, int thickness){
+    public GameObject(double x, double y, VDMColor c, int thickness){
         _pos = _initPos = new Vector2(x, y);
         setColor(c);
         _rot = 0;
@@ -76,7 +77,7 @@ public abstract class GameObject {
      *
      * @param c (int) Color to draw.
      */
-    public void setColor(int c) {
+    public void setColor(VDMColor c) {
         _c = c;
     } // setColor
 

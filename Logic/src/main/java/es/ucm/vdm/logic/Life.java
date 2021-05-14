@@ -2,13 +2,14 @@ package es.ucm.vdm.logic;
 
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
+import es.ucm.vdm.engine.VDMColor;
 
 public class Life extends GameObject {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
     int _w, _h; // Width and height
-    int _color2; // Second color (or cross color)
+    VDMColor _color2; // Second color (or cross color)
     boolean _lost; // Flag to know if life is lost or not
     double _diag; // Diagonal to paint the cross
     //---------------------------------------------------------------
@@ -23,7 +24,7 @@ public class Life extends GameObject {
      * @param y (double) Y coordinate
      * @param c (int) Color
      */
-    public Life(double x, double y, int c, int secondColor, int w, int h,
+    public Life(double x, double y, VDMColor c, VDMColor secondColor, int w, int h,
                 int crossRot, int thickness) {
         super(x, y, c, thickness);
         _w = w;

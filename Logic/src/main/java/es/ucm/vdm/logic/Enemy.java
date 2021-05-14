@@ -1,6 +1,7 @@
 package es.ucm.vdm.logic;
 
 import es.ucm.vdm.engine.Graphics;
+import es.ucm.vdm.engine.VDMColor;
 
 import static es.ucm.vdm.logic.Utils.subVect;
 import static es.ucm.vdm.logic.Utils.sumVect;
@@ -21,7 +22,7 @@ public class Enemy extends GameObject {
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
 
-    public Enemy(double x, double y, int c, int thickness, int length, float angle,
+    public Enemy(double x, double y, VDMColor c, int thickness, int length, float angle,
                  float angularSpeed, Vector2 linearSpeed, float waitTime, Vector2 direction){
         super(x, y, c, thickness);
         _len = length;

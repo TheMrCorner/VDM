@@ -17,6 +17,7 @@ import org.json.simple.parser.ParseException;
 
 import es.ucm.vdm.engine.Engine;
 import es.ucm.vdm.engine.Rect;
+import es.ucm.vdm.engine.VDMColor;
 
 public class Logic implements es.ucm.vdm.engine.Logic {
     // Public - Protected - Private
@@ -25,7 +26,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     //---------------------------------------------------------------
     Engine _eng; // Instance of Engine for loading levels and resources
     Rect _cnv; // Surface to paint current GameState
-    int _clearColor; // Black
+    VDMColor _clearColor; // Black
     GameState _currentGameState; // Current GameState instance
     int _actualLevel; // number to count the actual level
     PlayGameState test;
@@ -43,7 +44,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
 
         // Init everything
         _cnv = new Rect (640, 0, 0, 480);
-        _clearColor = 0x000000;
+        _clearColor = new VDMColor(0, 0, 0, 255);
     } // Logic
 
     /**
@@ -112,9 +113,11 @@ public class Logic implements es.ucm.vdm.engine.Logic {
      * Function to draw the dimensions of the canvas, for debugging only
      */
     public void drawCanvas(){
+        VDMColor c = new VDMColor(0, 255, 0, 255);
+
         Rect tmp = _eng.getGraphics().getCanvas();
 
-        _eng.getGraphics().setColor(0x00FF00);
+        _eng.getGraphics().setColor(c);
         _eng.getGraphics().save();
         _eng.getGraphics().translate(tmp.getLeft(), tmp.getTop());
 

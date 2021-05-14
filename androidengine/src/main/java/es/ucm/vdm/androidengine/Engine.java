@@ -18,6 +18,7 @@ import java.io.InputStream;
 import es.ucm.vdm.engine.AbstractEngine;
 import es.ucm.vdm.engine.Logic;
 import es.ucm.vdm.engine.Rect;
+import es.ucm.vdm.engine.VDMColor;
 
 /**
  * Android Engine class. Runs the main loop of the app, calling the necessary functions and methods
@@ -212,7 +213,7 @@ public class Engine extends AbstractEngine implements Runnable {
         // Start the frame
         ((Graphics)_g).startFrame(c);
 
-        _g.clear(0xFF000000);
+        _g.clear(new VDMColor(0, 0, 0, 255));
 
         _l.render();
 

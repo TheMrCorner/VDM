@@ -2,6 +2,7 @@ package es.ucm.vdm.logic;
 
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
+import es.ucm.vdm.engine.VDMColor;
 
 public class Item extends GameObject {
     //---------------------------------------------------------------
@@ -11,7 +12,8 @@ public class Item extends GameObject {
     double _cW, _cH; // Current width and height
     float _av; // Angular velocity
     float _exv; // Expansion velocity
-    float _transpVel; // alpha change velocity
+    int _transpVel; // alpha change velocity
+    VDMColor _transpCol; // color change variable
     boolean _taken; // Flag to control if the player has taken this item
     float _centerAv; // Angular velocity for rotating over one point
     float _totalRot;
@@ -36,8 +38,8 @@ public class Item extends GameObject {
      * @param height (int) Height of the square
      * @param angVel (float) Angular velocity the Object will have for rotation
      */
-    public Item(double x, double y, int c, int width, int height, float angVel, int thickness,
-                float expansionVel, float transparencyVel) {
+    public Item(double x, double y, VDMColor c, int width, int height, float angVel, int thickness,
+                float expansionVel, int transparencyVel) {
         super(x, y, c, thickness);
         // TODO: Meter la configuración de la velocidad de expansión y de transparencia.
         _w = width;
@@ -49,11 +51,12 @@ public class Item extends GameObject {
         _centerAv = -1;
         _exv = expansionVel;
         _transpVel = transparencyVel;
+        _transpCol = new VDMColor(c._r, c._g, c._b, c._a);
     } // Item
 
-    public Item(double x, double y, int c, int width, int height, float angVel, int thickness,
+    public Item(double x, double y, VDMColor c, int width, int height, float angVel, int thickness,
                 float tAngVel, float rotRefer, float distCenter,
-                float expansionVel, float transparencyVel){
+                float expansionVel, int transparencyVel){
         super(x, y, c, thickness);
         _w = width;
         _h = height;
@@ -64,6 +67,7 @@ public class Item extends GameObject {
         _distanceCenter = distCenter;
         _exv = expansionVel;
         _transpVel = transparencyVel;
+        _transpCol = new VDMColor(c._r, c._g, c._b, c._a);
     } // Item rotating with a point
 
     //---------------------------------------------------------------
@@ -79,13 +83,13 @@ public class Item extends GameObject {
         _rot = 0;
         _cW = _w;
         _cH = _h;
+        _transpCol = new VDMColor(_c._r, _c._g, _c._b, _c._a);
     } // resetItem
 
     /**
      * Function called when an item is taken by the player.
      */
     public void itemTaken(){
-        //_act = false;
         _taken = true;
     } // item_taken
 
@@ -114,8 +118,17 @@ public class Item extends GameObject {
         } // if
 
         if(_taken) {
-            _cW += _exv * t;
-            _cH += _exv * t;
+            if((_cW < (_w * 3)) && (_cH < (_h * 3))) {
+                _cW += _exv * t;
+                _cH += _exv * t;
+            }
+
+            _transpCol._a -= (_transpVel * t);
+
+            if(_transpCol._a <= 0){
+                _act = false;
+            }
+
         } // if
     } // update
 
@@ -162,22 +175,12 @@ public class Item extends GameObject {
             else{
                 Rect o = new Rect((int)_cW, 0, 0, (int)_cH);
 
-                String width = String.valueOf(_cW);
-                String height = String.valueOf(_cH);
-                String widthOR = String.valueOf(_w);
-                String heightOR = String.valueOf(_h);
-
-                System.out.println("Anchura nueva: " + width);
-                System.out.println("Altura nueva: " + height);
-                System.out.println("Anchura vieja: " + widthOR);
-                System.out.println("Altura vieja: " + heightOR);
-
                 Rect n = g.scale(o, g.getCanvas());
 
                 int lineThick = (int)(_cW * _lineThickness / _w);
 
                 // Set the color to paint the coin/item
-                g.setColor(_c);
+                g.setColor(_transpCol);
                 // Save the actual canvas transformation matrix
                 g.save();
 
@@ -191,14 +194,16 @@ public class Item extends GameObject {
 
                 g.rotate(_rot);
 
+                int lineSeparation = (int)(_cW * 1 / _w);
+
                 // Draw square
                 g.drawLine(-n.width / 2, -n.height / 2,
-                        n.width / 2, -n.height / 2, lineThick);
-                g.drawLine(-n.width / 2, -n.height / 2,
+                        n.width / 2 - lineSeparation, -n.height / 2, lineThick);
+                g.drawLine(-n.width / 2, -n.height / 2 + lineSeparation,
                         -n.width / 2, n.height / 2, lineThick);
                 g.drawLine(n.width / 2, -n.height / 2,
-                        n.width / 2, n.height / 2, lineThick);
-                g.drawLine(-n.width / 2, n.height / 2,
+                        n.width / 2, n.height / 2 - lineSeparation, lineThick);
+                g.drawLine(-n.width / 2 + lineSeparation, n.height / 2,
                         n.width / 2, n.height / 2, lineThick);
 
                 // Reset canvas after drawing

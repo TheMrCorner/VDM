@@ -53,14 +53,14 @@ public interface Graphics {
      *
      * @param color (int) Color to fill screen
      */
-    void clear(int color);
+    void clear(VDMColor color);
 
     /**
      * Sets a color to draw things in screen.
      *
      * @param color (int) Color to set for drawing
      */
-    void setColor(int color);
+    void setColor(VDMColor color);
 
     /**
      * Draws a line between to points specified with some color provided.

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
+import es.ucm.vdm.engine.VDMColor;
 
 import static es.ucm.vdm.logic.Utils.rotVect;
 import static es.ucm.vdm.logic.Utils.subVect;
@@ -41,7 +42,7 @@ public class Player extends GameObject {
      * @param lv (float) Linear velocity
      * @param av (float) Angular velocity
      */
-    public Player(double x, double y, int c, int w, int h, int thickness, float lv, float av, PlayGameState pg){
+    public Player(double x, double y, VDMColor c, int w, int h, int thickness, float lv, float av, PlayGameState pg){
         super(x, y, c, thickness);
         _dir = new Vector2(0, 0);
         _w = w;

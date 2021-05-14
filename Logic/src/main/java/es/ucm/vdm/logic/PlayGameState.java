@@ -11,6 +11,7 @@ import java.util.List;
 import es.ucm.vdm.engine.Engine;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
+import es.ucm.vdm.engine.VDMColor;
 import sun.security.ssl.Debug;
 
 import static es.ucm.vdm.logic.Utils.parseDouble;
@@ -42,9 +43,9 @@ public class PlayGameState implements GameState {
 
 
     // Constant values for colors and etc.
-    int _playerC = 0xFF0000FF; // Player color ARGB
-    int _itemC = 0xFFFFF200; // Item color ARGB
-    int _enemyC = 0xFFFF0000; // Enemy color ARGB
+    VDMColor _playerC; // 0xFF0000FF; // Player color ARGB
+    VDMColor _itemC; // = 0xFFFFF200; // Item color ARGB
+    VDMColor _enemyC; // = 0xFFFF0000; // Enemy color ARGB
     int _lineThickness = 4;
     int _playerWidth = 12; // Player width
     int _itemWidth = 8; // Item width
@@ -53,8 +54,8 @@ public class PlayGameState implements GameState {
     int _currLife = 0; // Current life (last life lost)
     int _playerVel;
     double _countdownInit = 1; // Count down to wait for dead resolution or win resolution (1 second)
-    float _expansionVel = 5;
-    float _transpVel = 1;
+    float _expansionVel = 100;
+    int _transpVel = 230;
 
     /**
      * Generates a new level from a JSONObject provided in the constructor.
@@ -66,6 +67,9 @@ public class PlayGameState implements GameState {
     public PlayGameState(JSONObject level, int nlev, int diff, Logic l){
         // Init GameObject pool
         //_go = new ArrayList<GameObject>();
+        _playerC = new VDMColor(0, 136, 255, 255);
+        _enemyC = new VDMColor(255, 0, 0, 255);
+        _itemC = new VDMColor(255, 242, 0, 255);
         _lf = new ArrayList<GameObject>();
         _diffLevel = diff;
         _l = l;
@@ -121,7 +125,7 @@ public class PlayGameState implements GameState {
         JSONArray e = (JSONArray) level.get("enemies"); // Enemies
 
         // Create Path
-        _paths = new Path(_posOrX, _posOrY, 0xFFFFFFFF, _lineThickness, p); // Path object
+        _paths = new Path(_posOrX, _posOrY, new VDMColor(255, 255, 255, 255), _lineThickness, p); // Path object
 
         createItems(i);
 

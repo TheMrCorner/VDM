@@ -15,6 +15,7 @@ import java.io.InputStream;
 import es.ucm.vdm.engine.AbstractEngine;
 import es.ucm.vdm.engine.Logic;
 import es.ucm.vdm.engine.Rect;
+import es.ucm.vdm.engine.VDMColor;
 
 // TODO: Comentar un poco lo que hace la calse y demás.
 public class Engine extends AbstractEngine implements Runnable, ComponentListener, WindowStateListener {
@@ -146,7 +147,7 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
      * per loop.
      */
     void render(){
-        _g.clear(0x000000); // Clear the whole buffer
+        _g.clear(new VDMColor(0, 0, 0, 255)); // Clear the whole buffer
 
         // Ideally this will only do 1 iteration per loop
         do {

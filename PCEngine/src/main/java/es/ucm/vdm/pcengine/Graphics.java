@@ -9,6 +9,7 @@ import java.util.Stack;
 import es.ucm.vdm.engine.AbstractGraphics;
 import es.ucm.vdm.engine.Font;
 import es.ucm.vdm.engine.Rect;
+import es.ucm.vdm.engine.VDMColor;
 
 public class Graphics extends AbstractGraphics {
     //---------------------------------------------------------------
@@ -50,7 +51,7 @@ public class Graphics extends AbstractGraphics {
      * @param color (int) Flat color received to paint the screen
      */
     @Override
-    public void clear(int color) {
+    public void clear(VDMColor color) {
         // Paint the hole screen with it.
         setColor(color);
         save();
@@ -65,8 +66,8 @@ public class Graphics extends AbstractGraphics {
      * @param color (int) Color to set for drawing
      */
     @Override
-    public void setColor(int color) {
-        Color c = new Color(color);
+    public void setColor(VDMColor color) {
+        Color c = new Color(color._r, color._g, color._b, color._a);
 
         // Set color to paint in the Swing Graphics.
         ((Graphics2D)(_win.getJGraphics())).setColor(c);

@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import java.util.ArrayList;
 
 import es.ucm.vdm.engine.Graphics;
+import es.ucm.vdm.engine.VDMColor;
 
 import static es.ucm.vdm.logic.Utils.parseDouble;
 
@@ -30,7 +31,7 @@ public class Path extends GameObject {
      * @param c (int) Color to paint the paths
      * @param paths (JSONArray) Array with all the paths
      */
-    public Path(int x, int y, int c, int thickness, JSONArray paths) {
+    public Path(int x, int y, VDMColor c, int thickness, JSONArray paths) {
         super(x, y, c, thickness);
 
         _paths = new ArrayList<>();
