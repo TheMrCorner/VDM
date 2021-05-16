@@ -38,14 +38,15 @@ public class PlayGameState implements GameState {
     int _diffLevel; // Difficulty
     int _posOrX; // Pos of coord origin X
     int _posOrY; // Pos of coord origin Y
-    boolean _dead; // Flag to check that player is dead
+    boolean _dead = false; // Flag to check that player is dead
+    boolean _completed = false; // Flag to check if level is complete
     double _countdown = 0; // Variable to count
 
 
     // Constant values for colors and etc.
-    VDMColor _playerC; // 0xFF0000FF; // Player color ARGB
-    VDMColor _itemC; // = 0xFFFFF200; // Item color ARGB
-    VDMColor _enemyC; // = 0xFFFF0000; // Enemy color ARGB
+    VDMColor _playerC; // Player color ARGB
+    VDMColor _itemC; // Item color ARGB
+    VDMColor _enemyC; // Enemy color ARGB
     int _lineThickness = 4;
     int _playerWidth = 12; // Player width
     int _itemWidth = 8; // Item width
@@ -82,7 +83,7 @@ public class PlayGameState implements GameState {
 
         // Create lifes
         // Lifes
-        int numLifes, lifeXposition, lifeYposition, vel;
+        int numLifes, lifeXposition, lifeYposition;
         // Check number of lifes depending on game difficulty
         if(_diffLevel == 0){
             numLifes = 10;
@@ -104,11 +105,17 @@ public class PlayGameState implements GameState {
             _lf.add(nLife);
         } // for
 
+        newLevel(level, nlev);
+    } // PlayGameState
+
+    public void newLevel(JSONObject level, int nlev){
+        _nLevel = nlev + 1;
+
         // Save level for reseting
         _level = level;
 
         parseLevel(level);
-    } // PlayGameState
+    } // newLevel
 
     /**
      * Function that parses all information relative to the level and builds it with the new
@@ -346,6 +353,7 @@ public class PlayGameState implements GameState {
                     if(collision != null){
                         _player.pathCollide(collision, _paths.getPaths().get(i), j, next);
                         _paths.setActivePath(i);
+                        checkItems();
                     } // if
                     // If no collision, keep running till infinite
                 } // Vertex for
@@ -360,6 +368,27 @@ public class PlayGameState implements GameState {
         } // is_flying
     } // check_collisions
 
+    private void checkItems(){
+        boolean completed = true;
+
+        for(int i = 0; i < _it.size() && completed; i++) {
+            if(!((Item)_it.get(i)).isTaken()){
+                completed = false;
+            } // if
+        } // for
+
+        if(completed){
+            _countdown = _countdownInit;
+        } // if
+
+        _completed = completed;
+    } // checkItems
+
+    /**
+     * Function called when the player hits an enemy or exists the boundaries of the game/window.
+     * Kills the player and reduces lives, then starts a countdown to reset the level or display
+     * the GameOver UI.
+     */
     private void killPlayer(){
         _player.setActive(false);
         _dead = true;
@@ -367,7 +396,7 @@ public class PlayGameState implements GameState {
         _currLife++;
 
         _countdown = _countdownInit;
-    } // kill_player
+    } // killPlayer
 
     /**
      * Update all the objects in this state and check the collisions between Player and the rest of
@@ -388,18 +417,27 @@ public class PlayGameState implements GameState {
         } // for
 
         // Update player
-        if(_countdown <= 0) {
+        if(!_dead) {
             _player.update(t);
         }
-        else{
-            _countdown -= t;
 
-            if(_countdown <= 0){
-                // !!!!Esto se debería hacer de otra manera,
-                // pero no me da tiempo a tenerlo para ahora
-                resetLevel();
+        if(_countdown > 0) {
+            _countdown -= t;
+        } // if
+        else {
+            if(_dead) {
+                if (_currLife >= _lf.size()) {
+                    // TODO: Display GameOver
+                } // All lives lost
+                else {
+                    resetLevel();
+                } // else
             } // if
-        } // else
+            else if(_completed){
+                _completed = false;
+                _l.levelComplete();
+            } // else if
+        } // if
     } // update
 
     @Override
@@ -418,7 +456,9 @@ public class PlayGameState implements GameState {
         } // for
 
         // Then render Player
-        _player.render(g);
+        if(!_dead) {
+            _player.render(g);
+        } // if
 
         // Render lives
         for(int i = 0; i < _lf.size(); i++) {

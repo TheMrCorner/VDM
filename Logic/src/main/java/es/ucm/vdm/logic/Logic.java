@@ -28,8 +28,8 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     Rect _cnv; // Surface to paint current GameState
     VDMColor _clearColor; // Black
     GameState _currentGameState; // Current GameState instance
-    int _actualLevel; // number to count the actual level
-    PlayGameState test;
+    int _currentLevel; // number to count the actual level
+    PlayGameState _pgs;
     Item test2;
     JSONArray _levels;
 
@@ -70,9 +70,11 @@ public class Logic implements es.ucm.vdm.engine.Logic {
             e.printStackTrace();
         }
 
-        JSONObject l = (JSONObject)_levels.get(11);
+        _currentLevel = 0;
 
-        test = new PlayGameState(l, 11, 0, this);
+        JSONObject l = (JSONObject)_levels.get(_currentLevel);
+
+        _pgs = new PlayGameState(l, _currentLevel, 0, this);
 
         // Init first state (Create a main menu state)
     } // initLogic
@@ -84,6 +86,14 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         return x < 0 || x > _eng.getWinWidth() || y < 0 || y > _eng.getWinHeight();
     } // checkWIndowBoundaries
 
+    public void levelComplete(){
+        _currentLevel++;
+
+        JSONObject l = (JSONObject)_levels.get(_currentLevel);
+
+        _pgs.newLevel(l, _currentLevel);
+    } // levelComplete
+
     /**
      * Updates the game variables and data for the next frame render.
      *
@@ -92,8 +102,8 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     @Override
     public void update(double t) {
         // Process actual input
-        test.processInput(_eng.getInput().getTouchEvents());
-        test.update(t);
+        _pgs.processInput(_eng.getInput().getTouchEvents());
+        _pgs.update(t);
         // Update GameState
         //_currentGameState.update(t);
     } // update
@@ -106,7 +116,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         // Clear buffer with black
         _eng.getGraphics().clear(_clearColor);
 
-        test.render(_eng.getGraphics());
+        _pgs.render(_eng.getGraphics());
     } // render
 
     /**

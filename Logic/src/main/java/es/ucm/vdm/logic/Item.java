@@ -8,16 +8,16 @@ public class Item extends GameObject {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
-    int _w, _h; // Width and Height
-    double _cW, _cH; // Current width and height
-    float _av; // Angular velocity
-    float _exv; // Expansion velocity
-    int _transpVel; // alpha change velocity
-    VDMColor _transpCol; // color change variable
-    boolean _taken; // Flag to control if the player has taken this item
-    float _centerAv; // Angular velocity for rotating over one point
-    float _totalRot;
-    float _distanceCenter;
+    private int _w, _h; // Width and Height
+    private double _cW, _cH; // Current width and height
+    private float _av; // Angular velocity
+    private float _exv; // Expansion velocity
+    private int _transpVel; // alpha change velocity
+    private VDMColor _transpCol; // color change variable
+    private boolean _taken; // Flag to control if the player has taken this item
+    private float _centerAv; // Angular velocity for rotating over one point
+    private float _totalRot;
+    private float _distanceCenter;
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
@@ -92,6 +92,15 @@ public class Item extends GameObject {
     public void itemTaken(){
         _taken = true;
     } // item_taken
+
+    /**
+     * Function to check whether the has been taken or not.
+     *
+     * @return (boolean) _taken
+     */
+    public boolean isTaken(){
+        return _taken;
+    } // isTaken
 
     /**
      * Item update. Rotates the object and scales it if it is taken.
@@ -208,7 +217,7 @@ public class Item extends GameObject {
 
                 // Reset canvas after drawing
                 g.restore();
-            }
+            } // else
         } // if
     } // render
 } // Item
