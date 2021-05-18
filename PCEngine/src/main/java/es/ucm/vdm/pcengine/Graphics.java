@@ -97,8 +97,8 @@ public class Graphics extends AbstractGraphics {
      *
      * @param x1 (int) X position of top left corner
      * @param y1 (int) Y position of top left corner
-     * @param x2 (int) X position of bottom right corner
-     * @param y2 (int) Y position of bottom right corner
+     * @param x2 (int) width of the rectangle
+     * @param y2 (int) height of the rectangle
      */
     @Override
     public void fillRect(int x1, int y1, int x2, int y2) {
@@ -113,7 +113,6 @@ public class Graphics extends AbstractGraphics {
 
     @Override
     public void drawText(String text, int x, int y) {
-        // TODO: Implement
         _font.setContents(text);
         _font.setPosition(x, y);
         _font.render();

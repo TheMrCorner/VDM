@@ -9,6 +9,7 @@ import java.util.List;
 
 // UCM
 import es.ucm.vdm.engine.Engine;
+import es.ucm.vdm.engine.Font;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
 import es.ucm.vdm.engine.VDMColor;
@@ -39,6 +40,7 @@ public class PlayGameState implements GameState {
     int _posOrX; // Pos of coord origin X
     int _posOrY; // Pos of coord origin Y
     boolean _dead = false; // Flag to check that player is dead
+    boolean _gameOver = false; // Flag used to display the Game Over banner
     boolean _completed = false; // Flag to check if level is complete
     double _countdown = 0; // Variable to count
 
@@ -96,7 +98,7 @@ public class PlayGameState implements GameState {
 
         // Then create lifes and place them in scene.
         Life nLife;
-        lifeYposition = 20; // Set Y position
+        lifeYposition = 25; // Set Y position
         for(int lf = 0; lf < numLifes; lf++){
             // Set X position relative to number of lifes and canvas width
             lifeXposition = _l.getCanvasSize().width - (20 * (lf + 1));
@@ -162,6 +164,7 @@ public class PlayGameState implements GameState {
         _player.resetPlayer(_paths.getInitPos(), _paths.getPaths().get(0));
         _paths.setActivePath(0);
         _dead = false;
+        _gameOver = false;
     } // resetLevel
 
     /**
@@ -300,6 +303,35 @@ public class PlayGameState implements GameState {
     } // create_enemies
 
     /**
+     * Used to render the game over banner over the level
+     */
+    private void renderGameOverBanner(Graphics g) {
+        g.save();
+
+        // Draw the background
+        g.setColor(new VDMColor(100, 100, 100, 255));
+        g.translate(_posOrX, _posOrY);
+        g.fillRect((-g.getWidth() / 2), (-g.getHeight()/3), g.getWidth(), g.getHeight()/3);
+
+        // Draw Game Over text
+        g.newFont(Font.FONT_FILE, g.repositionX(35), true);
+        g.drawText("GAME OVER", -g.getWidth()/3 , (-g.getHeight() / 4));
+
+        // Draw Difficulty text
+        g.newFont(Font.FONT_FILE, g.repositionX(20), false);
+        if (_diffLevel == 0)
+            g.drawText("EASY MODE", -g.getWidth()/3 , (-g.getHeight() / 6));
+        else
+            g.drawText("HARD MODE", -g.getWidth()/3 , (-g.getHeight() / 6));
+
+        // TODO: create a score value for this
+        // Draw Score text
+        g.drawText("SCORE: " , -g.getWidth()/3 , (-g.getHeight() / 8));
+
+        g.restore();
+    }
+
+    /**
      * Sets a logic instance in this GameState for indicating ending of game, levels, get a new
      * level and indicate changes of state.
      *
@@ -421,23 +453,27 @@ public class PlayGameState implements GameState {
             _player.update(t);
         }
 
-        if(_countdown > 0) {
-            _countdown -= t;
-        } // if
-        else {
-            if(_dead) {
-                if (_currLife >= _lf.size()) {
-                    // TODO: Display GameOver
-                } // All lives lost
-                else {
-                    resetLevel();
-                } // else
+        // If it's game over, skip the rest of the checks
+        if (!_gameOver) {
+            if (_countdown > 0) {
+                _countdown -= t;
             } // if
-            else if(_completed){
-                _completed = false;
-                _l.levelComplete();
-            } // else if
-        } // if
+            else {
+                if (_dead) {
+                    if (_currLife >= _lf.size()) {
+                        // TODO: Display GameOver
+                        _gameOver = true;
+                    } // All lives lost
+                    else {
+                        resetLevel();
+                    } // else
+                } // if
+                else if (_completed) {
+                    _completed = false;
+                    _l.levelComplete();
+                } // else if
+            } // if
+        } // if !_gameover
     } // update
 
     @Override
@@ -465,17 +501,19 @@ public class PlayGameState implements GameState {
             _lf.get(i).render(g);
         } // for
 
-        //TODO: change this to actual level info
-        /*g.newFont("Resources/Fonts/Bungee-Regular.ttf", g.repositionX(20), false);
-
+        // TODO: is it possible to call this only on screen resize?
+        // Render level info
+        g.newFont(Font.FONT_FILE, g.repositionX(20), false);
         g.save();
 
         g.translate(_posOrX, _posOrY);
+        g.drawText(_name, (-g.getWidth() / 2) + 70 , (-g.getHeight() / 2) + 70);
 
-        g.drawText("test", 0, 0);
+        g.restore();
 
-        g.restore();*/
-        // Render UI
+        // If it's a game over, render the game over screen
+        if (_gameOver)
+            renderGameOverBanner(g);
 
     } // render
 
@@ -501,6 +539,7 @@ public class PlayGameState implements GameState {
                     // Tell the _player to begin flight
                     _player.fly(_paths.getJumpDir(_paths.getActivePath(),
                             _player.getActualPoint()));
+                    //TODO: add load of menu when it's game over
                     break;
                 default:
                     // Ignore the rest
