@@ -70,9 +70,10 @@ public class PlayGameState implements GameState {
     public PlayGameState(JSONObject level, int nlev, int diff, Logic l){
         // Init GameObject pool
         //_go = new ArrayList<GameObject>();
-        _playerC = new VDMColor(0, 136, 255, 255);
-        _enemyC = new VDMColor(255, 0, 0, 255);
-        _itemC = new VDMColor(255, 242, 0, 255);
+        VDMColor colorPicker = new VDMColor();
+        _playerC = colorPicker.getPlayerColor();
+        _enemyC = colorPicker.getEnemyColor();
+        _itemC = colorPicker.getItemColor();
         _lf = new ArrayList<GameObject>();
         _diffLevel = diff;
         _l = l;
@@ -308,25 +309,29 @@ public class PlayGameState implements GameState {
     private void renderGameOverBanner(Graphics g) {
         g.save();
 
+        VDMColor colorPicker = new VDMColor();
+
+        //TODO: fix in android
         // Draw the background
-        g.setColor(new VDMColor(100, 100, 100, 255));
+        g.setColor(new VDMColor(60, 60, 60, 255));
         g.translate(_posOrX, _posOrY);
         g.fillRect((-g.getWidth() / 2), (-g.getHeight()/3), g.getWidth(), g.getHeight()/3);
 
         // Draw Game Over text
+        g.setColor(colorPicker.getRed());
         g.newFont(Font.FONT_FILE, g.repositionX(35), true);
         g.drawText("GAME OVER", -g.getWidth()/3 , (-g.getHeight() / 4));
 
         // Draw Difficulty text
+        g.setColor(colorPicker.getWhite());
         g.newFont(Font.FONT_FILE, g.repositionX(20), false);
         if (_diffLevel == 0)
             g.drawText("EASY MODE", -g.getWidth()/3 , (-g.getHeight() / 6));
         else
             g.drawText("HARD MODE", -g.getWidth()/3 , (-g.getHeight() / 6));
 
-        // TODO: create a score value for this
         // Draw Score text
-        g.drawText("SCORE: " , -g.getWidth()/3 , (-g.getHeight() / 8));
+        g.drawText("SCORE: " + _nLevel , -g.getWidth()/3 , (-g.getHeight() / 8));
 
         g.restore();
     }
@@ -461,7 +466,6 @@ public class PlayGameState implements GameState {
             else {
                 if (_dead) {
                     if (_currLife >= _lf.size()) {
-                        // TODO: Display GameOver
                         _gameOver = true;
                     } // All lives lost
                     else {
