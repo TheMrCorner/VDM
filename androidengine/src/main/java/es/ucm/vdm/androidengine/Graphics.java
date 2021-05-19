@@ -119,7 +119,7 @@ public class Graphics extends AbstractGraphics {
         _font.setView(_sView);
         _font.setPaint(_pnt);
         _font.setCanvas(_cnv);
-        _font.initializeFont(filename,size,0xffffffff, isBold);
+        _font.initializeFont(filename,size,_pnt.getColor(), isBold);
 
         return _font;
     } // newFont

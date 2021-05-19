@@ -121,8 +121,10 @@ public class Graphics extends AbstractGraphics {
     @Override
     public Font newFont(String filename, int size, boolean isBold) {
         _font = new PCFont();
-        _font.initializeFont(filename, size, 0xffffff, isBold);
+
+        _font.initializeFont(filename, size, ((Graphics2D)(_win.getJGraphics())).getColor().getRGB(), isBold);
         _font.setCanvas((Graphics2D)_win.getJGraphics());
+
         return _font;
     } // newFont
 

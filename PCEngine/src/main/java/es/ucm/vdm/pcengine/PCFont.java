@@ -33,7 +33,7 @@ public class PCFont implements es.ucm.vdm.engine.Font {
         // Loading the font from the .ttf file
         Font baseFont;
 
-        try (InputStream is = new FileInputStream(filename)) {
+        try (InputStream is = new FileInputStream("Resources/" + filename)) {
             baseFont = Font.createFont(Font.TRUETYPE_FONT, is);
         }
         catch (Exception e) {
