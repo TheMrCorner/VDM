@@ -100,7 +100,6 @@ public class Player extends GameObject {
      * @param point2 (int) Second point that made the collision
      */
     public void pathCollide(Vector2 nPosition, ArrayList<Vector2> nPath, int point1, int point2){
-        setPos(nPosition); // set player position to collide point
         _path = nPath;
 
         // Now calculate the new direction to fit with the direction that player had before
@@ -112,7 +111,7 @@ public class Player extends GameObject {
             // Calculate direction to follow with the 2 points in order
             calculateDirection(point1, point2);
             _actualPoint = point1;
-            _dist = Math.abs(Utils.subVect(_path.get(point2), nPosition).magnitude());
+            _dist = Math.abs(Utils.subVect(_path.get(point1), nPosition).magnitude());
             _initPos = (Vector2)nPath.get(point1);
         } // if
         else{
@@ -123,9 +122,10 @@ public class Player extends GameObject {
             // Calculate direction to follow with 2 points in reverse
             calculateDirection(point2, point1);
             _actualPoint = point2;
-            _dist = Math.abs(Utils.subVect(_path.get(point1), nPosition).magnitude());
+            _dist = Math.abs(Utils.subVect(_path.get(point2), nPosition).magnitude());
             _initPos = (Vector2)nPath.get(point2);
         } // else
+
         _flying = false;
     } // path_collide
 
@@ -249,8 +249,8 @@ public class Player extends GameObject {
                 } // if distance
             } // if
             else {
-                double x = _pos._x + (_dir._unit._x) * (_w / 9.1);
-                double y = _pos._y + (_dir._unit._y) * (_h / 9.1);
+                double x = _pos._x + (_dir._unit._x) * 0.1;
+                double y = _pos._y + (_dir._unit._y) * 0.1;
 
                 _pos._x = (_pos._x) + (((_dir._unit._x) * _flv) * t) + (_dir._unit._x) * (_w / 9.7);
                 _pos._y = (_pos._y) + (((_dir._unit._y) * _flv) * t) + (_dir._unit._y) * (_h / 9.7);

@@ -363,7 +363,7 @@ public class PlayGameState implements GameState {
         if(_player.isFlying() && !_dead) {
             // Then check items
             for(int i = 0; i < _it.size(); i++) {
-                double dist = Math.sqrt(Utils.sqrDistancePointSegment(_player.getJumpPos(), segEND, _it.get(i).getPos()));
+                double dist = Math.sqrt(Utils.sqrDistancePointSegment(segINIT, segEND, _it.get(i).getPos()));
 
                 if (dist != -1) {
                     if (dist < _itemDist) {
@@ -379,7 +379,7 @@ public class PlayGameState implements GameState {
                     if(next == _paths.getPaths().get(i).size()){
                         next = 0;
                     } // if toroid
-                    collision = segmentsIntersection(_player.getJumpPos(), segEND,
+                    collision = segmentsIntersection(segINIT, segEND,
                             _paths.getPaths().get(i).get(j), _paths.getPaths().get(i).get(next));
 
                     if(collision != null){
@@ -503,11 +503,15 @@ public class PlayGameState implements GameState {
 
         // TODO: is it possible to call this only on screen resize?
         // Render level info
+
         g.newFont(Font.FONT_FILE, g.repositionX(20), false);
         g.save();
 
         g.translate(_posOrX, _posOrY);
-        g.drawText(_name, (-g.getWidth() / 2) + 70 , (-g.getHeight() / 2) + 70);
+
+        String text = String.format("LEVEL %s - ", _nLevel) + _name;
+
+        g.drawText(text, (-g.getWidth() / 2) + 70 , (-g.getHeight() / 2) + 70);
 
         g.restore();
 

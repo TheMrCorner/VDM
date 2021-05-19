@@ -61,6 +61,8 @@ public abstract class AbstractEngine implements Engine {
 
             _g.setReferenceCanvas(_l.getCanvasSize());
 
+            _l.initLogic();
+
             resize();
 
             _tempLogic = null;

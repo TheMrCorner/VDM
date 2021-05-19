@@ -68,9 +68,6 @@ public class PCFont implements es.ucm.vdm.engine.Font {
     public void render() {
         // check for nulls before trying to render
         if (_graphics != null && _font != null) {
-
-            //TODO: reposition so it scales with screen
-
             _graphics.setColor(_fontColor);
             _graphics.setFont(_font);
             _graphics.drawString(_contents, _x, _y);
