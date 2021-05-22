@@ -101,7 +101,7 @@ public class Graphics extends AbstractGraphics {
     @Override
     public void fillRect(int x1, int y1, int x2, int y2) {
         _cnv.setDensity(1);
-        Rect temp = new Rect(x1, y1, (x2 - x1), (y2 - y1));
+        Rect temp = new Rect(x1, y1, x2, y2);
         _cnv.drawRect(temp, _pnt);
     } // fillRect
 

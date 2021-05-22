@@ -97,13 +97,14 @@ public class Graphics extends AbstractGraphics {
      *
      * @param x1 (int) X position of top left corner
      * @param y1 (int) Y position of top left corner
-     * @param x2 (int) width of the rectangle
-     * @param y2 (int) height of the rectangle
+     * @param x2 (int) Bottom right X coordinate
+     * @param y2 (int) Bottom right Y coordinate
      */
     @Override
     public void fillRect(int x1, int y1, int x2, int y2) {
         try {
-            ((Graphics2D)(_win.getJGraphics())).fillRect(x1, y1, x2, y2);
+            // using fill polygon so it only uses position instead of position and dimensions like drawRect
+            ((Graphics2D)(_win.getJGraphics())).fillPolygon(new int[]{x1, x2, x2, x1}, new int[]{y1, y1, y2, y2}, 4);
         } // try
         catch(Exception e){
             e.printStackTrace();
