@@ -72,8 +72,8 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         }
 
         // Init first state (Create a main menu state)
-        //setGameState(GameStates.MENU);
-        setGameState(GameStates.PLAY);
+        setGameState(GameStates.MENU);
+        //setGameState(GameStates.PLAY);
     } // initLogic
 
     public boolean checkWindowBoundaries(int x, int y) {
@@ -146,7 +146,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
             _pgs = (PlayGameState)_currentGameState;
         }
         else if (gs == GameStates.MENU) {
-            _currentGameState = new MainMenuState(this);
+            _currentGameState = new MainMenuState(this, _eng.getGraphics());
         }
     }
 } // Logic
