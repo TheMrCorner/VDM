@@ -29,9 +29,10 @@ public class Logic implements es.ucm.vdm.engine.Logic {
     VDMColor _clearColor; // Black
     GameState _currentGameState; // Current GameState instance
     int _currentLevel; // number to count the actual level
-    PlayGameState _pgs;
+    PlayGameState _pgs = null;
     Item test2;
     JSONArray _levels;
+    enum GameStates {PLAY, MENU};
 
     /**
      * Logic constructor, creates a new instance of Logic with a new Engine.
@@ -70,13 +71,9 @@ public class Logic implements es.ucm.vdm.engine.Logic {
             e.printStackTrace();
         }
 
-        _currentLevel = 0;
-
-        JSONObject l = (JSONObject)_levels.get(_currentLevel);
-
-        _pgs = new PlayGameState(l, _currentLevel, 0, this);
-
         // Init first state (Create a main menu state)
+        //setGameState(GameStates.MENU);
+        setGameState(GameStates.PLAY);
     } // initLogic
 
     public boolean checkWindowBoundaries(int x, int y) {
@@ -101,11 +98,9 @@ public class Logic implements es.ucm.vdm.engine.Logic {
      */
     @Override
     public void update(double t) {
-        // Process actual input
-        _pgs.processInput(_eng.getInput().getTouchEvents());
-        _pgs.update(t);
-        // Update GameState
-        //_currentGameState.update(t);
+        // Process actual input and update GameState
+        _currentGameState.processInput((_eng.getInput().getTouchEvents()));
+        _currentGameState.update(t);
     } // update
 
     /**
@@ -116,7 +111,8 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         // Clear buffer with black
         _eng.getGraphics().clear(_clearColor);
 
-        _pgs.render(_eng.getGraphics());
+        //_pgs.render(_eng.getGraphics());
+        _currentGameState.render(_eng.getGraphics());
     } // render
 
     /**
@@ -135,4 +131,22 @@ public class Logic implements es.ucm.vdm.engine.Logic {
 
         _eng.getGraphics().restore();
     } // drawCanvas
+
+    /**
+     * Changes the current game state to the one specified in gs
+     * @param gs (GameStates) enum value of game state we want to start
+     */
+    public void setGameState(GameStates gs) {
+        if (gs == GameStates.PLAY) {
+            _currentLevel = 0;
+
+            JSONObject l = (JSONObject)_levels.get(_currentLevel);
+
+            _currentGameState = new PlayGameState(l, _currentLevel, 0, this);
+            _pgs = (PlayGameState)_currentGameState;
+        }
+        else if (gs == GameStates.MENU) {
+            _currentGameState = new MainMenuState(this);
+        }
+    }
 } // Logic

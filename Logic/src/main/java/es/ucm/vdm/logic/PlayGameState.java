@@ -311,11 +311,10 @@ public class PlayGameState implements GameState {
 
         VDMColor colorPicker = new VDMColor();
 
-        //TODO: fix in android
         // Draw the background
         g.setColor(new VDMColor(60, 60, 60, 255));
         g.translate(_posOrX, _posOrY);
-        g.fillRect((-g.getWidth() / 2), (-g.getHeight()/3), g.getWidth(), g.getHeight()/3);
+        g.fillRect((-g.getWidth() / 2), (-g.getHeight()/3), (g.getWidth() / 2), 0);
 
         // Draw Game Over text
         g.setColor(colorPicker.getRed());
@@ -507,7 +506,6 @@ public class PlayGameState implements GameState {
 
         // TODO: is it possible to call this only on screen resize?
         // Render level info
-
         g.newFont(Font.FONT_FILE, g.repositionX(20), false);
         g.save();
 
