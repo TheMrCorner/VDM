@@ -91,14 +91,12 @@ public class Enemy extends GameObject {
                 distY += ((_dir._unit._y * _lSp._y) * t);
 
                 if(Math.abs(distX) >= Math.abs(_dir._x) && _lSp._x != 0){
-                    System.out.println("Max pos reached in X: " + distX + " ");
                     _dir._unit._x *= -1;
                     distX = 0;
                     waited = _wait * 1000;
                     _waiting = true;
                 } // if
                 if(Math.abs(distY) >= Math.abs(_dir._y) && _lSp._y != 0){
-                    System.out.println("Max pos reached in Y: " + distY + " ");
                     _dir._unit._y *= -1;
                     distY = 0;
                     waited = _wait * 1000;

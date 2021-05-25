@@ -78,8 +78,8 @@ public class PlayGameState implements GameState {
         _diffLevel = diff;
         _l = l;
 
-        _posOrY = (int)_l._cnv.height/2;
-        _posOrX = (int)_l._cnv.width/2;
+        _posOrY = _l._cnv.height/2;
+        _posOrX = _l._cnv.width/2;
 
         // Parse all data from the level
         _nLevel = nlev + 1;

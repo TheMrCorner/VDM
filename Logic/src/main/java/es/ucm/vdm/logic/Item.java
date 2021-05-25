@@ -41,7 +41,6 @@ public class Item extends GameObject {
     public Item(double x, double y, VDMColor c, int width, int height, float angVel, int thickness,
                 float expansionVel, int transparencyVel) {
         super(x, y, c, thickness);
-        // TODO: Meter la configuración de la velocidad de expansión y de transparencia.
         _w = width;
         _h = height;
         _cW = _w;
@@ -60,6 +59,8 @@ public class Item extends GameObject {
         super(x, y, c, thickness);
         _w = width;
         _h = height;
+        _cW = _w;
+        _cH = _h;
         _av = angVel;
         _taken = false;
         _centerAv = tAngVel;
@@ -122,8 +123,8 @@ public class Item extends GameObject {
                 _totalRot = 0;
             } // if
 
-            _pos._x = _coordOrigin._x + _distanceCenter *Math.sin(Math.toRadians(_totalRot));
-            _pos._y = _coordOrigin._y + _distanceCenter * Math.cos(Math.toRadians(_totalRot));
+            _pos._x = _distanceCenter * Math.sin(Math.toRadians(_totalRot));
+            _pos._y = _distanceCenter * Math.cos(Math.toRadians(_totalRot));
         } // if
 
         if(_taken) {
@@ -149,75 +150,47 @@ public class Item extends GameObject {
     @Override
     public void render(Graphics g) {
         if(_act) {
+            Rect o;
+            Rect n = null;
+            int lineThickness = _lineThickness;
+            VDMColor c;
+
             if(!_taken) {
-                Rect o = new Rect(_w, 0, 0, _h);
-                Rect n = g.scale(o, g.getCanvas());
+                o = new Rect(_w, 0, 0, _h);
 
-                // Set the color to paint the coin/item
-                g.setColor(_c);
-                // Save the actual canvas transformation matrix
-                g.save();
-
-                if (_centerAv == -1) {
-                    g.translate((int) _coordOrigin._x + (int) _pos._x,
-                            (int) _coordOrigin._y - (int) _pos._y);
-                } else {
-                    g.translate((int) _pos._x,
-                            (int) _pos._y);
-                }
-
-                g.rotate(_rot);
-
-                // Draw square
-                g.drawLine(-n.width / 2, -n.height / 2,
-                        n.width / 2, -n.height / 2, _lineThickness);
-                g.drawLine(-n.width / 2, -n.height / 2,
-                        -n.width / 2, n.height / 2, _lineThickness);
-                g.drawLine(n.width / 2, -n.height / 2,
-                        n.width / 2, n.height / 2, _lineThickness);
-                g.drawLine(-n.width / 2, n.height / 2,
-                        n.width / 2, n.height / 2, _lineThickness);
-
-                // Reset canvas after drawing
-                g.restore();
+                c = _c;
             }
             else{
-                Rect o = new Rect((int)_cW, 0, 0, (int)_cH);
+                o = new Rect((int)_cW, 0, 0, (int)_cH);
 
-                Rect n = g.scale(o, g.getCanvas());
+                lineThickness = (int)(_cW * _lineThickness / _w);
 
-                int lineThick = (int)(_cW * _lineThickness / _w);
-
-                // Set the color to paint the coin/item
-                g.setColor(_transpCol);
-                // Save the actual canvas transformation matrix
-                g.save();
-
-                if (_centerAv == -1) {
-                    g.translate((int) _coordOrigin._x + (int) _pos._x,
-                            (int) _coordOrigin._y - (int) _pos._y);
-                } else {
-                    g.translate((int) _pos._x,
-                            (int) _pos._y);
-                }
-
-                g.rotate(_rot);
-
-                int lineSeparation = (int)(_cW * 1 / _w);
-
-                // Draw square
-                g.drawLine(-n.width / 2, -n.height / 2,
-                        n.width / 2 - lineSeparation, -n.height / 2, lineThick);
-                g.drawLine(-n.width / 2, -n.height / 2 + lineSeparation,
-                        -n.width / 2, n.height / 2, lineThick);
-                g.drawLine(n.width / 2, -n.height / 2,
-                        n.width / 2, n.height / 2 - lineSeparation, lineThick);
-                g.drawLine(-n.width / 2 + lineSeparation, n.height / 2,
-                        n.width / 2, n.height / 2, lineThick);
-
-                // Reset canvas after drawing
-                g.restore();
+                c = _transpCol;
             } // else
+
+            n = g.scale(o, g.getCanvas());
+            // Set the color to paint the coin/item
+            g.setColor(c);
+            // Save the actual canvas transformation matrix
+            g.save();
+
+            g.translate((int) _coordOrigin._x + (int) _pos._x,
+                    (int) _coordOrigin._y + ((int) _pos._y * (-1)));
+
+            g.rotate(_rot);
+
+            // Draw square
+            g.drawLine(-n.width / 2, -n.height / 2,
+                    n.width / 2, -n.height / 2, lineThickness);
+            g.drawLine(-n.width / 2, -n.height / 2,
+                    -n.width / 2, n.height / 2, lineThickness);
+            g.drawLine(n.width / 2, -n.height / 2,
+                    n.width / 2, n.height / 2, lineThickness);
+            g.drawLine(-n.width / 2, n.height / 2,
+                    n.width / 2, n.height / 2, lineThickness);
+
+            // Reset canvas after drawing
+            g.restore();
         } // if
     } // render
 } // Item

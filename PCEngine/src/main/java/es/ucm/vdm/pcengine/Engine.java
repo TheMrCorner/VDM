@@ -197,7 +197,7 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
                     // Inform about the fps
                     if (_currentTime - _info > 1000000000L) {
                         long fps = _frames * 1000000000L / (_currentTime - _info);
-                        System.out.println("Info: " + fps + " fps");
+                        //System.out.println("Info: " + fps + " fps");
                         _frames = 0;
                         _info = _currentTime;
                     } // if
