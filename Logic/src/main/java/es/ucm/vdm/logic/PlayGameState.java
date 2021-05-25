@@ -198,18 +198,9 @@ public class PlayGameState implements GameState {
                 Object ang = coord.get("angle");
                 Object mag = coord.get("radius");
                 Object angVel = coord.get("speed");
-                double trueAng;
-                double magnitude;
-                double totalAngularVelocity;
-
-                // First parse the angle to get the position
-                trueAng = parseDouble(ang);
-
-                // Then parse the radius to get the magnitude of the vector (distance really)
-                magnitude = parseDouble(mag);
-
-                // Finally, parse the angular velocity that all items will have.
-                totalAngularVelocity = parseDouble(angVel);
+                double trueAng = parseDouble(ang);
+                double magnitude = parseDouble(mag);
+                double totalAngularVelocity = parseDouble(angVel);
 
                 // Now, using simple trigonometry, get the position at which the object should be
                 // With multiplication of magnitude by cos and sin we get how much will add to

@@ -117,10 +117,10 @@ public class Item extends GameObject {
         } // if
 
         if(_centerAv != -1){
-            _totalRot += _centerAv * t;
+            _totalRot -= _centerAv * t;
 
-            if(_totalRot >= 360){
-                _totalRot = 0;
+            if(_totalRot <= 0){
+                _totalRot = 360;
             } // if
 
             _pos._x = _distanceCenter * Math.sin(Math.toRadians(_totalRot));
