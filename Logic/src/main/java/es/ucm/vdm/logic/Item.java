@@ -143,7 +143,7 @@ public class Item extends GameObject {
     } // update
 
     /**
-     * Renders the item with the color preset and in the position asignated.
+     * Renders the item with the color preset and in the position assigned.
      *
      * @param g (Graphics) Graphics instance to paint it
      */

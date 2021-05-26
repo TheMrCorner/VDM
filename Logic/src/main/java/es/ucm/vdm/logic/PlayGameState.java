@@ -536,7 +536,9 @@ public class PlayGameState implements GameState {
                     // Tell the _player to begin flight
                     _player.fly(_paths.getJumpDir(_paths.getActivePath(),
                             _player.getActualPoint()));
-                    //TODO: add load of menu when it's game over
+
+                    if (_gameOver)
+                        _l.setGameState(Logic.GameStates.MENU);
                     break;
                 default:
                     // Ignore the rest
