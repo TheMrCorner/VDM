@@ -530,6 +530,7 @@ public class PlayGameState implements GameState {
             Input.TouchEvent te = e.get(ptr); // Get touch event at pointers position
 
             switch(te.getType()){
+                case CLICKED:
                 case PRESSED_DOWN:
                 case KEY_PRESSED:
                     // Same mechanism as with mouse or touchscreen but with keyboard.
