@@ -538,7 +538,7 @@ public class PlayGameState implements GameState {
                             _player.getActualPoint()));
 
                     if (_gameOver)
-                        _l.setGameState(Logic.GameStates.MENU);
+                        _l.setGameState(Logic.GameStates.MENU, 0);
                     break;
                 default:
                     // Ignore the rest

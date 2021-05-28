@@ -72,7 +72,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
         }
 
         // Init first state (Create a main menu state)
-        setGameState(GameStates.MENU);
+        setGameState(GameStates.MENU, 0);
         //setGameState(GameStates.PLAY);
     } // initLogic
 
@@ -136,17 +136,17 @@ public class Logic implements es.ucm.vdm.engine.Logic {
      * Changes the current game state to the one specified in gs
      * @param gs (GameStates) enum value of game state we want to start
      */
-    public void setGameState(GameStates gs) {
+    public void setGameState(GameStates gs, int diff) {
         if (gs == GameStates.PLAY) {
             _currentLevel = 0;
 
             JSONObject l = (JSONObject)_levels.get(_currentLevel);
 
-            _currentGameState = new PlayGameState(l, _currentLevel, 0, this);
+            _currentGameState = new PlayGameState(l, _currentLevel, diff, this);
             _pgs = (PlayGameState)_currentGameState;
         }
         else if (gs == GameStates.MENU) {
-            _currentGameState = new MainMenuState(this, _eng.getGraphics());
+            _currentGameState = new MainMenuState(this);
         }
     }
 } // Logic

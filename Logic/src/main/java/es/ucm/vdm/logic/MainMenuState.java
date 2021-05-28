@@ -1,5 +1,6 @@
 package es.ucm.vdm.logic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.ucm.vdm.engine.Engine;
@@ -13,12 +14,12 @@ public class MainMenuState implements GameState {
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
     Logic _l; // For changing gamestate
-    Graphics _g = null; // For repositioning of coordinates in processInput
     int _posOrX; // Pos of coord origin X
     int _posOrY; // Pos of coord origin Y
     VDMColor _colorPicker; // Used for picking colors for the text and it also stores a grey color
     Button _easy;
     Button _hard;
+    ArrayList<Text> _texts;
 
     //---------------------------------------------------------------
     //--------------------------Constants----------------------------
@@ -28,77 +29,89 @@ public class MainMenuState implements GameState {
     final String EASY_DESCRIPTION = "(Slow speed, 10 lives)";
     final String HARD_DESCRIPTION = "(Fast speed, 5 lives)";
 
-    public MainMenuState(Logic l, Graphics g) {
+    public MainMenuState(Logic l) {
         _l = l;
-        _g = g;
 
-        _posOrY = (int)_l._cnv.height/2;
-        _posOrX = (int)_l._cnv.width/2;
+        _posOrY = _l._cnv.height/2;
+        _posOrX = _l._cnv.width/2;
+
+        Vector2 ors = new Vector2(_posOrX, _posOrY);
 
         _colorPicker = new VDMColor(60, 60, 60, 255);
 
-        _easy = new Button(0, 0, 100, 100, new VDMColor(255, 255, 255, 255), 1);
-    }
+        _texts = new ArrayList<Text>();
+
+        Text esText = new Text(-308, -78, _colorPicker.getWhite(),
+                35, "EASY MODE", false, Font.FONT_FILE);
+        esText.setCoordOrigin(ors);
+        _easy = new Button(-200, -68, 216, 29,
+                _colorPicker.getEnemyColor(), 10, esText);
+        _easy.setCoordOrigin(ors);
+
+        Text hdText =  new Text(-308, -116, _colorPicker.getWhite(),
+                35, "HARD MODE", false, Font.FONT_FILE);
+        hdText.setCoordOrigin(ors);
+        _hard = new Button(-196, -110, 224, 29,
+                _colorPicker.getItemColor(), 10, hdText);
+        _hard.setCoordOrigin(ors);
+
+        Text title = new Text(-308, 160, _colorPicker.getPlayerColor(),
+                50, GAME_TITLE, true, Font.FONT_FILE);
+        title.setCoordOrigin(ors);
+        _texts.add(title);
+
+        Text stitle = new Text(-308, 129, _colorPicker.getPlayerColor(),
+                25, GAME_SUBTITLE, false, Font.FONT_FILE);
+        stitle.setCoordOrigin(ors);
+        _texts.add(stitle);
+
+        Text easText = new Text(-84, -78, _colorPicker,
+                20, EASY_DESCRIPTION, false, Font.FONT_FILE);
+        easText.setCoordOrigin(ors);
+        _texts.add(easText);
+
+        Text hardText = new Text(-72, -116, _colorPicker,
+                20, HARD_DESCRIPTION, false, Font.FONT_FILE);
+        hardText.setCoordOrigin(ors);
+        _texts.add(hardText);
+    } // Constructor
 
     @Override
-    public void update(double t) {
-
-    }
+    public void update(double t) {}
 
     @Override
     public void render(Graphics g) {
         g.save();
 
         // Render game title
-        g.newFont(Font.FONT_FILE, g.repositionX(40), true);
-        g.setColor(_colorPicker.getPlayerColor());
-        g.translate(_posOrX, _posOrY);
-        g.drawText(GAME_TITLE, (-g.getWidth()/3), (-g.getHeight() / 3));
+        for (int i = 0; i < _texts.size(); i++){
+            _texts.get(i).render(g);
+        } // for
 
-        // Render game subtitle
-        g.newFont(Font.FONT_FILE, g.repositionX(20), false);
-        g.drawText(GAME_SUBTITLE, (-g.getWidth()/3), (-g.getHeight() / 4));
-
-        // Render difficulty texts
-        g.newFont(Font.FONT_FILE, g.repositionX(30), false);
-        g.setColor(_colorPicker.getWhite());
-        g.drawText("EASY MODE", (-g.getWidth()/3), (g.getHeight() / 6));
-        g.drawText("HARD MODE", (-g.getWidth()/3), (g.getHeight() / 4));
-
-        g.newFont(Font.FONT_FILE, g.repositionX(15), false);
-        g.setColor(_colorPicker);
-        g.drawText(EASY_DESCRIPTION, 0, (g.getHeight() / 6));
-        g.drawText(HARD_DESCRIPTION, 0, (g.getHeight() / 4));
-
-        // debug, render button
-        _easy.setPos(new Vector2((-g.getWidth()/3), (g.getHeight() / 6)));
-        _easy.setWidthHeight(g.getWidth()/4, g.getHeight()/10);
         _easy.render(g);
+        _hard.render(g);
 
         g.restore();
     }
 
     @Override
     public void processInput(List<Input.TouchEvent> e) {
-        //TODO: process clicks
-
         // int ptr = e.size() - 1; // Pointer to roam the list
         int ptr = 0;
 
         while(ptr < e.size()){ // While list is not empty...
             Input.TouchEvent te = e.get(ptr); // Get touch event at pointers position
 
-            if (te.getType() == Input.TouchEvent.TouchType.PRESSED_DOWN) {
-                if (_g != null) {
-                    int logicX = _g.reverseRepositionX(te.getX());
-                    int logicY = _g.reverseRepositionY(te.getY());
-
-                    if (_easy.isPressed(logicX, logicY, _g))
-                        _l.setGameState(Logic.GameStates.PLAY);
-                }
+            if (te.getType() == Input.TouchEvent.TouchType.CLICKED) {
+                if (_easy.isPressed(te.getX(), te.getY())) {
+                    _l.setGameState(Logic.GameStates.PLAY, 0);
+                } // if
+                else if(_hard.isPressed(te.getX(), te.getY())) {
+                    _l.setGameState(Logic.GameStates.PLAY, 1);
+                } // else if
             } // if
 
             ptr++;
         } // while
-    }
+    } // processInput
 } // MainMenuState

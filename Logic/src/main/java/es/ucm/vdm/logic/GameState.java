@@ -7,6 +7,8 @@ import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
 
 public interface GameState {
+
+
     /**
      * Updates all GameObjects in this State with the time passed since the las update.
      *
