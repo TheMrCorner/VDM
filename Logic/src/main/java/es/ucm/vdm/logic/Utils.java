@@ -23,27 +23,18 @@ public final class Utils {
         return null;
     } // segmentsIntersection
 
-	public static double sqrDistancePointSegment(Vector2 a, Vector2 b, Vector2 c) {
-	    Vector2 segment = subVect(a, b);
-	    Vector2 point = subVect(c, b);
-
-        double cos = dotProduct(point, segment) /
-                (point.magnitude() * segment.magnitude());
-
-        if(cos == 0){ // Perpendicular, the distance is trivial
-            return Math.abs(point.magnitude());
+	public static double sqrDistancePointSegment(Vector2 v1, Vector2 v2, Vector2 p) {
+	    if(v1 == v2) {
+	        return subVect(p, v1).sqMagnitude();
         } // if
-        else if(Math.acos(cos) > (Math.PI / 2) && Math.acos(cos) < Math.PI){ // Out of range
-            return -1;
-        } // else if
-        else if(Math.acos(cos) < ((3 * Math.PI) / 2) && Math.acos(cos) > Math.PI){ // Out of range
-            return -1;
-        } // else if
-        else{
-            double cat = point.magnitude() * cos;
 
-            return Math.abs((Math.pow(point.magnitude(), 2) - Math.pow(cat, 2)));
-        } // else
+	    Vector2 V = subVect(v2, v1);
+	    Vector2 VP = subVect(p, v1);
+
+        double t = Math.max(0, Math.min(1, dotProduct(VP, V) / V.sqMagnitude()));
+        Vector2 temp = new Vector2(t * V._x, t * V._y);
+        Vector2 proj = sumVect(v1, temp);
+        return subVect(proj, p).sqMagnitude();
     } // sqrDistancePointSegment
 
 	public static Vector2 rotVect(Vector2 v, double ang){

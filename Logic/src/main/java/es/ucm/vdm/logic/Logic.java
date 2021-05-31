@@ -138,7 +138,7 @@ public class Logic implements es.ucm.vdm.engine.Logic {
      */
     public void setGameState(GameStates gs, int diff) {
         if (gs == GameStates.PLAY) {
-            _currentLevel = 0;
+            _currentLevel = 8;
 
             JSONObject l = (JSONObject)_levels.get(_currentLevel);
 

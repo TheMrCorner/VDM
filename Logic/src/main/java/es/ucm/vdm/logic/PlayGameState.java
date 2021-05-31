@@ -30,6 +30,10 @@ public class PlayGameState implements GameState {
     ArrayList<GameObject> _lf;
     Path _paths;
     Player _player;
+    Text _levelText;
+    Text _gameOverText;
+    Text _difficultyText;
+    Text _scoreText;
 
     //---------------------------------------------------------------
     Logic _l; // For changing gamestate
@@ -150,6 +154,12 @@ public class PlayGameState implements GameState {
         _player.setPath(_paths.getPaths().get(0), 0, 1);
         _player.setCoordOrigin(new Vector2(_posOrX, _posOrY));
         _paths.setActivePath(0);
+
+        String text = String.format("LEVEL %s - ", _nLevel) + _name;
+
+        _levelText = new Text(-300, 200, _playerC.getWhite(),
+                15, text, false, Font.FONT_FILE);
+        _levelText.setCoordOrigin(new Vector2(_posOrX, _posOrY));
     } // parse_level
 
     /**
@@ -310,18 +320,18 @@ public class PlayGameState implements GameState {
         // Draw Game Over text
         g.setColor(colorPicker.getRed());
         g.newFont(Font.FONT_FILE, g.repositionX(35), true);
-        g.drawText("GAME OVER", -g.getWidth()/3 , (-g.getHeight() / 4));
+        g.drawText("GAME OVER", g.repositionX(-_posOrX/3) , (-g.getHeight() / 4));
 
         // Draw Difficulty text
         g.setColor(colorPicker.getWhite());
         g.newFont(Font.FONT_FILE, g.repositionX(20), false);
         if (_diffLevel == 0)
-            g.drawText("EASY MODE", -g.getWidth()/3 , (-g.getHeight() / 6));
+            g.drawText("EASY MODE", -_posOrX/4 , (-g.getHeight() / 6));
         else
-            g.drawText("HARD MODE", -g.getWidth()/3 , (-g.getHeight() / 6));
+            g.drawText("HARD MODE", -_posOrX/4 , (-g.getHeight() / 6));
 
         // Draw Score text
-        g.drawText("SCORE: " + _nLevel , -g.getWidth()/3 , (-g.getHeight() / 8));
+        g.drawText("SCORE: " + _nLevel , -_posOrX/4 , (-g.getHeight() / 8));
 
         g.restore();
     }
@@ -357,15 +367,30 @@ public class PlayGameState implements GameState {
         // ONLY WHEN FLYING AND NOT DEAD
         if(_player.isFlying() && !_dead) {
             // Then check items
-            for(int i = 0; i < _it.size(); i++) {
-                double dist = Math.sqrt(Utils.sqrDistancePointSegment(segINIT, segEND, _it.get(i).getPos()));
 
-                if (dist != -1) {
-                    if (dist < _itemDist) {
-                        ((Item) _it.get(i)).itemTaken();
+            System.out.println("-----------------------Check items----------------------");
+
+            for(int i = 0; i < _it.size(); i++) {
+                if(!((Item)_it.get(i)).isTaken()) {
+                    double dist = Utils.sqrDistancePointSegment(segINIT, segEND, _it.get(i).getPos());
+
+                    if (dist != -1.0) {
+                        dist = Math.sqrt(dist);
+                        if(dist < 100){
+                            System.out.println("Distance: " + Double.toString(dist));
+                            System.out.println(String.format("Position item: %f, %f", _it.get(i).getPos()._x, _it.get(i).getPos()._y));
+                            System.out.println(String.format("Position init: %f, %f", segINIT._x, segINIT._y));
+                            System.out.println(String.format("Position end: %f, %f", segEND._x, segEND._y));
+                        } // if
+                        if (dist < _itemDist) {
+                            System.out.println("Item taken");
+                            ((Item) _it.get(i)).itemTaken();
+                        } // if
                     } // if
                 } // if
             } // for
+
+            System.out.println("----------------------Items checked----------------------");
 
             // Check paths
             for(int i = 0; i < _paths.getPaths().size(); i++){
@@ -495,18 +520,7 @@ public class PlayGameState implements GameState {
             _lf.get(i).render(g);
         } // for
 
-        // TODO: is it possible to call this only on screen resize?
-        // Render level info
-        g.newFont(Font.FONT_FILE, g.repositionX(20), false);
-        g.save();
-
-        g.translate(_posOrX, _posOrY);
-
-        String text = String.format("LEVEL %s - ", _nLevel) + _name;
-
-        g.drawText(text, (-g.getWidth() / 2) + 70 , (-g.getHeight() / 2) + 70);
-
-        g.restore();
+        _levelText.render(g);
 
         // If it's a game over, render the game over screen
         if (_gameOver)
@@ -535,8 +549,9 @@ public class PlayGameState implements GameState {
                 case KEY_PRESSED:
                     // Same mechanism as with mouse or touchscreen but with keyboard.
                     // Tell the _player to begin flight
-                    _player.fly(_paths.getJumpDir(_paths.getActivePath(),
-                            _player.getActualPoint()));
+                    if(!_player.isFlying())
+                        _player.fly(_paths.getJumpDir(_paths.getActivePath(),
+                                _player.getActualPoint()));
 
                     if (_gameOver)
                         _l.setGameState(Logic.GameStates.MENU, 0);

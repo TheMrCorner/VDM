@@ -255,15 +255,6 @@ public class Engine extends AbstractEngine implements Runnable {
             // Update
             update();
 
-            // Inform about the fps (Debug only)
-            if(_currentTime - _info > 1000000000l){
-                long fps = _frames * 1000000000l / (_currentTime - _info);
-                System.out.println("Info: " + fps + " fps");
-                _frames = 0;
-                _info = _currentTime;
-            }
-            ++_frames; // Update frames
-
             // Render
 
             // Wait till Surface is ready
