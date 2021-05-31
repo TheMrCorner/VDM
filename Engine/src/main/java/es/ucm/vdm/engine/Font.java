@@ -4,7 +4,8 @@ package es.ucm.vdm.engine;
  * Base class for the font functionality of the game. Contains shared attributes and functionality
  */
 public interface Font {
-    final String FONT_FILE = "Fonts/Bungee-Regular.ttf";
+    final String FONT_BUNGEE_REGULAR = "Fonts/Bungee-Regular.ttf";
+    final String FONT_BUNGEE_HAIRLINE = "Fonts/BungeeHairline-Regular.ttf";
 
     /**
      * Creates a platform specific instance of a font object with the supplied data

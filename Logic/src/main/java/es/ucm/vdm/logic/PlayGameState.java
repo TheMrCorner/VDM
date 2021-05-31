@@ -158,7 +158,7 @@ public class PlayGameState implements GameState {
         String text = String.format("LEVEL %s - ", _nLevel) + _name;
 
         _levelText = new Text(-300, 200, _playerC.getWhite(),
-                15, text, false, Font.FONT_FILE);
+                15, text, false, Font.FONT_BUNGEE_HAIRLINE);
         _levelText.setCoordOrigin(new Vector2(_posOrX, _posOrY));
     } // parse_level
 
@@ -319,12 +319,12 @@ public class PlayGameState implements GameState {
 
         // Draw Game Over text
         g.setColor(colorPicker.getRed());
-        g.newFont(Font.FONT_FILE, g.repositionX(35), true);
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(35), true);
         g.drawText("GAME OVER", g.repositionX(-_posOrX/3) , (-g.getHeight() / 4));
 
         // Draw Difficulty text
         g.setColor(colorPicker.getWhite());
-        g.newFont(Font.FONT_FILE, g.repositionX(20), false);
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(20), false);
         if (_diffLevel == 0)
             g.drawText("EASY MODE", -_posOrX/4 , (-g.getHeight() / 6));
         else
@@ -376,14 +376,7 @@ public class PlayGameState implements GameState {
 
                     if (dist != -1.0) {
                         dist = Math.sqrt(dist);
-                        if(dist < 100){
-                            System.out.println("Distance: " + Double.toString(dist));
-                            System.out.println(String.format("Position item: %f, %f", _it.get(i).getPos()._x, _it.get(i).getPos()._y));
-                            System.out.println(String.format("Position init: %f, %f", segINIT._x, segINIT._y));
-                            System.out.println(String.format("Position end: %f, %f", segEND._x, segEND._y));
-                        } // if
                         if (dist < _itemDist) {
-                            System.out.println("Item taken");
                             ((Item) _it.get(i)).itemTaken();
                         } // if
                     } // if

@@ -42,36 +42,36 @@ public class MainMenuState implements GameState {
         _texts = new ArrayList<Text>();
 
         Text esText = new Text(-308, -78, _colorPicker.getWhite(),
-                35, "EASY MODE", false, Font.FONT_FILE);
+                35, "EASY MODE", false, Font.FONT_BUNGEE_REGULAR);
         esText.setCoordOrigin(ors);
         _easy = new Button(-200, -68, 216, 29,
                 _colorPicker.getEnemyColor(), 10, esText);
         _easy.setCoordOrigin(ors);
 
         Text hdText =  new Text(-308, -116, _colorPicker.getWhite(),
-                35, "HARD MODE", false, Font.FONT_FILE);
+                35, "HARD MODE", false, Font.FONT_BUNGEE_REGULAR);
         hdText.setCoordOrigin(ors);
         _hard = new Button(-196, -110, 224, 29,
                 _colorPicker.getItemColor(), 10, hdText);
         _hard.setCoordOrigin(ors);
 
         Text title = new Text(-308, 160, _colorPicker.getPlayerColor(),
-                50, GAME_TITLE, true, Font.FONT_FILE);
+                50, GAME_TITLE, true, Font.FONT_BUNGEE_REGULAR);
         title.setCoordOrigin(ors);
         _texts.add(title);
 
         Text stitle = new Text(-308, 129, _colorPicker.getPlayerColor(),
-                25, GAME_SUBTITLE, false, Font.FONT_FILE);
+                25, GAME_SUBTITLE, false, Font.FONT_BUNGEE_REGULAR);
         stitle.setCoordOrigin(ors);
         _texts.add(stitle);
 
         Text easText = new Text(-84, -78, _colorPicker,
-                20, EASY_DESCRIPTION, false, Font.FONT_FILE);
+                20, EASY_DESCRIPTION, false, Font.FONT_BUNGEE_REGULAR);
         easText.setCoordOrigin(ors);
         _texts.add(easText);
 
         Text hardText = new Text(-72, -116, _colorPicker,
-                20, HARD_DESCRIPTION, false, Font.FONT_FILE);
+                20, HARD_DESCRIPTION, false, Font.FONT_BUNGEE_REGULAR);
         hardText.setCoordOrigin(ors);
         _texts.add(hardText);
     } // Constructor
