@@ -8,12 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 // UCM
-import es.ucm.vdm.engine.Engine;
 import es.ucm.vdm.engine.Font;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
 import es.ucm.vdm.engine.VDMColor;
-import sun.security.ssl.Debug;
 
 import static es.ucm.vdm.logic.Utils.parseDouble;
 import static es.ucm.vdm.logic.Utils.segmentsIntersection;
@@ -31,9 +29,7 @@ public class PlayGameState implements GameState {
     Path _paths;
     Player _player;
     Text _levelText;
-    Text _gameOverText;
-    Text _difficultyText;
-    Text _scoreText;
+    ParticleSystem _part = null;
 
     //---------------------------------------------------------------
     Logic _l; // For changing gamestate
@@ -41,18 +37,20 @@ public class PlayGameState implements GameState {
     JSONObject _level;
     int _nLevel; // Number of level, for writing
     int _diffLevel; // Difficulty
-    int _posOrX; // Pos of coord origin X
-    int _posOrY; // Pos of coord origin Y
     boolean _dead = false; // Flag to check that player is dead
     boolean _gameOver = false; // Flag used to display the Game Over banner
     boolean _completed = false; // Flag to check if level is complete
     double _countdown = 0; // Variable to count
+    boolean _pathCollision = false;
 
 
     // Constant values for colors and etc.
     VDMColor _playerC; // Player color ARGB
     VDMColor _itemC; // Item color ARGB
     VDMColor _enemyC; // Enemy color ARGB
+    Vector2 _coordOr;
+    int _coordOrX;
+    int _coordOrY;
     int _lineThickness = 4;
     int _playerWidth = 12; // Player width
     int _itemWidth = 8; // Item width
@@ -63,6 +61,7 @@ public class PlayGameState implements GameState {
     double _countdownInit = 1; // Count down to wait for dead resolution or win resolution (1 second)
     float _expansionVel = 100;
     int _transpVel = 230;
+    float _collisionDesp = 0.03f; // Distance moved when player collides with the path.
 
     /**
      * Generates a new level from a JSONObject provided in the constructor.
@@ -82,8 +81,10 @@ public class PlayGameState implements GameState {
         _diffLevel = diff;
         _l = l;
 
-        _posOrY = _l._cnv.height/2;
-        _posOrX = _l._cnv.width/2;
+        _coordOrX = _l._cnv.width/2;
+        _coordOrY = _l._cnv.height/2;
+
+        _coordOr = new Vector2(_coordOrX, _coordOrY);
 
         // Parse all data from the level
         _nLevel = nlev + 1;
@@ -139,7 +140,7 @@ public class PlayGameState implements GameState {
         JSONArray e = (JSONArray) level.get("enemies"); // Enemies
 
         // Create Path
-        _paths = new Path(_posOrX, _posOrY, new VDMColor(255, 255, 255, 255), _lineThickness, p); // Path object
+        _paths = new Path((int)_coordOr._x, (int)_coordOr._y, new VDMColor(255, 255, 255, 255), _lineThickness, p); // Path object
 
         createItems(i);
 
@@ -152,14 +153,14 @@ public class PlayGameState implements GameState {
         _player =  new Player(_paths.getInitPos()._x, _paths.getInitPos()._y, _playerC,
                 _playerWidth, _playerWidth, _lineThickness, _playerVel, _aVel, this);
         _player.setPath(_paths.getPaths().get(0), 0, 1);
-        _player.setCoordOrigin(new Vector2(_posOrX, _posOrY));
+        _player.setCoordOrigin(_coordOr);
         _paths.setActivePath(0);
 
         String text = String.format("LEVEL %s - ", _nLevel) + _name;
 
         _levelText = new Text(-300, 200, _playerC.getWhite(),
                 15, text, false, Font.FONT_BUNGEE_HAIRLINE);
-        _levelText.setCoordOrigin(new Vector2(_posOrX, _posOrY));
+        _levelText.setCoordOrigin(_coordOr);
     } // parse_level
 
     /**
@@ -176,6 +177,7 @@ public class PlayGameState implements GameState {
         _paths.setActivePath(0);
         _dead = false;
         _gameOver = false;
+        _part = null;
     } // resetLevel
 
     /**
@@ -231,7 +233,7 @@ public class PlayGameState implements GameState {
                         _itemWidth, _aVel, _lineThickness, _expansionVel, _transpVel);
             } // else
 
-            nItem.setCoordOrigin(new Vector2(_posOrX, _posOrY));
+            nItem.setCoordOrigin(_coordOr);
             _it.add(nItem);
         } // for
     } // create_items
@@ -299,7 +301,7 @@ public class PlayGameState implements GameState {
 
             nEnemy = new Enemy(coordX, coordY, _enemyC, _lineThickness, (int) length - 2, (int) angle,
                     (float) angSpeed, linearSpeed, (float) waitTime, direction);
-            nEnemy.setCoordOrigin(new Vector2(_posOrX, _posOrY));
+            nEnemy.setCoordOrigin(_coordOr);
             _en.add(nEnemy);
         } // for
     } // create_enemies
@@ -314,24 +316,24 @@ public class PlayGameState implements GameState {
 
         // Draw the background
         g.setColor(new VDMColor(60, 60, 60, 255));
-        g.translate(_posOrX, _posOrY);
+        g.translate((int)_coordOr._x, (int)_coordOr._y);
         g.fillRect((-g.getWidth() / 2), (-g.getHeight()/3), (g.getWidth() / 2), 0);
 
         // Draw Game Over text
         g.setColor(colorPicker.getRed());
         g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(35), true);
-        g.drawText("GAME OVER", g.repositionX(-_posOrX/3) , (-g.getHeight() / 4));
+        g.drawText("GAME OVER", g.repositionX(-(int)_coordOr._x/3) , (-g.getHeight() / 4));
 
         // Draw Difficulty text
         g.setColor(colorPicker.getWhite());
         g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(20), false);
         if (_diffLevel == 0)
-            g.drawText("EASY MODE", -_posOrX/4 , (-g.getHeight() / 6));
+            g.drawText("EASY MODE", -(int)_coordOr._x/4 , (-g.getHeight() / 6));
         else
-            g.drawText("HARD MODE", -_posOrX/4 , (-g.getHeight() / 6));
+            g.drawText("HARD MODE", -(int)_coordOr._x/4 , (-g.getHeight() / 6));
 
         // Draw Score text
-        g.drawText("SCORE: " + _nLevel , -_posOrX/4 , (-g.getHeight() / 8));
+        g.drawText("SCORE: " + _nLevel , -(int)_coordOr._x/4 , (-g.getHeight() / 8));
 
         g.restore();
     }
@@ -360,6 +362,9 @@ public class PlayGameState implements GameState {
             collision = segmentsIntersection(segINIT, segEND, enSeg[0], enSeg[1]);
             if(collision != null){
                 // KILL PLAYER
+                _part = new ParticleSystem(collision._x, collision._y,
+                        _playerC, _lineThickness, _coordOr);
+
                 killPlayer();
             } // if
         } // for
@@ -396,17 +401,23 @@ public class PlayGameState implements GameState {
                             _paths.getPaths().get(i).get(j), _paths.getPaths().get(i).get(next));
 
                     if(collision != null){
+                        Vector2 dir = _player.getDir(); // Moving effect
+
+                        _coordOr._x += _collisionDesp * dir._x;
+                        _coordOr._y -= _collisionDesp * dir._y;
+
                         _player.pathCollide(collision, _paths.getPaths().get(i), j, next);
                         _paths.setActivePath(i);
                         checkItems();
+                        _pathCollision = true;
                     } // if
                     // If no collision, keep running till infinite
                 } // Vertex for
             } // Paths for
 
             // Check boundaries
-            int posX = _posOrX + (int) segEND._x;
-            int posY = _posOrY + ((int) segEND._y * (-1));
+            int posX = (int)_coordOr._x + (int) segEND._x;
+            int posY = (int)_coordOr._y + ((int) segEND._y * (-1));
             if(_l.checkWindowBoundaries(posX, posY)){
                 killPlayer();
             } // if
@@ -451,6 +462,12 @@ public class PlayGameState implements GameState {
      */
     @Override
     public void update(double t) {
+
+        // Update particles
+        if(_part != null){
+            _part.update(t);
+        } // if
+
         // First update all items
         for (int i = 0; i < _it.size(); i++) {
             _it.get(i).update(t);
@@ -493,6 +510,11 @@ public class PlayGameState implements GameState {
         // Render paths first
         _paths.render(g);
 
+        // render particles
+        if(_part != null){
+            _part.render(g);
+        } // if
+
         // Then render items
         for(int i = 0; i < _it.size(); i++) {
             _it.get(i).render(g);
@@ -508,6 +530,12 @@ public class PlayGameState implements GameState {
             _player.render(g);
         } // if
 
+        if(_pathCollision){
+            _coordOr._x = _coordOrX;
+            _coordOr._y = _coordOrY;
+            _pathCollision = false;
+        }
+
         // Render lives
         for(int i = 0; i < _lf.size(); i++) {
             _lf.get(i).render(g);
@@ -518,7 +546,6 @@ public class PlayGameState implements GameState {
         // If it's a game over, render the game over screen
         if (_gameOver)
             renderGameOverBanner(g);
-
     } // render
 
 
