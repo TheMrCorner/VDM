@@ -332,35 +332,40 @@ public class PlayGameState implements GameState {
      * Used to render the game over banner over the level
      */
     private void renderGameOverBanner(Graphics g) {
-        g.save();
-
         VDMColor colorPicker = new VDMColor();
 
         // Draw the background
+        g.save();
         g.setColor(new VDMColor(60, 60, 60, 255));
         g.translate((int)_coordOr._x, (int)_coordOr._y);
         g.fillRect((-g.getWidth() / 2), (-g.getHeight()/3), (g.getWidth() / 2), 0);
+        g.restore();
 
         // Draw Game Over text
+        g.save();
         g.setColor(colorPicker.getRed());
-        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(35), true);
-        g.drawText("GAME OVER", g.repositionX(-(int)_coordOr._x/3) ,
-                g.repositionY((-g.getHeight() / 6)));
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(45), true);
+        g.translate((int) _coordOr._x - 140, ((int) _coordOr._y - 110));
+        g.drawText("GAME OVER", 0, 0);
+        g.restore();
 
+        g.save();
         // Draw Difficulty text
         g.setColor(colorPicker.getWhite());
-        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(20), false);
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(30), false);
+        g.translate((int) _coordOr._x - 90, ((int) _coordOr._y - 70));
         if (_diffLevel == 0)
-            g.drawText("EASY MODE", g.repositionX(-(int)_coordOr._x/5),
-                    g.repositionY((-g.getHeight() / 9)));
+            g.drawText("EASY MODE", 0, 0);
         else
-            g.drawText("HARD MODE", g.repositionX(-(int)_coordOr._x/5),
-                    g.repositionY((-g.getHeight() / 9)));
+            g.drawText("HARD MODE", 0, 0);
+        g.restore();
 
+        g.save();
+        g.setColor(colorPicker.getWhite());
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(30), false);
+        g.translate((int) _coordOr._x - 80, ((int) _coordOr._y - 40));
         // Draw Score text
-        g.drawText("SCORE: " + _nLevel , g.repositionX(-(int)_coordOr._x/6),
-                g.repositionY((-g.getHeight() / 18)));
-
+        g.drawText("SCORE: " + _nLevel , 0, 0);
         g.restore();
     }
 
@@ -370,40 +375,44 @@ public class PlayGameState implements GameState {
      * @param g (Graphics) Graphics object to paint everything.
      */
     private void renderGameWinBanner(Graphics g){
-        g.save();
-
         VDMColor colorPicker = new VDMColor();
 
-        // Draw the background
+        g.save();
         g.setColor(new VDMColor(60, 60, 60, 255));
         g.translate((int)_coordOr._x, (int)_coordOr._y);
         g.fillRect((-g.getWidth() / 2), (-g.getHeight()/3), (g.getWidth() / 2), 0);
+        g.restore();
 
-        // Draw Game Over text
+        g.save();
+        // Draw Winning text
         if(_yellowCongratulations){
             g.setColor(colorPicker.getItemColor());
         } // if
         else{
             g.setColor(colorPicker.getPlayerColor());
         } // else
-        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(35), true);
-        g.drawText("CONGRATULATIONS", g.repositionX((int)((-(int)_coordOr._x/4) * 2.5)),
-                g.repositionX((-g.getHeight() / 6)));
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(45), true);
+        g.translate((int) _coordOr._x - 245, ((int) _coordOr._y - 110));
+        g.drawText("CONGRATULATIONS", 0, 0);
+        g.restore();
 
+        g.save();
         // Draw Difficulty text
         g.setColor(colorPicker.getWhite());
-        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(20), false);
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(25), false);
+        g.translate((int) _coordOr._x - 150, ((int) _coordOr._y - 70));
         if (_diffLevel == 0)
-            g.drawText("EASY MODE COMPLETE", g.repositionX((-(int)_coordOr._x/5) * 2),
-                    g.repositionY((-g.getHeight() / 9)));
+            g.drawText("EASY MODE COMPLETE", 0, 0);
         else
-            g.drawText("HARD MODE COMPLETE", g.repositionX((-(int)_coordOr._x/5) * 2),
-                    g.repositionY((-g.getHeight() / 9)));
+            g.drawText("HARD MODE COMPLETE", 0, 0);
+        g.restore();
 
+        g.save();
+        g.setColor(colorPicker.getWhite());
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(25), false);
+        g.translate((int) _coordOr._x - 190, ((int) _coordOr._y - 40));
         // Draw Score text
-        g.drawText("CLICK TO QUIT TO MAIN MENU", g.repositionX((-(int)_coordOr._x/4) * 2),
-                g.repositionY((-g.getHeight() / 18)));
-
+        g.drawText("CLICK TO QUIT TO MAIN MENU", 0, 0);
         g.restore();
     }
 
