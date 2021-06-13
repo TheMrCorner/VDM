@@ -8,11 +8,11 @@ public class Vector2 {
     //---------------------------------------------------------------
     //---------------------------Atributes---------------------------
     //---------------------------------------------------------------
-    public double _x;
-    public double _y;
-    public double _magnitude = 0;
-    public double _squareMagnitude = 0;
-    public Vector2 _unit;
+    public double _x; // X value of the vector
+    public double _y; // Y value of the vector
+    public double _magnitude = 0; // Magnitude of the vector
+    public double _squareMagnitude = 0; // Square magnitude of the vector
+    public Vector2 _unit; // Unit vector of this vector
     //---------------------------------------------------------------
     //---------------------------Atributes---------------------------
     //---------------------------------------------------------------

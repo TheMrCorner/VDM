@@ -1,8 +1,13 @@
 package es.ucm.vdm.logic;
 
+// UCM
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.VDMColor;
 
+/**
+ * Text GameObject that stores the font with which to paint the text, the text to write and the
+ * different parameters.
+ */
 public class Text extends GameObject {
 
     private boolean _b;
@@ -10,13 +15,16 @@ public class Text extends GameObject {
     private String _f;
 
     /**
-     * Constructor of the GameObject. Creates a new GameObject and assigns the position, the color
-     * and the rotation that the object will have. To make this generic, initializes _rot to 0.
+     * Constructor of Text GameObject. Creates a new Text object with all the parameters provided
+     * to apply it for the text.
      *
-     * @param x         (double) X coordinate.
-     * @param y         (double) Y coordinate
-     * @param c         (int) Color
-     * @param thickness
+     * @param x (double) X position of the text.
+     * @param y (double) Y position of the text.
+     * @param c (VDMColor) Color to paint the text.
+     * @param thickness (int) Thickness of the text. (Font size)
+     * @param text (String) Text to write
+     * @param bold (boolean) Boolean to check if text is bold or not.
+     * @param font (String) Font path that will use to paint itself.
      */
     public Text(double x, double y, VDMColor c, int thickness,
                 String text, boolean bold, String font) {
@@ -27,6 +35,11 @@ public class Text extends GameObject {
         _f = font;
     } // Constructor
 
+    /**
+     * Renders the text in the current position.
+     *
+     * @param g (Graphics) Graphics instance to paint it.
+     */
     @Override
     public void render(Graphics g) {
 

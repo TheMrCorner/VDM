@@ -1,11 +1,13 @@
 package es.ucm.vdm.logic;
 
+// UCM
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.VDMColor;
 
-import static es.ucm.vdm.logic.Utils.subVect;
-import static es.ucm.vdm.logic.Utils.sumVect;
-
+/**
+ * Enemy class and object. Inherits from GameObject and can rotate,
+ * move or stay still. Kills the player when it touches.
+ */
 public class Enemy extends GameObject {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -22,6 +24,20 @@ public class Enemy extends GameObject {
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
 
+    /**
+     * Creates a new enemy with the parameters specified.
+     *
+     * @param x (double) X position at the center of the segment.
+     * @param y (double) Y position at the center of the segment.
+     * @param c (VDMColor) Color to paint the enemy
+     * @param thickness (int) Thickness of the line.
+     * @param length (int) Length of the enemy.
+     * @param angle (float) Angle that the enemy is rotated.
+     * @param angularSpeed (float) Rotation speed.
+     * @param linearSpeed (Vector2) Linear speed.
+     * @param waitTime (float) Time to wait to move again.
+     * @param direction (Vector2) Direction in which the enemy moves.
+     */
     public Enemy(double x, double y, VDMColor c, int thickness, int length, float angle,
                  float angularSpeed, Vector2 linearSpeed, float waitTime, Vector2 direction){
         super(x, y, c, thickness);
@@ -42,7 +58,7 @@ public class Enemy extends GameObject {
     /**
      * Returns the segment made by this enemy.
      *
-     * @return (Vector2[])
+     * @return (Vector2[]) Init and End position of the enemy's segment.
      */
     public Vector2[] getSegment(){
         // Create a vector array with 2 positions
@@ -75,15 +91,24 @@ public class Enemy extends GameObject {
         return seg;
     } // get_segment
 
+    /**
+     * Update the position and rotation of the enemy using the time elapsed between frames as
+     * a reference.
+     *
+     * @param t (double) Time elapsed
+     */
     @Override
     public void update(double t) {
         _rot += _aSp * t;
 
+        // Return rotation to 0
         if(_rot >= 360){
             _rot = 0;
         } // if
 
+        // Check if it moves in any direction
         if(_dir != null){
+            // Check if it has to wait.
             if(!_waiting) {
                 _pos._x += ((_dir._unit._x * _lSp._x) * t);
                 _pos._y += ((_dir._unit._y * _lSp._y) * t);
@@ -112,6 +137,11 @@ public class Enemy extends GameObject {
         } // if
     } // update
 
+    /**
+     * Renders the enemy rotating the matrix and moving it.
+     *
+     * @param g (Graphics) Graphics instance to paint it
+     */
     @Override
     public void render(Graphics g) {
         // Set color to paint the player

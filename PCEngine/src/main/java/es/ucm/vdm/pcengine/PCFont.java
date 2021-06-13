@@ -1,5 +1,6 @@
 package es.ucm.vdm.pcengine;
 
+// JAVA
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -55,15 +56,21 @@ public class PCFont implements es.ucm.vdm.engine.Font {
         _fontColor = new Color(r, g, b);
 
         return true;
-    }
+    } // initializeFont
 
-
+    /**
+     * Set the contents to be displayed.
+     *
+     * @param contents (String) text we want to display
+     */
     @Override
     public void setContents(String contents) {
         _contents = contents;
-    }
+    } // setContents
 
-
+    /**
+     * Renders the text on screen.
+     */
     @Override
     public void render() {
         // check for nulls before trying to render
@@ -71,18 +78,24 @@ public class PCFont implements es.ucm.vdm.engine.Font {
             //_graphics.setColor(_fontColor);
             _graphics.setFont(_font);
             _graphics.drawString(_contents, _x, _y);
-        }
-    }
+        } // if
+    } // render
 
+    /**
+     * Set position of the text.
+     *
+     * @param x (int) horizontal value
+     * @param y (int) vertical value
+     */
     @Override
     public void setPosition(int x, int y) {
         _x = x;
         _y = y;
-    }
+    } // setPosition
 
     /**
      * Sets the Graphics attribute used for rendering
      * @param g (Graphics) Graphics component for rendering purposes
      */
-    public void setCanvas(Graphics g) { _graphics = g;}
-}
+    public void setCanvas(Graphics g) { _graphics = g;} // setCanvas
+} // PCFont

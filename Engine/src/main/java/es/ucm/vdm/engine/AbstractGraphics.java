@@ -1,9 +1,13 @@
 package es.ucm.vdm.engine;
 
+/**
+ * Abstract class to represent Graphics. Implements some
+ * functions that are common to both Graphics. This include
+ * all the functions related to scaling and reference canvas.
+ */
 public abstract class AbstractGraphics implements Graphics {
     // Canvas
     public Rect _can;
-
     public Rect _refCan;
 
     /**
@@ -154,4 +158,4 @@ public abstract class AbstractGraphics implements Graphics {
     public Rect getCanvas() {
         return _can;
     } // getCanvas
-}
+} // AbstractGraphics

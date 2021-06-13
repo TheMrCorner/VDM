@@ -1,9 +1,10 @@
 package es.ucm.vdm.logic;
 
-// Utils
+// JSON
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+// JAVA
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,55 +13,64 @@ import es.ucm.vdm.engine.Font;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
 import es.ucm.vdm.engine.VDMColor;
-
 import static es.ucm.vdm.logic.Utils.parseDouble;
 import static es.ucm.vdm.logic.Utils.segmentsIntersection;
 
+/**
+ * PlayGameState. This GameState controls the Game Scenario, checking collisions between objects,
+ * checking when a level is completed, checking when the player is dead and processing all inputs.
+ * Displays different banners for different situations (GameOver and Game complete). Displays the
+ * UI and calls for all the different methods that are necessary for the game to work (updates,
+ * renders and etc.)
+ */
 public class PlayGameState implements GameState {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
 
     //---------------------Object Pools-------------------------------
-    //ArrayList<GameObject> _go; // GameObject pool
-    ArrayList<GameObject> _it;
-    ArrayList<GameObject> _en;
-    ArrayList<GameObject> _lf;
-    Path _paths;
-    Player _player;
-    Text _levelText;
-    ParticleSystem _part = null;
+    ArrayList<GameObject> _it; // Items
+    ArrayList<GameObject> _en; // Enemies
+    ArrayList<GameObject> _lf; // Lifes
+    Path _paths; // Paths
+    Player _player; // Player GO
+    Text _levelText; // Level text
+    ParticleSystem _part = null; // Particle system
 
     //---------------------------------------------------------------
     Logic _l; // For changing gamestate
     String _name; // Name of the actual level
-    JSONObject _level;
+    JSONObject _level; // Current level data
     int _nLevel; // Number of level, for writing
     int _diffLevel; // Difficulty
     boolean _dead = false; // Flag to check that player is dead
     boolean _gameOver = false; // Flag used to display the Game Over banner
     boolean _completed = false; // Flag to check if level is complete
     double _countdown = 0; // Variable to count
-    boolean _pathCollision = false;
+    boolean _pathCollision = false; // Collision with the path, for animation
+    boolean _allLevelsCleared = false; // Check if all levels are complete
+    boolean _yellowCongratulations = false; // Change Congratulations text
+    double _timeInColor = 1.0; // Time in which the text will be of one color
+    double _colorChangeCounter = 0.0; // Counter for the time
 
 
     // Constant values for colors and etc.
     VDMColor _playerC; // Player color ARGB
     VDMColor _itemC; // Item color ARGB
     VDMColor _enemyC; // Enemy color ARGB
-    Vector2 _coordOr;
-    int _coordOrX;
-    int _coordOrY;
-    int _lineThickness = 4;
+    Vector2 _coordOr; // Coord origin
+    int _coordOrX; // Coord origin X value
+    int _coordOrY; // Coord origin Y value
+    int _lineThickness = 4; // Line thickness
     int _playerWidth = 12; // Player width
     int _itemWidth = 8; // Item width
-    int _itemDist = 20;
+    int _itemDist = 20; // Item distance to take them
     float _aVel = 180; // Angular velocity for all player and items
     int _currLife = 0; // Current life (last life lost)
-    int _playerVel;
+    int _playerVel; // Player speed
     double _countdownInit = 1; // Count down to wait for dead resolution or win resolution (1 second)
-    float _expansionVel = 100;
-    int _transpVel = 230;
+    float _expansionVel = 100; // Item expansion speed
+    int _transpVel = 230; // Transparent speed
     float _collisionDesp = 0.03f; // Distance moved when player collides with the path.
 
     /**
@@ -68,7 +78,8 @@ public class PlayGameState implements GameState {
      *
      * @param level (JSONObject) Level to be loaded.
      * @param nlev (int) Number of the actual level.
-     * @param diff (boolean) Difficulty level
+     * @param diff (boolean) Difficulty level.
+     * @param l (Logic) Logic of the game.
      */
     public PlayGameState(JSONObject level, int nlev, int diff, Logic l){
         // Init GameObject pool
@@ -116,13 +127,24 @@ public class PlayGameState implements GameState {
         newLevel(level, nlev);
     } // PlayGameState
 
+    /**
+     * Load new level (if it is possible).
+     *
+     * @param level (JSONObject) Level to parse.
+     * @param nlev (int) Number of level.
+     */
     public void newLevel(JSONObject level, int nlev){
-        _nLevel = nlev + 1;
+        if(level != null && nlev != -1) {
+            _nLevel = nlev + 1;
 
-        // Save level for reseting
-        _level = level;
+            // Save level for reseting
+            _level = level;
 
-        parseLevel(level);
+            parseLevel(level);
+        } // if
+        else{
+            _allLevelsCleared = true;
+        } // else
     } // newLevel
 
     /**
@@ -322,18 +344,65 @@ public class PlayGameState implements GameState {
         // Draw Game Over text
         g.setColor(colorPicker.getRed());
         g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(35), true);
-        g.drawText("GAME OVER", g.repositionX(-(int)_coordOr._x/3) , (-g.getHeight() / 4));
+        g.drawText("GAME OVER", g.repositionX(-(int)_coordOr._x/3) ,
+                g.repositionY((-g.getHeight() / 6)));
 
         // Draw Difficulty text
         g.setColor(colorPicker.getWhite());
         g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(20), false);
         if (_diffLevel == 0)
-            g.drawText("EASY MODE", -(int)_coordOr._x/4 , (-g.getHeight() / 6));
+            g.drawText("EASY MODE", g.repositionX(-(int)_coordOr._x/5),
+                    g.repositionY((-g.getHeight() / 9)));
         else
-            g.drawText("HARD MODE", -(int)_coordOr._x/4 , (-g.getHeight() / 6));
+            g.drawText("HARD MODE", g.repositionX(-(int)_coordOr._x/5),
+                    g.repositionY((-g.getHeight() / 9)));
 
         // Draw Score text
-        g.drawText("SCORE: " + _nLevel , -(int)_coordOr._x/4 , (-g.getHeight() / 8));
+        g.drawText("SCORE: " + _nLevel , g.repositionX(-(int)_coordOr._x/6),
+                g.repositionY((-g.getHeight() / 18)));
+
+        g.restore();
+    }
+
+    /**
+     * Used to render the banner that tells the player they won.
+     *
+     * @param g (Graphics) Graphics object to paint everything.
+     */
+    private void renderGameWinBanner(Graphics g){
+        g.save();
+
+        VDMColor colorPicker = new VDMColor();
+
+        // Draw the background
+        g.setColor(new VDMColor(60, 60, 60, 255));
+        g.translate((int)_coordOr._x, (int)_coordOr._y);
+        g.fillRect((-g.getWidth() / 2), (-g.getHeight()/3), (g.getWidth() / 2), 0);
+
+        // Draw Game Over text
+        if(_yellowCongratulations){
+            g.setColor(colorPicker.getItemColor());
+        } // if
+        else{
+            g.setColor(colorPicker.getPlayerColor());
+        } // else
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(35), true);
+        g.drawText("CONGRATULATIONS", g.repositionX((int)((-(int)_coordOr._x/4) * 2.5)),
+                g.repositionX((-g.getHeight() / 6)));
+
+        // Draw Difficulty text
+        g.setColor(colorPicker.getWhite());
+        g.newFont(Font.FONT_BUNGEE_REGULAR, g.repositionX(20), false);
+        if (_diffLevel == 0)
+            g.drawText("EASY MODE COMPLETE", g.repositionX((-(int)_coordOr._x/5) * 2),
+                    g.repositionY((-g.getHeight() / 9)));
+        else
+            g.drawText("HARD MODE COMPLETE", g.repositionX((-(int)_coordOr._x/5) * 2),
+                    g.repositionY((-g.getHeight() / 9)));
+
+        // Draw Score text
+        g.drawText("CLICK TO QUIT TO MAIN MENU", g.repositionX((-(int)_coordOr._x/4) * 2),
+                g.repositionY((-g.getHeight() / 18)));
 
         g.restore();
     }
@@ -372,9 +441,6 @@ public class PlayGameState implements GameState {
         // ONLY WHEN FLYING AND NOT DEAD
         if(_player.isFlying() && !_dead) {
             // Then check items
-
-            System.out.println("-----------------------Check items----------------------");
-
             for(int i = 0; i < _it.size(); i++) {
                 if(!((Item)_it.get(i)).isTaken()) {
                     double dist = Utils.sqrDistancePointSegment(segINIT, segEND, _it.get(i).getPos());
@@ -387,8 +453,6 @@ public class PlayGameState implements GameState {
                     } // if
                 } // if
             } // for
-
-            System.out.println("----------------------Items checked----------------------");
 
             // Check paths
             for(int i = 0; i < _paths.getPaths().size(); i++){
@@ -424,6 +488,9 @@ public class PlayGameState implements GameState {
         } // is_flying
     } // check_collisions
 
+    /**
+     * Function to check if all items are collected.
+     */
     private void checkItems(){
         boolean completed = true;
 
@@ -462,6 +529,15 @@ public class PlayGameState implements GameState {
      */
     @Override
     public void update(double t) {
+        // Update time counter for congrats animation
+        if(_allLevelsCleared){
+            _colorChangeCounter += t;
+
+            if(_colorChangeCounter >= _timeInColor) {
+                _yellowCongratulations = !_yellowCongratulations;
+                _colorChangeCounter = 0.0;
+            } // if
+        } // if
 
         // Update particles
         if(_part != null){
@@ -501,10 +577,15 @@ public class PlayGameState implements GameState {
                     _completed = false;
                     _l.levelComplete();
                 } // else if
-            } // if
+            } // else
         } // if !_gameover
     } // update
 
+    /**
+     * Render the current scene in it's current position.
+     *
+     * @param g (Graphics) Instance of Graphics
+     */
     @Override
     public void render(Graphics g) {
         // Render paths first
@@ -546,6 +627,10 @@ public class PlayGameState implements GameState {
         // If it's a game over, render the game over screen
         if (_gameOver)
             renderGameOverBanner(g);
+
+        if(_allLevelsCleared){
+            renderGameWinBanner(g);
+        } // if
     } // render
 
 
@@ -573,8 +658,11 @@ public class PlayGameState implements GameState {
                         _player.fly(_paths.getJumpDir(_paths.getActivePath(),
                                 _player.getActualPoint()));
 
-                    if (_gameOver)
+                    if (_gameOver || _allLevelsCleared)
                         _l.setGameState(Logic.GameStates.MENU, 0);
+                    break;
+                case KEY_EXIT:
+                    _l.closeGame();
                     break;
                 default:
                     // Ignore the rest

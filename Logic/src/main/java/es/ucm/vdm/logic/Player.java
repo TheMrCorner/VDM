@@ -1,14 +1,19 @@
 package es.ucm.vdm.logic;
 
+// JAVA
 import java.util.ArrayList;
 
+// UCM
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
 import es.ucm.vdm.engine.VDMColor;
-
 import static es.ucm.vdm.logic.Utils.rotVect;
 import static es.ucm.vdm.logic.Utils.subVect;
 
+/**
+ * Player GameObject. Manages all the logic related to the player, like distance moved and rendering
+ * process.
+ */
 public class Player extends GameObject {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -23,7 +28,7 @@ public class Player extends GameObject {
     int _pathDir; // Direction of the path
     int _actualPoint; // Last point that Player went through
     boolean _flying; // flag to detect if player is flying
-    Vector2 _jumpPos;
+    Vector2 _jumpPos; // Jumping position. Used to calculate collisions
     PlayGameState _pg; // Instance of PlayGameState to communicate with and check collisions
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -69,6 +74,12 @@ public class Player extends GameObject {
         calculateDirection(initPoint, endingPoint);
     } // set_path
 
+    /**
+     * Reset Player data: direction, position, distance, flying, etc.
+     *
+     * @param pos (Vector2) New position of the Player.
+     * @param p (ArrayList) New path to place the player.
+     */
     public void resetPlayer(Vector2 pos, ArrayList p){
         _dir = new Vector2(0, 0);
         _pos = _initPos = new Vector2(pos._x, pos._y);
@@ -198,10 +209,6 @@ public class Player extends GameObject {
                                    _pos._y + ((_w / 8) * _dir._y));
         } // if
     } // fly
-
-    public Vector2 getJumpPos(){
-        return _jumpPos;
-    } // getJumpPos
 
     /**
      * Gets the index of path which points the actual point.

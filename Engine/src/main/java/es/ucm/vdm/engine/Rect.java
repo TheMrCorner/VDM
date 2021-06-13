@@ -4,6 +4,20 @@ package es.ucm.vdm.engine;
  * Class Rectangle. Saves the dimensions of a Rectangle. Where it begins and where it ends.
  */
 public class Rect {
+    // Pixel where it begins
+    int _right;
+    int _left;
+    int _top;
+    int _bottom;
+
+    // Positions
+    int _x = 0;
+    int _y = 0;
+
+    // Width and Height
+    public int width;
+    public int height;
+
     /**
      * Constructor. Sets all values from the Rectangle. Right, Left, Bottom and Top.
      *
@@ -100,20 +114,5 @@ public class Rect {
      * @return Y
      */
     public int getY() { return _y; } // getY
-
-    // Pixel where it begins
-    int _right;
-    int _left;
-    int _top;
-    int _bottom;
-
-    // Positions
-    int _x = 0;
-    int _y = 0;
-
-    // Width and Height
-    public int width;
-    public int height;
-
 } // Rect
 

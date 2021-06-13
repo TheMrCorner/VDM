@@ -1,11 +1,13 @@
 package es.ucm.vdm.pcengine;
 
+// JAVA
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.Stack;
 
+// UCM
 import es.ucm.vdm.engine.AbstractGraphics;
 import es.ucm.vdm.engine.Font;
 import es.ucm.vdm.engine.Rect;
@@ -17,7 +19,6 @@ public class Graphics extends AbstractGraphics {
     //---------------------------------------------------------------
     Window _win;
     Stack<AffineTransform> _saveStack; // Stack to save transformation matrix states
-
     PCFont _font;
 
     /**

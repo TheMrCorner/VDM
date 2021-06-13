@@ -33,10 +33,14 @@ public abstract class AbstractInput implements Input {
         return tmp;
     } // getTouchEvent
 
-
+    /**
+     * Adds a new event to the event list.
+     *
+     * @param event (TouchEvent) New event.
+     */
     protected synchronized void addEvent(TouchEvent event) {
         synchronized (this){
             _touchEvn.add(event);
-        }
-    }
-}
+        } // synchronized
+    } // asEvent
+} // AbstractInput

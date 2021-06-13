@@ -10,7 +10,6 @@ import android.view.SurfaceView;
 
 // UCM
 import es.ucm.vdm.engine.AbstractGraphics;
-import es.ucm.vdm.androidengine.Font;
 import es.ucm.vdm.engine.VDMColor;
 
 /**

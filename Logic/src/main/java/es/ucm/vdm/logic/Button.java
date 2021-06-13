@@ -1,72 +1,90 @@
 package es.ucm.vdm.logic;
 
+// UCM
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
 import es.ucm.vdm.engine.VDMColor;
 
+/**
+ * Button object to create an interactable object in the scene.
+ */
 public class Button extends GameObject{
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
     private int _w, _h; // Width and Height
+    private boolean _debug;
     private Text _t;
 
     /**
-     * Constructor of the GameObject. Creates a new GameObject and assigns the position, the color
-     * and the rotation that the object will have. To make this generic, initializes _rot to 0.
+     * Button constructor. Creates the new button and sets it's parameters.
      *
-     * @param x         (double) X coordinate.
-     * @param y         (double) Y coordinate
-     * @param width (int) Width of the button
-     * @param height (int) Height of the button
-     * @param c         (int) Color
-     * @param thickness
+     * @param x (double) X Position.
+     * @param y (double) Y Position.
+     * @param width (int) Width of the button Rect.
+     * @param height (int) Height of the button Rect.
+     * @param c (VDMColor) Color to set for debugging rectangle.
+     * @param thickness (int) Thickness.
+     * @param t (Text) Text associated to the Button.
      */
     public Button(double x, double y, int width, int height, VDMColor c, int thickness, Text t) {
         super(x, y, c, thickness);
         _w = width;
         _h = height;
         _t = t;
-    }
+        _debug = false;
+    } // Constructor
 
-
-    public void setWidthHeight(int width, int height) {
-        _w = width;
-        _h = height;
-    }
-
+    /**
+     * Render the text associated with this button. If debug is activated, it also
+     * renders the dimensions of the button to test if Input is working correctly.
+     *
+     * @param g (Graphics) Graphics instance to paint it
+     */
     @Override
     public void render(Graphics g) {
         // for debug only
-        /*Rect o = new Rect(_w, 0, 0, _h);
-        Rect n = g.scale(o, g.getCanvas());
+        // This is just for debugging the dimensions of the button.
+        if(_debug) {
+            Rect o = new Rect(_w, 0, 0, _h);
+            Rect n = g.scale(o, g.getCanvas());
 
-        g.setColor(_c);
-        // Save actual canvas Transformation matrix
-        g.save();
+            g.setColor(_c);
+            // Save actual canvas Transformation matrix
+            g.save();
 
-        Vector2 v = new Vector2((int) _coordOrigin._x + (int) _pos._x,
-                (int) _coordOrigin._y + ((int) _pos._y * (-1)));
+            Vector2 v = new Vector2((int) _coordOrigin._x + (int) _pos._x,
+                    (int) _coordOrigin._y + ((int) _pos._y * (-1)));
 
-        // Change transformation matrix
-        g.translate((int) _coordOrigin._x + (int) _pos._x,
-                (int) _coordOrigin._y + ((int) _pos._y * (-1)));
+            // Change transformation matrix
+            g.translate((int) _coordOrigin._x + (int) _pos._x,
+                    (int) _coordOrigin._y + ((int) _pos._y * (-1)));
 
-        // Draw square
-        g.drawLine(-n.width / 2, -n.height / 2,
-                n.width / 2, -n.height / 2, _lineThickness);
-        g.drawLine(-n.width / 2, -n.height / 2,
-                -n.width / 2, n.height / 2, _lineThickness);
-        g.drawLine(n.width / 2, -n.height / 2,
-                n.width / 2, n.height / 2, _lineThickness);
-        g.drawLine(-n.width / 2, n.height / 2,
-                n.width / 2, n.height / 2, _lineThickness);
+            // Draw square
+            g.drawLine(-n.width / 2, -n.height / 2,
+                    n.width / 2, -n.height / 2, _lineThickness);
+            g.drawLine(-n.width / 2, -n.height / 2,
+                    -n.width / 2, n.height / 2, _lineThickness);
+            g.drawLine(n.width / 2, -n.height / 2,
+                    n.width / 2, n.height / 2, _lineThickness);
+            g.drawLine(-n.width / 2, n.height / 2,
+                    n.width / 2, n.height / 2, _lineThickness);
 
-        // Reset canvas after drawing
-        g.restore();*/
+            // Reset canvas after drawing
+            g.restore();
+        } // if
 
         _t.render(g);
-    }
+    } // render
+
+    /**
+     * Use this to debug the button dimensions.
+     *
+     * @param debug (boolean) New debug status.
+     */
+    public void toggleDebug(boolean debug) {
+        _debug = debug;
+    } // toggleDebug
 
     /**
      * Function that checks if a button is pressed. Returns true when that happens, false if not.
@@ -112,4 +130,4 @@ public class Button extends GameObject{
             return false;
         } // else
     } // isPressed
-}
+} // Button

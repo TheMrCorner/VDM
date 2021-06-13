@@ -1,10 +1,13 @@
 package es.ucm.vdm.pcengine;
 
+// JAVA
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-
 import javax.swing.JFrame;
 
+/**
+ * Window class to implement JFrame and abstract it.
+ */
 public class Window extends JFrame{
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------

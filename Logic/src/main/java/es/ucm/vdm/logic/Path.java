@@ -1,13 +1,15 @@
 package es.ucm.vdm.logic;
 
+// JSON
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+// JAVA
 import java.util.ArrayList;
 
+// UCM
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.VDMColor;
-
 import static es.ucm.vdm.logic.Utils.parseDouble;
 
 /**
@@ -18,18 +20,19 @@ public class Path extends GameObject {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
-    ArrayList<ArrayList<Vector2>> _paths;
-    ArrayList<ArrayList<Vector2>> _pathsDirs;
+    ArrayList<ArrayList<Vector2>> _paths; // Different paths vertices
+    ArrayList<ArrayList<Vector2>> _pathsDirs; // Directions of the jumps
     int _activePath; // Variable that stores the actual path that the player is following
 
     /**
      * Constructor of a new path. Parses all the information relative to the paths and
      * stores it in an arraylist for using them later.
      *
-     * @param x (int) X position (central) of the paths
-     * @param y (int) Y position (central) of the paths
-     * @param c (int) Color to paint the paths
-     * @param paths (JSONArray) Array with all the paths
+     * @param x (int) X position (central) of the paths.
+     * @param y (int) Y position (central) of the paths.
+     * @param c (int) Color to paint the paths.
+     * @param thickness (int) Thickness of the paths lines.
+     * @param paths (JSONArray) Array with all the paths.
      */
     public Path(int x, int y, VDMColor c, int thickness, JSONArray paths) {
         super(x, y, c, thickness);
@@ -48,10 +51,6 @@ public class Path extends GameObject {
         for(int i = 0; i < paths.size(); i++) {
             temp = (JSONObject) paths.get(i);
             vert = (JSONArray) temp.get("vertices");
-
-            if (temp.containsKey("directions")) {
-                dirs = (JSONArray) temp.get("directions");
-            }
 
             t = new ArrayList<Vector2>();
             JSONObject coord;
@@ -92,6 +91,9 @@ public class Path extends GameObject {
                 } // vertices for
                 _pathsDirs.add(d);
             } // if
+            else{
+                _pathsDirs.add(null);
+            } // else
         } // paths for
     } // Path
 
@@ -107,7 +109,7 @@ public class Path extends GameObject {
     /**
      * Function to access the actual active path and get it's information.
      *
-     * @return (int) actual active path
+     * @return (int) Actual active path.
      */
     public int getActivePath(){
         return _activePath;
@@ -134,13 +136,13 @@ public class Path extends GameObject {
     /**
      * Returns the jumping direction of a path if it is specified.
      *
-     * @param p (int) Path
-     * @param v (int) Vertex
-     * @return (Vector2) Direction jump (null if not exists)
+     * @param p (int) Path.
+     * @param v (int) Vertex.
+     * @return (Vector2) Direction jump (null if not exists).
      */
     public Vector2 getJumpDir(int p, int v) {
         // If list is not empty, that means that there is directions set for every path
-        if(!_pathsDirs.isEmpty()){
+        if(_pathsDirs.get(p) != null){
             return _pathsDirs.get(p).get(v); // Return the jump direction of this path and vertex
         } // if
         else {
@@ -153,7 +155,7 @@ public class Path extends GameObject {
      * Renders the GO with the characteristics set on this object. Render is specific from every
      * GO, there is no default render.
      *
-     * @param g (Graphics) Graphics instance to paint it
+     * @param g (Graphics) Graphics instance to paint it.
      */
     public void render(Graphics g){
         // Set color to paint the player

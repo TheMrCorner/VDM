@@ -1,8 +1,13 @@
 package es.ucm.vdm.logic;
 
+// UCM
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.VDMColor;
 
+/**
+ * GameObject abstract class. Abstract some aspects of the objects of the game that
+ * are common to all of them.
+ */
 public abstract class GameObject {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -20,8 +25,9 @@ public abstract class GameObject {
      * and the rotation that the object will have. To make this generic, initializes _rot to 0.
      *
      * @param x (double) X coordinate.
-     * @param y (double) Y coordinate
-     * @param c (int) Color
+     * @param y (double) Y coordinate.
+     * @param c (int) Color.
+     * @param thickness (int) Thickness which the lane would have.
      */
     public GameObject(double x, double y, VDMColor c, int thickness){
         _pos = _initPos = new Vector2(x, y);

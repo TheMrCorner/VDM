@@ -1,18 +1,25 @@
 package es.ucm.vdm.engine;
 
+/**
+ * Abstract class for the engines. Implements some functions
+ * that are common to both engines as well as some variables
+ * that are the same for both engines.
+ */
 public abstract class AbstractEngine implements Engine {
 
+    // ENGINE VARS
     protected Graphics _g;
     protected Input _ip;
     protected Logic _l;
     protected Logic _tempLogic;
 
-
+    // TIME AND FRAMES
     protected long _lastFrameTime;
     protected long _currentTime, _nanoElapsedTime;
     protected double _elapsedTime;
     protected int _frames;
     protected long _info;
+    protected volatile boolean _running;
 
     /**
      * Resize canvas to fit the screen. Only called when the window is resized. (Fullscreen, or
@@ -89,6 +96,14 @@ public abstract class AbstractEngine implements Engine {
     public Input getInput() {
         return (Input)_ip;
     } // getInput
+
+    /**
+     * Function to close and terminate the game.
+     */
+    @Override
+    public void closeGame(){
+        _running = false;
+    } // closeGame
 
 
     /**

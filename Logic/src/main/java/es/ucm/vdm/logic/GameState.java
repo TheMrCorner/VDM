@@ -1,11 +1,16 @@
 package es.ucm.vdm.logic;
 
+// JAVA
 import java.util.List;
 
-import es.ucm.vdm.engine.Engine;
+// UCM
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
 
+/**
+ * GameState Interface. Represents a GameState with it's basic methods, like processing
+ * Input, update and render.
+ */
 public interface GameState {
 
 

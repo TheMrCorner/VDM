@@ -1,13 +1,9 @@
 package es.ucm.vdm.androidengine;
 
 // Android
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
-import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 
 // Java
@@ -16,8 +12,6 @@ import java.io.InputStream;
 
 // UCM
 import es.ucm.vdm.engine.AbstractEngine;
-import es.ucm.vdm.engine.Logic;
-import es.ucm.vdm.engine.Rect;
 import es.ucm.vdm.engine.VDMColor;
 
 /**
@@ -33,8 +27,6 @@ public class Engine extends AbstractEngine implements Runnable {
     AssetManager _aMan;
 
     Thread _renderThread;
-
-    volatile boolean _running = false;
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------

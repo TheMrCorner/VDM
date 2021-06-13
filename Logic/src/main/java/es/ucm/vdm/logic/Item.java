@@ -1,9 +1,14 @@
 package es.ucm.vdm.logic;
 
+// UCM
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
 import es.ucm.vdm.engine.VDMColor;
 
+/**
+ * Item class and Object. It can rotate around some point and it's rotating constantly
+ * over itself.
+ */
 public class Item extends GameObject {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -16,8 +21,8 @@ public class Item extends GameObject {
     private VDMColor _transpCol; // color change variable
     private boolean _taken; // Flag to control if the player has taken this item
     private float _centerAv; // Angular velocity for rotating over one point
-    private float _totalRot;
-    private float _distanceCenter;
+    private float _totalRot; // Accumulated rotation
+    private float _distanceCenter; // Distance to the center point
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
     //---------------------------------------------------------------
@@ -31,12 +36,15 @@ public class Item extends GameObject {
      * Constructor of an item. Receives the position of the item and the color that will be used
      * to draw it. Also receives width and height with an angular velocity for rotation.
      *
-     * @param x (double) X position in canvas
-     * @param y (double) Y position in canvas
-     * @param c (int) Color to draw this GO
-     * @param width (int) Width of the square
-     * @param height (int) Height of the square
-     * @param angVel (float) Angular velocity the Object will have for rotation
+     * @param x (double) X position in canvas.
+     * @param y (double) Y position in canvas.
+     * @param c (VDMColor) Color to draw the Item.
+     * @param width (int) Width of the square.
+     * @param height (int) Height of the square.
+     * @param angVel (float) Angular velocity the Object will have for rotation.
+     * @param thickness (int) Thickness of the lines that create the Item.
+     * @param expansionVel (float) Expansion velocity for taken animation.
+     * @param transparencyVel (int) Transparency speed for alpha reduction.
      */
     public Item(double x, double y, VDMColor c, int width, int height, float angVel, int thickness,
                 float expansionVel, int transparencyVel) {
@@ -53,6 +61,22 @@ public class Item extends GameObject {
         _transpCol = new VDMColor(c._r, c._g, c._b, c._a);
     } // Item
 
+    /**
+     * Contructor for an Item that rotates around a specific point in the space.
+     *
+     * @param x (double) X position to which rotate around.
+     * @param y (double) Y position to which rotate around.
+     * @param c (VDMColor) Color to draw the Item.
+     * @param width (int) Width of the square.
+     * @param height (int) Height of the square.
+     * @param angVel (float) Angular velocity the Object will have for rotation.
+     * @param thickness (int) Thickness of the lines that create the Item.
+     * @param tAngVel (float) Angular speed for general rotation.
+     * @param rotRefer (float) Rotation accumulated. (Initial rotation angle)
+     * @param distCenter (float) Distance to the point of rotation.
+     * @param expansionVel (float) Expansion velocity for taken animation.
+     * @param transparencyVel (int) Transparency speed for alpha reduction.
+     */
     public Item(double x, double y, VDMColor c, int width, int height, float angVel, int thickness,
                 float tAngVel, float rotRefer, float distCenter,
                 float expansionVel, int transparencyVel){

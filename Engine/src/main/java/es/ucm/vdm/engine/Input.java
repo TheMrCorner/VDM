@@ -14,7 +14,8 @@ public interface Input {
             CLICKED,
             KEY_PRESSED,
             KEY_RELEASED,
-            KEY_TYPED
+            KEY_TYPED,
+            KEY_EXIT
         }
 
         /**
@@ -62,7 +63,7 @@ public interface Input {
          * TouchType of the TouchEvent.
          */
         TouchType _t;
-    }
+    } // TouchEvent
 
     List<TouchEvent> getTouchEvents();
-}
+} // Input

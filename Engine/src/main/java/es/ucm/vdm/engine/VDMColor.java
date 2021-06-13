@@ -34,7 +34,7 @@ public class VDMColor {
      */
     public VDMColor getWhite() {
         return new VDMColor(255, 255, 255, 255);
-    }
+    } // getWhite
 
     /**
      * used for getting red color
@@ -42,7 +42,7 @@ public class VDMColor {
      */
     public VDMColor getRed() {
         return new VDMColor(255, 20, 50, 255);
-    }
+    } // getRed
 
     /**
      * used for getting the player color
@@ -50,7 +50,7 @@ public class VDMColor {
      */
     public VDMColor getPlayerColor() {
         return new VDMColor(0, 136, 255, 255);
-    }
+    } // getPlayerColor
 
     /**
      * used for getting the enemy color
@@ -58,7 +58,7 @@ public class VDMColor {
      */
     public VDMColor getEnemyColor() {
         return new VDMColor(255, 0, 0, 255);
-    }
+    } // getEnemyColor
 
     /**
      * used for getting the item color
@@ -66,7 +66,5 @@ public class VDMColor {
      */
     public VDMColor getItemColor() {
         return new VDMColor(255, 242, 0, 255);
-    }
-
-
-}
+    } // getItemColor
+} // VDMColor

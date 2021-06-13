@@ -8,6 +8,11 @@ import android.os.Bundle;
 import es.ucm.vdm.androidengine.Engine;
 import es.ucm.vdm.logic.Logic;
 
+/**
+ * This activity works as the launcher for the game. Creates the engine and the logic and sets them
+ * to work together. Then just manages the different events from android related to the app life and
+ * stopping events.
+ */
 public class MainActivity extends AppCompatActivity {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -52,4 +57,4 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         _eng.onPause(); // Pause engine
     } // onPause
-}
+} // MainActivity

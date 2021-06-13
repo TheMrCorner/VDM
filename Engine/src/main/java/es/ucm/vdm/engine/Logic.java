@@ -7,4 +7,4 @@ public interface Logic {
 
     void update(double t);
     void render();
-}
+} // Logic

@@ -4,6 +4,10 @@ import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Rect;
 import es.ucm.vdm.engine.VDMColor;
 
+/**
+ * GameObject that represents a Life on screen. It has two positions, active or inactive, with
+ * it's unique render option (cross or square).
+ */
 public class Life extends GameObject {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -17,12 +21,17 @@ public class Life extends GameObject {
     //---------------------------------------------------------------
 
     /**
-     * Constructor of the GameObject. Creates a new GameObject and assigns the position, the color
-     * and the rotation that the object will have. To make this generic, initializes _rot to 0.
+     * Constructor for a Life object. Receives all data necessary to paint a life, setting
+     * it's colors and etc.
      *
-     * @param x (double) X coordinate.
-     * @param y (double) Y coordinate
-     * @param c (int) Color
+     * @param x (double) X position of the Object.
+     * @param y (double) Y position of the Object.
+     * @param c (VDMColor) Color to paint the Object.
+     * @param secondColor (VDMColor) Color to paint the Object in it's second position.
+     * @param w (int) Width of the square.
+     * @param h (int) Height of the square.
+     * @param crossRot (int) Rotation angle fot the Cross figure.
+     * @param thickness (int) Thickness of the lines.
      */
     public Life(double x, double y, VDMColor c, VDMColor secondColor, int w, int h,
                 int crossRot, int thickness) {

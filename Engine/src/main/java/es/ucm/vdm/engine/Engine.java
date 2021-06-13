@@ -15,6 +15,8 @@ public interface Engine {
     void resetLogic();
     
     void HandleException(Exception e);
+
+    void closeGame();
     
     int getWinWidth();
     

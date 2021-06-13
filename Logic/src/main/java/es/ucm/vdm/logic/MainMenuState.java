@@ -1,14 +1,18 @@
 package es.ucm.vdm.logic;
 
+// JAVA
 import java.util.ArrayList;
 import java.util.List;
 
-import es.ucm.vdm.engine.Engine;
+// UCM
 import es.ucm.vdm.engine.Font;
 import es.ucm.vdm.engine.Graphics;
 import es.ucm.vdm.engine.Input;
 import es.ucm.vdm.engine.VDMColor;
 
+/**
+ * MainMenuState. This state is the one that will appear when the game starts.
+ */
 public class MainMenuState implements GameState {
     //---------------------------------------------------------------
     //----------------------Private Atributes------------------------
@@ -17,9 +21,9 @@ public class MainMenuState implements GameState {
     int _posOrX; // Pos of coord origin X
     int _posOrY; // Pos of coord origin Y
     VDMColor _colorPicker; // Used for picking colors for the text and it also stores a grey color
-    Button _easy;
-    Button _hard;
-    ArrayList<Text> _texts;
+    Button _easy; // Button for the easy mode.
+    Button _hard; // Button for the hard mode.
+    ArrayList<Text> _texts; // Array list with the different texts.
 
     //---------------------------------------------------------------
     //--------------------------Constants----------------------------
@@ -29,6 +33,12 @@ public class MainMenuState implements GameState {
     final String EASY_DESCRIPTION = "(Slow speed, 10 lives)";
     final String HARD_DESCRIPTION = "(Fast speed, 5 lives)";
 
+    /**
+     * Constructor of the MainMenuState. Creates the different texts and positions them in the
+     * screen to show the info. It also creates the different buttons needed to begin the game.
+     *
+     * @param l
+     */
     public MainMenuState(Logic l) {
         _l = l;
 
@@ -76,9 +86,19 @@ public class MainMenuState implements GameState {
         _texts.add(hardText);
     } // Constructor
 
+    /**
+     * Update. In this screen is only to fit the Interface requirements.
+     *
+     * @param t (double) Time elapsed since the last frame.
+     */
     @Override
     public void update(double t) {}
 
+    /**
+     * Renders all data from the scene.
+     *
+     * @param g (Graphics) Instance of Graphics
+     */
     @Override
     public void render(Graphics g) {
         g.save();
@@ -92,8 +112,13 @@ public class MainMenuState implements GameState {
         _hard.render(g);
 
         g.restore();
-    }
+    } // render
 
+    /**
+     * Function to process the input received from the Engine.
+     *
+     * @param e (List<Input.TouchEvent>) Event list taken from the Input class
+     */
     @Override
     public void processInput(List<Input.TouchEvent> e) {
         // int ptr = e.size() - 1; // Pointer to roam the list
@@ -110,6 +135,9 @@ public class MainMenuState implements GameState {
                     _l.setGameState(Logic.GameStates.PLAY, 1);
                 } // else if
             } // if
+            else if(te.getType() == Input.TouchEvent.TouchType.KEY_EXIT) {
+                _l.closeGame();
+            } // else if
 
             ptr++;
         } // while

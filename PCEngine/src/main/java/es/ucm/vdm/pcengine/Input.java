@@ -1,5 +1,6 @@
 package es.ucm.vdm.pcengine;
 
+// JAVA
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -7,8 +8,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
+// UCM
 import es.ucm.vdm.engine.AbstractInput;
-
 
 /**
  * Class that manages the input. Get Input events generated from the various input listeners and
@@ -38,7 +39,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
         w.addMouseMotionListener(this);
 
         _g = g;
-    }
+    } // Constructor
 
     //-----------------------KeyboardEvent---------------------------
 
@@ -50,10 +51,17 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
      */
     @Override
     public void keyTyped(KeyEvent keyEvent) {
-        TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_TYPED);
+        TouchEvent aux;
+
+        if(keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_EXIT);
+        } // if
+        else {
+            aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_TYPED);
+        } // else
 
         addEvent(aux);
-    }
+    } // keyTyped
 
     /**
      * Called when a key is pressed. Gets the listener event and processes it to create our own
@@ -63,10 +71,17 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
      */
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_PRESSED);
+        TouchEvent aux;
+
+        if(keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_EXIT);
+        } // if
+        else {
+            aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_PRESSED);
+        } // else
 
         addEvent(aux);
-    }
+    } // keyPressed
 
     /**
      * Called when a key is released. Gets the listener event and processes it to create our own
@@ -76,10 +91,17 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
      */
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        TouchEvent aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_RELEASED);
+        TouchEvent aux;
+
+        if(keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_EXIT);
+        } // if
+        else {
+            aux = new TouchEvent(0, 0, TouchEvent.TouchType.KEY_RELEASED);
+        } // else
 
         addEvent(aux);
-    }
+    } // keyReleased
 
     //-----------------------KeyboardEvent---------------------------
 
@@ -100,17 +122,17 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
             if(_g.isInCanvas(mouseEvent.getX(), mouseEvent.getY())){
                 x = _g.reverseRepositionX(mouseEvent.getX() - _g.getCanvas().getX());
                 y = _g.reverseRepositionY(mouseEvent.getY() - _g.getCanvas().getY());
-            }
+            } // if
             else{
                 x = mouseEvent.getX();
                 y = mouseEvent.getY();
-            }
+            } // else
 
             TouchEvent aux = new TouchEvent(x, y, TouchEvent.TouchType.CLICKED);
 
             addEvent(aux);
-        }
-    }
+        } // if
+    } // mouseClicked
 
     /**
      * Called when the mouse is pressed. Gets the listener event and processes it to create our own
@@ -126,8 +148,8 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
             TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.PRESSED_DOWN);
 
             addEvent(aux);
-        }
-    }
+        } // if
+    } // mousePressed
 
     /**
      * Called when the mouse is released. Gets the listener event and processes it to create our own
@@ -142,21 +164,21 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
             TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.RELEASED);
 
             addEvent(aux);
-        }
-    }
+        } // if
+    } // mouseReleased
 
     //------------------------MouseEvent-----------------------------
 
     //------------------------MouseMotionEvent-----------------------
 
     @Override
-    public void mouseEntered(MouseEvent mouseEvent) {    }
+    public void mouseEntered(MouseEvent mouseEvent) {}
 
     @Override
-    public void mouseExited(MouseEvent mouseEvent) {    }
+    public void mouseExited(MouseEvent mouseEvent) {}
 
     @Override
-    public void mouseDragged(MouseEvent mouseEvent) {    }
+    public void mouseDragged(MouseEvent mouseEvent) {}
 
     /**
      * Called when the mouse is moved. Gets the listener event and processes it to create our own
@@ -170,7 +192,7 @@ public class Input extends AbstractInput implements es.ucm.vdm.engine.Input, Mou
         TouchEvent aux = new TouchEvent(mouseEvent.getX(), mouseEvent.getY(), TouchEvent.TouchType.MOVED);
 
         addEvent(aux);
-    }
+    } // mouseMoved
 
     //------------------------MouseMotionEvent-----------------------
-}
+} // Input
