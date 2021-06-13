@@ -228,6 +228,8 @@ public class Engine extends AbstractEngine implements Runnable, ComponentListene
                 resetLogic();
             } // if
         } // while
+
+        System.exit(1);
     } // run
 
 
